@@ -1,11 +1,15 @@
-# GxTFT-for-Arduino-a-New-Approach-for-a-General-TFT-Library
+# GxTFT for Arduino : a New Approach for a General TFT Library
 
 This library separates the aspects IO connection, controller type and display class into separate C++ classes
+
+The purpose of this Library and its design is to make additions easy.
 
 -- under construction --
 
 This seems the right place to present my ideas for this topic. I will do it step-by-step.
 
-I will need to learn - study the Arduino Tutorial - how to create a true Arduino library.
+The initial commit serves as "proof of concept". It supports:
 
-So the initial commits will be work-in-progress, not directly usable as a library.
+* HVGA on MEGA
+* HVGA on DUE
+* HVGA on SPI (3.5inch RPI Display)
