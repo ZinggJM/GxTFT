@@ -13,3 +13,7 @@ The initial commit serves as "proof of concept". It supports:
 * HVGA on MEGA
 * HVGA on DUE
 * HVGA on SPI (3.5inch RPI Display)
+
+-- preliminary addition --
+
+Added GxIO classes for TIKY 5inch display
