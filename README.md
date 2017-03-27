@@ -4,9 +4,7 @@ This library separates the aspects IO connection, controller type and display cl
 
 The purpose of this Library and its design is to make additions easy.
 
--- under construction --
-
-This seems the right place to present my ideas for this topic. I will do it step-by-step.
+This is the right place to present my ideas for this topic. I do it step-by-step.
 
 The initial commit serves as "proof of concept". It supports:
 
@@ -14,6 +12,12 @@ The initial commit serves as "proof of concept". It supports:
 * HVGA on DUE
 * HVGA on SPI (3.5inch RPI Display)
 
--- preliminary addition --
-
 Added GxIO classes for TIKY 5inch display
+
+Fixed TIKY GxIO classes and GxCTRL_ILI9806
+
+Added Updates 1 :
+
+Renamed GxIO classes for HVGA on MEGA and DUE
+
+Added read support to GxIO classes (partially tested only, some shields are output only).
