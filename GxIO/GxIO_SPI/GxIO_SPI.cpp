@@ -96,6 +96,16 @@ uint16_t GxIO_SPI::readData16Transaction()
   return rv;
 }
 
+uint8_t GxIO_SPI::readData()
+{
+  return IOSPI.transfer(0xFF);
+}
+
+uint16_t GxIO_SPI::readData16()
+{
+  return IOSPI.transfer16(0xFFFF);
+}
+
 void GxIO_SPI::writeCommandTransaction(uint8_t c)
 {
   IOSPI.beginTransaction(settings);
@@ -271,6 +281,16 @@ uint16_t GxIO_SPI::readData16Transaction()
   uint16_t rv = IOSPI.transfer16(0xFFFF);
   if (_cs >= 0) digitalWrite(_cs, HIGH);
   return rv;
+}
+
+uint8_t GxIO_SPI::readData()
+{
+  return IOSPI.transfer(0xFF);
+}
+
+uint16_t GxIO_SPI::readData16()
+{
+  return IOSPI.transfer16(0xFFFF);
 }
 
 void GxIO_SPI::writeCommandTransaction(uint8_t c)

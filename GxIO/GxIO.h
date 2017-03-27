@@ -18,6 +18,9 @@ class GxIO
     virtual uint16_t transfer16Transaction(uint16_t d);
     virtual uint8_t readDataTransaction(); 
     virtual uint16_t readData16Transaction(); 
+    virtual uint8_t readData(); 
+    virtual uint16_t readData16(); 
+    virtual uint32_t readRawData32(uint8_t part); // debug purpose
     virtual void writeCommandTransaction(uint8_t c);
     virtual void writeDataTransaction(uint8_t d);
     virtual void writeData16Transaction(uint16_t d, uint32_t num = 1);
