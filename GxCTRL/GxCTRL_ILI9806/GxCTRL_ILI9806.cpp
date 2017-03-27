@@ -180,11 +180,11 @@ void GxCTRL_ILI9806::init()
   delay(120);
   IO.writeCommandTransaction(0x29); // Display On
   delay(10);
-  //Lcd_Light_ON;
 
-  IO.writeCommandTransaction(0x3A); IO.writeDataTransaction(0x55);
-  IO.writeCommandTransaction(0x36); IO.writeDataTransaction(0xA8);
-  //Lcd_ColorBox(0, 0, 800, 480, YELLOW);
+  IO.writeCommandTransaction(0x3A); 
+  IO.writeDataTransaction(0x55);
+  IO.writeCommandTransaction(0x36); 
+  IO.writeDataTransaction(0x0); // portrait, RGB
 }
 
 void GxCTRL_ILI9806::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
@@ -201,6 +201,7 @@ void GxCTRL_ILI9806::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y
   IO.writeData(y1 >> 8);
   IO.writeData(y1);        // YEND
   IO.writeCommand(RAMWR);  // write to RAM
+  IO.endTransaction();
 }
 
 void GxCTRL_ILI9806::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
@@ -217,7 +218,6 @@ void GxCTRL_ILI9806::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t
   IO.writeData(y1 >> 8);
   IO.writeData(y1);        // YEND
   IO.writeCommand(RAMWR);  // write to RAM
-  IO.endTransaction();
 }
 
 void GxCTRL_ILI9806::setRotation(uint8_t r)
@@ -227,16 +227,16 @@ void GxCTRL_ILI9806::setRotation(uint8_t r)
   switch (r & 3)
   {
     case 0:
-      IO.writeData(MADCTL_MX | MADCTL_MV);
+      IO.writeData(0);
       break;
     case 1:
-      IO.writeData(MADCTL_MX | MADCTL_MY);
+      IO.writeData(MADCTL_MX | MADCTL_MV);
       break;
     case 2:
-      IO.writeData(MADCTL_MY | MADCTL_MV);
+      IO.writeData(MADCTL_MX | MADCTL_MY);
       break;
     case 3:
-      IO.writeData(0);
+      IO.writeData(MADCTL_MY | MADCTL_MV);
       break;
   }
   IO.endTransaction();

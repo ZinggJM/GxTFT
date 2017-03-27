@@ -24,6 +24,8 @@ class GxIO_SPI : public GxIO
     uint16_t transfer16Transaction(uint16_t d);
     uint8_t readDataTransaction();
     uint16_t readData16Transaction();
+    uint8_t readData();
+    uint16_t readData16();
     void writeCommandTransaction(uint8_t c);
     void writeDataTransaction(uint8_t d);
     void writeData16Transaction(uint16_t d, uint32_t num = 1);

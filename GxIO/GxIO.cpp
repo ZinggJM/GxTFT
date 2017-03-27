@@ -26,5 +26,20 @@ uint16_t GxIO::readData16Transaction()
   return 0;
 };
 
+uint8_t GxIO::readData()
+{
+  return 0;
+};
+
+uint16_t GxIO::readData16()
+{
+  return 0;
+};
+
+uint32_t GxIO::readRawData32(uint8_t part)
+{
+  return 0;
+};
+
 
 
