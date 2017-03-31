@@ -21,21 +21,29 @@
 
 #include <GxTFT_GFX.h> // Hardware-specific library
 
-// select one
+// select one display class
 #define TFT_Class GxTFT_GFX
 
-// select one
+// select one GxIO class
+#include <GxIO/GxIO_DUE_P16_DUESHIELD/GxIO_DUE_P16_DUESHIELD.h>
+//#include <GxIO/GxIO_DUE_P16_TIKY/GxIO_DUE_P16_TIKY.h>
+//#include <GxIO/GxIO_DUE_P16_WIRED/GxIO_DUE_P16_WIRED.h>
+//#include <GxIO/GxIO_MEGA_P16_MEGASHIELD/GxIO_MEGA_P16_MEGASHIELD.h>
 //#include <GxIO/GxIO_SPI/GxIO_SPI.h>
-//#include <GxIO/GxIO_HVGAOnMEGA/GxIO_HVGAOnMEGA.h>
-#include <GxIO/GxIO_HVGAOnDue/GxIO_HVGAOnDue.h>
+//#include <GxIO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
+//#include <GxIO/GxIO_STM32F103V_P16_TIKY/GxIO_STM32F103V_P16_TIKY.h>
+//#include <GxIO/GxIO_STM32F407V_P16/GxIO_STM32F407V_P16.h>
+//#include <GxIO/GxIO_UNO_P8_SHIELD/GxIO_UNO_P8_SHIELD.h>
 
-// select one
+
+// select one GxCTRL class
 //#include <GxCTRL/GxCTRL_HX8357B/GxCTRL_HX8357B.h>
 //#include <GxCTRL/GxCTRL_HX8357C/GxCTRL_HX8357C.h>
-//#include <GxCTRL/GxCTRL_HX8357B/GxCTRL_HX8357B.h>
 //#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
-#include <GxCTRL/GxCTRL_ILI9481/GxCTRL_ILI9481.h> // HVGA 320x480
+//#include <GxCTRL/GxCTRL_ILI9481/GxCTRL_ILI9481.h> // HVGA 320x480
 //#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
+//#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
+#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 800x480 e.g. 7inch Display
 
 GxIO_Class io; // #define GxIO_Class is in the selected header file
 
@@ -46,17 +54,32 @@ GxIO_Class io; // #define GxIO_Class is in the selected header file
 GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
 
 // select one or adapt
-//TFT_Class tft(io, controller, 240, 320); // 240x320
-TFT_Class tft(io, controller, 320, 480); // portrait HVGA 320x480 or 3.5inch RPI Display
+//TFT_Class tft(io, controller, 240, 320); // portrait 240x320
+//TFT_Class tft(io, controller, 320, 240); // landscape 240x320
+//TFT_Class tft(io, controller, 320, 480); // portrait HVGA 320x480 or 3.5inch RPI Display
 //TFT_Class tft(io, controller, 480, 320); // landscape HVGA 320x480 or 3.5inch RPI Display
+//TFT_Class tft(io, controller, 480, 800); // portrait 800x480 7inch Display
+TFT_Class tft(io, controller, 800, 480); // landscape 800x480 7inch Display
+//TFT_Class tft(io, controller, 854, 480); // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
+//TFT_Class tft(io, controller, 480, 854); // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 
-void setup() 
+// include the selected code
+#include "GxTFT_IncludeCpp.h"
+
+void setup()
 {
   Serial.begin(115200);
   Serial.println();
   Serial.println(String(controller.name) + " Test on " + String(io.name));
 
   tft.init();
+
+  reportID();
+  delay(2000);
+  reportReg();
+  delay(5000);
+  //while(1);
+  tft.init(); // reset, in case read disturbed the controller
 
   Serial.println(F("Benchmark                Time (microseconds)"));
 
@@ -113,16 +136,173 @@ void setup()
 
 }
 
-
-void loop(void) 
+void loop(void)
 {
-  for (uint8_t rotation = 0; rotation < 4; rotation++) 
+  for (uint8_t rotation = 0; rotation < 4; rotation++)
   {
     tft.setRotation(rotation);
     testText();
     delay(10000);
   }
 }
+
+uint16_t readReg(uint16_t reg)
+{
+  io.startTransaction();
+  io.writeCommand(reg);
+  uint16_t rv = io.readData16();
+  io.endTransaction();
+  return rv;
+}
+
+uint32_t readReg40(uint16_t reg)
+{
+  uint16_t h, m, l;
+  io.startTransaction();
+  io.writeCommand(reg);
+  h = io.readData16();
+  m = io.readData16();
+  l = io.readData16();
+  io.endTransaction();
+  return ((uint32_t) h << 24) | (m << 8) | (l >> 8);
+}
+
+void reportID()
+{
+  // To Do : generalize handling of read controller ID
+  if (String(controller.name) == String("GxCTRL_SSD1963"))
+  {
+    // SSD1963 interprets any command as command, not as parameter addess!
+    // Read DDB
+    io.startTransaction();
+    io.writeCommand(0xA1);
+    uint8_t p1 = io.readData();
+    uint8_t p2 = io.readData();
+    uint8_t p3 = io.readData();
+    uint8_t p4 = io.readData();
+    uint8_t p5 = io.readData();
+    io.endTransaction();
+    tft.fillScreen(BLACK);
+    tft.setCursor(0, 0);
+    tft.setTextColor(WHITE);  tft.setTextSize(2);
+    tft.print("SSD1963 DDB p1 : 0x"); tft.println(p1, HEX);
+    tft.print("SSD1963 DDB p2 : 0x"); tft.println(p2, HEX);
+    tft.print("SSD1963 DDB p3 : 0x"); tft.println(p3, HEX);
+    tft.print("SSD1963 DDB p4 : 0x"); tft.println(p4, HEX);
+    tft.print("SSD1963 DDB p4 : 0x"); tft.println(p5, HEX);
+    tft.println();
+    Serial.print("SSD1963 DDB p1 : 0x"); Serial.println(p1, HEX);
+    Serial.print("SSD1963 DDB p2 : 0x"); Serial.println(p2, HEX);
+    Serial.print("SSD1963 DDB p3 : 0x"); Serial.println(p3, HEX);
+    Serial.print("SSD1963 DDB p4 : 0x"); Serial.println(p4, HEX);
+    Serial.print("SSD1963 DDB p4 : 0x"); Serial.println(p5, HEX);
+  }
+  else
+  {
+    uint32_t rr40BF = readReg40(0xBF);
+    uint16_t rr0 = readReg(0);
+    tft.fillScreen(BLACK);
+    tft.setCursor(0, 0);
+    tft.setTextColor(WHITE);  tft.setTextSize(2);
+    tft.print("readReg40(0xBF) :  0x"); tft.println(rr40BF, HEX);
+    tft.print("readReg(0)      :  0x"); tft.println(rr0, HEX);
+    tft.println();
+    Serial.print("readReg40(0xBF) :  0x"); Serial.println(rr40BF, HEX);
+    Serial.print("readReg(0)      :  0x"); Serial.println(rr0, HEX);
+    Serial.println();
+  }
+}
+
+void reportReg()
+{
+  // To Do : generalize handling of read controller ID
+  if (String(controller.name) == String("GxCTRL_SSD1963"))
+  {
+    readReg(0x0A, 1, "Get Power Mode");
+    readReg(0x0B, 1, "Get Address Mode");
+    readReg(0x0C, 1, "Get Pixel Format");
+    readReg(0x0D, 1, "Get Display Mode");
+    readReg(0x0E, 1, "Get Signal Mode");
+  }
+  else
+  {
+    readReg(0x00, 2, "ID: ILI9320, ILI9325, ILI9335, ...");
+    readReg(0x04, 4, "Manufacturer ID");
+    readReg(0x09, 5, "Status Register");
+    readReg(0x0A, 2, "Get Power Mode");
+    readReg(0x0C, 2, "Get Pixel Format");
+    readReg(0x61, 2, "RDID1 HX8347-G");
+    readReg(0x62, 2, "RDID2 HX8347-G");
+    readReg(0x63, 2, "RDID3 HX8347-G");
+    readReg(0x64, 2, "RDID1 HX8347-A");
+    readReg(0x65, 2, "RDID2 HX8347-A");
+    readReg(0x66, 2, "RDID3 HX8347-A");
+    readReg(0x67, 2, "RDID Himax HX8347-A");
+    readReg(0x70, 2, "Panel Himax HX8347-A");
+    readReg(0xA1, 5, "RD_DDB SSD1963");
+    readReg(0xB0, 2, "RGB Interface Signal Control");
+    readReg(0xB4, 2, "Inversion Control");
+    readReg(0xB6, 5, "Display Control");
+    readReg(0xB7, 2, "Entry Mode Set");
+    readReg(0xBF, 6, "ILI9481, HX8357-B");
+    readReg(0xC0, 9, "Panel Control");
+    readReg(0xC8, 13, "GAMMA");
+    readReg(0xCC, 2, "Panel Control");
+    readReg(0xD0, 3, "Power Control");
+    readReg(0xD2, 5, "NVM Read");
+    readReg(0xD3, 4, "ILI9341, ILI9488");
+    readReg(0xDA, 2, "RDID1");
+    readReg(0xDB, 2, "RDID2");
+    readReg(0xDC, 2, "RDID3");
+    readReg(0xE0, 16, "GAMMA-P");
+    readReg(0xE1, 16, "GAMMA-N");
+    readReg(0xEF, 6, "ILI9327");
+    readReg(0xF2, 12, "Adjust Control 2");
+    readReg(0xF6, 4, "Interface Control");
+  }
+}
+
+void printhex(uint8_t val)
+{
+  if (val < 0x10) tft.print("0");
+  tft.print(val, HEX);
+  if (val < 0x10) Serial.print("0");
+  Serial.print(val, HEX);
+}
+
+void readReg(uint16_t reg, uint8_t n, const char *msg)
+{
+  uint8_t n_max = 20;
+  n = min(n, n_max);
+  uint8_t val8[n_max];
+  io.startTransaction();
+  io.writeCommand(reg);
+  for (uint8_t i = 0; i < n; i++)
+  {
+    val8[i] = io.readData();
+  }
+  io.endTransaction();
+  tft.print("reg(0x");
+  Serial.print("reg(0x");
+  printhex(reg >> 8);
+  printhex(reg);
+  tft.print(")");
+  Serial.print(")");
+  for (uint8_t i = 0; i < n; i++)
+  {
+    tft.print(" ");
+    Serial.print(" ");
+    printhex(val8[i]);
+  }
+  tft.print("\t");
+  tft.println(msg);
+  Serial.print("\t");
+  Serial.println(msg);
+}
+
+#if !defined(ESP8266)
+#define yield()
+#endif
 
 unsigned long testFillScreen() {
   unsigned long start = micros();
