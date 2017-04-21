@@ -5,6 +5,129 @@
 
 #include "GxCTRL_SSD1963.h"
 
+uint32_t GxCTRL_SSD1963::readID()
+{
+  return readRegister(0xA1, 0, 4);
+  uint32_t rv = 0;
+  io.startTransaction();
+  io.writeCommand(0xA1);
+  rv |= io.readData16();
+  rv |= io.readData16() << 16;
+  io.endTransaction();
+  return rv;
+}
+
+uint32_t GxCTRL_SSD1963::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
+{
+  uint32_t rv = 0;
+  bytes = min(bytes, 4);
+  // only "get" commands allowed!
+  switch (nr)
+  {
+    case 0x0A: // Get Power Mode
+    case 0x0B: // Get Address Mode
+    case 0x0C: // Get Pixel Format
+    case 0x0D: // Get Display Mode
+    case 0x0E: // Get Signal Mode
+      io.startTransaction();
+      io.writeCommand(nr);
+      rv |= io.readData();
+      io.endTransaction();
+      break;
+    case 0x45: // Get Tear Scanline
+      io.startTransaction();
+      io.writeCommand(nr);
+      rv |= io.readData() << 8;
+      rv |= io.readData();
+      io.endTransaction();
+      break;
+    case 0xA1: // Get DDB
+    case 0xB1: // Get LCD Mode
+    case 0xB5: // Get Horizontal Period
+    case 0xB7: // Get Vertical Period
+    case 0xB9: // Get GPIO Configuration
+    case 0xBB: // Get GPIO Value
+    case 0xBD: // Get Post Proc
+    case 0xBF: // Get PWM Configuration
+    case 0xC1: // Get LCD Gen0
+    case 0xC3: // Get LCD Gen1
+    case 0xC5: // Get LCD Gen2
+    case 0xC7: // Get LCD Gen3
+    case 0xC9: // Get GPIO0 ROP
+    case 0xCB: // Get GPIO1 ROP
+    case 0xCD: // Get GPIO2 ROP
+    case 0xCF: // Get GPIO3 ROP
+    case 0xD1: // Get DBC Configuration
+    case 0xD5: // Get DBC Threshold
+    case 0xE3: // Get PLL MN
+    case 0xE4: // Get PLL Status
+    case 0xE7: // Get LSHIFT Frequency
+    case 0xF1: // Get Pixel Data Interface
+      io.startTransaction();
+      io.writeCommand(nr);
+      for (uint8_t i = 0; i < index; i++)
+      {
+        IO.readData(); // skip
+      }
+      for (; bytes > 0; bytes--)
+      {
+        rv <<= 8;
+        rv |= IO.readData();
+      }
+      io.endTransaction();
+      break;
+  }
+  return rv;
+}
+
+uint16_t GxCTRL_SSD1963::readPixel(uint16_t x, uint16_t y)
+{
+  uint16_t rv;
+  readRect(x, y, 1, 1, &rv);
+  return rv;
+}
+
+#if defined(SSD1963_RAMRD_AUTO_INCREMENT_OK) // not ok on my display
+
+void GxCTRL_SSD1963::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+{
+  uint16_t xe = x + w - 1;
+  uint16_t ye = y + h - 1;
+  uint32_t num = uint32_t(w) * uint32_t(h);
+  IO.startTransaction();
+  setWindowAddress(x, y, xe, ye);
+  IO.writeCommand(0x2e);  // read from RAM
+  //IO.readData(); // dummy
+  for (; num > 0; num--)
+  {
+    uint16_t d = IO.readData16();
+    *data++ = ((d & 0x001F) << 11) | (d & 0x07E0) | ((d & 0xF800) >> 11); // r,b swapped
+  }
+  IO.endTransaction();
+}
+
+#else
+
+void GxCTRL_SSD1963::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+{
+  uint16_t xe = x + w - 1;
+  uint16_t ye = y + h - 1;
+  uint32_t num = uint32_t(w) * uint32_t(h);
+  for (uint16_t yy = y; yy <= ye; yy++)
+  {
+    for (uint16_t xx = x; xx <= xe; xx++)
+    {
+      IO.startTransaction();
+      setWindowAddress(xx, yy, xe, ye);
+      IO.writeCommand(0x2e);
+      *data++ = IO.readData16();
+      IO.endTransaction();
+    }
+  }
+}
+
+#endif
+
 void GxCTRL_SSD1963::init()
 {
   rotation = 1; // landscape is default
@@ -99,11 +222,10 @@ void GxCTRL_SSD1963::init()
   IO.endTransaction();
 }
 
-void GxCTRL_SSD1963::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void GxCTRL_SSD1963::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
   if (rotation & 1) // landscape
   {
-    IO.startTransaction();
     IO.writeCommand(0x2a);
     IO.writeAddrMSBfirst(x0);
     IO.writeAddrMSBfirst(x1);
@@ -115,7 +237,6 @@ void GxCTRL_SSD1963::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y
   else // portrait
   {
     // transform to physical addresses
-    IO.startTransaction();
     IO.writeCommand(0x2b); // by switching address
     IO.writeAddrMSBfirst(x0);
     IO.writeAddrMSBfirst(x1);
@@ -125,34 +246,6 @@ void GxCTRL_SSD1963::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y
     IO.writeCommand(0x2c);
   }
   IO.writeCommand(0x2c);
-  IO.endTransaction();
-}
-
-void GxCTRL_SSD1963::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
-  if (rotation & 1) // landscape
-  {
-    IO.startTransaction();
-    IO.writeCommand(0x2a);
-    IO.writeAddrMSBfirst(x0);
-    IO.writeAddrMSBfirst(x1);
-    IO.writeCommand(0x2b);
-    IO.writeAddrMSBfirst(y0);
-    IO.writeAddrMSBfirst(y1);
-    IO.writeCommand(0x2c);
-  }
-  else // portrait
-  {
-    // transform to physical addresses
-    IO.startTransaction();
-    IO.writeCommand(0x2b); // by switching address
-    IO.writeAddrMSBfirst(x0);
-    IO.writeAddrMSBfirst(x1);
-    IO.writeCommand(0x2a); // by switching address
-    IO.writeAddrMSBfirst(y0);
-    IO.writeAddrMSBfirst(y1);
-    IO.writeCommand(0x2c);
-  }
 }
 
 void GxCTRL_SSD1963::setRotation(uint8_t r)

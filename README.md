@@ -21,3 +21,7 @@ Added Updates 1 :
 Renamed GxIO classes for HVGA on MEGA and DUE
 
 Added read support to GxIO classes (partially tested only, some shields are output only).
+
+Updated GxCTRL and its subclasses; added GxCTRL_RA8875S
+
+Updated read support; read support is controller specific, issues remain to be investigated.

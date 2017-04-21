@@ -2,6 +2,8 @@
 // code extracts taken from https://github.com/Bodmer/TFT_HX8357
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
+//
+// note: untested, and read functions are untested; I have no HX8357 display to test with
 
 #include "GxCTRL_HX8357C.h"
 
@@ -17,6 +19,24 @@
 #define MADCTL_BGR 0x08
 #define MADCTL_SS  0x02
 #define MADCTL_GS  0x01
+
+uint32_t GxCTRL_HX8357C::readID()
+{
+  io.writeCommandTransaction(0);
+  return io.readData16Transaction();
+}
+
+uint32_t GxCTRL_HX8357C::readRegister(uint8_t nr, uint8_t index = 0, uint8_t bytes = 1)
+{
+  uint32_t rv = 0;
+  bytes = min(bytes, 4);
+  for (uint8_t i = 0; i < bytes; i++)
+  {
+    io.writeCommandTransaction(nr + index + i);
+    rv |= io.readDataTransaction();
+  }
+  return rv;
+}
 
 void GxCTRL_HX8357C::init()
 {
@@ -125,26 +145,8 @@ void GxCTRL_HX8357C::init()
   delay(120);
 }
 
-void GxCTRL_HX8357C::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void GxCTRL_HX8357C::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
-  IO.startTransaction();
-  IO.writeCommand(CASET);  // Column addr set
-  IO.writeData(x0 >> 8);
-  IO.writeData(x0 & 0xFF); // XSTART
-  IO.writeData(x1 >> 8);
-  IO.writeData(x1 & 0xFF); // XEND
-  IO.writeCommand(PASET);  // Row addr set
-  IO.writeData(y0 >> 8);
-  IO.writeData(y0);        // YSTART
-  IO.writeData(y1 >> 8);
-  IO.writeData(y1);        // YEND
-  IO.writeCommand(RAMWR);  // write to RAM
-  IO.endTransaction();
-}
-
-void GxCTRL_HX8357C::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
-  IO.startTransaction();
   IO.writeCommand(CASET);  // Column addr set
   IO.writeData(x0 >> 8);
   IO.writeData(x0 & 0xFF); // XSTART

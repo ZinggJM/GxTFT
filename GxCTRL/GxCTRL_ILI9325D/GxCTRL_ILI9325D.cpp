@@ -6,6 +6,56 @@
 
 #include "GxCTRL_ILI9325D.h"
 
+uint32_t GxCTRL_ILI9325D::readID()
+{
+  return readRegister(0x0, 0, 2);
+}
+
+uint32_t GxCTRL_ILI9325D::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
+{
+  uint32_t rv = 0;
+  bytes = min(bytes, 4);
+  IO.startTransaction();
+  IO.writeCommand(nr);
+  for (uint8_t i = 0; i < index; i++)
+  {
+    IO.readData(); // skip
+  }
+  for (; bytes > 0; bytes--)
+  {
+    rv <<= 8;
+    rv |= IO.readData();
+  }
+  IO.endTransaction();
+  return rv;
+}
+
+uint16_t GxCTRL_ILI9325D::readPixel(uint16_t x, uint16_t y)
+{
+  uint16_t rv;
+  readRect(x, y, 1, 1, &rv);
+  return rv;
+}
+
+void GxCTRL_ILI9325D::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+{
+  uint16_t xe = x + w - 1;
+  uint16_t ye = y + h - 1;
+  uint32_t num = uint32_t(w) * uint32_t(h);
+  for (uint16_t yy = y; yy <= ye; yy++)
+  {
+    for (uint16_t xx = x; xx <= xe; xx++)
+    {
+      IO.startTransaction();
+      setWindowAddress(xx, yy, xe, ye);
+      IO.writeCommand(0x22);
+      IO.readData16(); // dummy
+      *data++ = IO.readData16();
+      IO.endTransaction();
+    }
+  }
+}
+
 void GxCTRL_ILI9325D::init()
 {
   _rotation = 0; // portrait is default
@@ -72,15 +122,8 @@ void GxCTRL_ILI9325D::init()
   IO.endTransaction();
 }
 
-void GxCTRL_ILI9325D::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void GxCTRL_ILI9325D::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
-  setWindowKeepTransaction(x0, y0, x1, y1);
-  IO.endTransaction();
-}
-
-void GxCTRL_ILI9325D::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
-  IO.startTransaction();
   switch (_rotation)
   {
     case 0:
@@ -92,13 +135,6 @@ void GxCTRL_ILI9325D::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_
       LCD_Write_COM_DATA(0x21, y0); // vertical GRAM address set
       break;
     case 1:
-      //      t  = y0;
-      //      y0 = x0;
-      //      x0 = TFTWIDTH  - 1 - y1;
-      //      y1 = x1;
-      //      x1 = TFTWIDTH  - 1 - t;
-      //      x  = x1;
-      //      y  = y0;
       LCD_Write_COM_DATA(0x50, _tft_width - 1 - y1); // horizontal address start
       LCD_Write_COM_DATA(0x51, _tft_width - 1 - y0); // horizontal address end
       LCD_Write_COM_DATA(0x52, x0); // vertical address start
@@ -107,14 +143,6 @@ void GxCTRL_ILI9325D::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_
       LCD_Write_COM_DATA(0x21, x0); // vertical GRAM address set
       break;
     case 2:
-      //      t  = x0;
-      //      x0 = TFTWIDTH  - 1 - x1;
-      //      x1 = TFTWIDTH  - 1 - t;
-      //      t  = y0;
-      //      y0 = TFTHEIGHT - 1 - y1;
-      //      y1 = TFTHEIGHT - 1 - t;
-      //      x  = x1;
-      //      y  = y1;
       LCD_Write_COM_DATA(0x50, _tft_width - 1 - x1); // horizontal address start
       LCD_Write_COM_DATA(0x51, _tft_width - 1 - x0); // horizontal address end
       LCD_Write_COM_DATA(0x52, _tft_height - 1 - y1); // vertical address start
@@ -123,13 +151,6 @@ void GxCTRL_ILI9325D::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_
       LCD_Write_COM_DATA(0x21, _tft_height - 1 - y0); // vertical GRAM address set
       break;
     case 3:
-      //      t  = x0;
-      //      x0 = y0;
-      //      y0 = TFTHEIGHT - 1 - x1;
-      //      x1 = y1;
-      //      y1 = TFTHEIGHT - 1 - t;
-      //      x  = x0;
-      //      y  = y1;
       LCD_Write_COM_DATA(0x50, y0); // horizontal address start
       LCD_Write_COM_DATA(0x51, y1); // horizontal address end
       LCD_Write_COM_DATA(0x52, _tft_height - 1 - x1); // vertical address start

@@ -14,9 +14,13 @@ class GxCTRL_SSD1963 : public GxCTRL
     GxCTRL_SSD1963(GxIO& io) : GxCTRL(io), physical_width(800), physical_height(480) {};
     GxCTRL_SSD1963(GxIO& io, uint16_t phy_w, uint16_t phy_h) : GxCTRL(io), physical_width(phy_w), physical_height(phy_w) {};
     const char* name = "GxCTRL_SSD1963";
+    const uint32_t ID = 0x1963;
+    uint32_t readID();
+    uint32_t readRegister(uint8_t nr, uint8_t index = 0, uint8_t bytes = 1);
+    uint16_t readPixel(uint16_t x, uint16_t y);
+    void     readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data);
     void init();
-    void setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-    void setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+    void setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
     void setRotation(uint8_t r);
   private:
     uint8_t rotation;

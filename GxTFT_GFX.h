@@ -56,6 +56,16 @@ class GxTFT_GFX : public Adafruit_GFX
           setRotation(uint8_t r),
           invertDisplay(boolean i);
     uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
+    void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+    void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+    void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
+    void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
+    void drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color);
+    void fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color);
+    void drawEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color);
+    void fillEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color);
+    void drawCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color);
+    void fillCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color);
 
     void reset(void);
 
@@ -63,7 +73,8 @@ class GxTFT_GFX : public Adafruit_GFX
     uint8_t	tabcolor;
     GxIO& IO;
     GxCTRL& Controller;
-    int16_t  _tft_width, _tft_height;   // physical Display w/h
+    uint8_t _initial_rotation;         // Display orientation as by constructor, kept for init()
+    int16_t _tft_width, _tft_height;   // Display w/h in portrait orientation (default)
 };
 
 #endif //endif of the header file
