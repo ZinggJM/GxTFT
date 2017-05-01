@@ -25,3 +25,5 @@ Added read support to GxIO classes (partially tested only, some shields are outp
 Updated GxCTRL and its subclasses; added GxCTRL_RA8875S
 
 Updated read support; read support is controller specific, issues remain to be investigated.
+
+Added GxTFT & RA8875P
