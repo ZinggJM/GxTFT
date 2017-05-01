@@ -169,6 +169,11 @@ void GxIO_UNO_P8_SHIELD::endTransaction()
   PORTC |= _BV(3); // CS_H;
 }
 
+void GxIO_UNO_P8_SHIELD::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_UNO_P8_SHIELD::setBackLight(bool lit)
 {
   if (_bl >= 0) digitalWrite(_bl, (lit ? HIGH : LOW));

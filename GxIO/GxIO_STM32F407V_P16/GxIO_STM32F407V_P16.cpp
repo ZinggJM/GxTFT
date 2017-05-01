@@ -260,6 +260,11 @@ void GxIO_STM32F407V_P16::endTransaction()
   GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
 }
 
+void GxIO_STM32F407V_P16::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_STM32F407V_P16::setBackLight(bool lit)
 {
   digitalWrite(_bl, (lit == _bl_active_high));

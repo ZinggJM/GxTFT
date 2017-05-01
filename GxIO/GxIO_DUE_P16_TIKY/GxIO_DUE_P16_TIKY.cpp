@@ -224,6 +224,11 @@ void GxIO_DUE_P16_TIKY::endTransaction()
   REG_PIOB_SODR = 0x1 << 26; // PB26 CS_H
 }
 
+void GxIO_DUE_P16_TIKY::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_DUE_P16_TIKY::setBackLight(bool lit)
 {
   digitalWrite(_bl, (lit ? HIGH : LOW));

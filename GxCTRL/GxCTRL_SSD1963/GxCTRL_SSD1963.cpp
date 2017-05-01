@@ -9,11 +9,11 @@ uint32_t GxCTRL_SSD1963::readID()
 {
   return readRegister(0xA1, 0, 4);
   uint32_t rv = 0;
-  io.startTransaction();
-  io.writeCommand(0xA1);
-  rv |= io.readData16();
-  rv |= io.readData16() << 16;
-  io.endTransaction();
+  IO.startTransaction();
+  IO.writeCommand(0xA1);
+  rv |= IO.readData16();
+  rv |= IO.readData16() << 16;
+  IO.endTransaction();
   return rv;
 }
 
@@ -29,17 +29,17 @@ uint32_t GxCTRL_SSD1963::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
     case 0x0C: // Get Pixel Format
     case 0x0D: // Get Display Mode
     case 0x0E: // Get Signal Mode
-      io.startTransaction();
-      io.writeCommand(nr);
-      rv |= io.readData();
-      io.endTransaction();
+      IO.startTransaction();
+      IO.writeCommand(nr);
+      rv |= IO.readData();
+      IO.endTransaction();
       break;
     case 0x45: // Get Tear Scanline
-      io.startTransaction();
-      io.writeCommand(nr);
-      rv |= io.readData() << 8;
-      rv |= io.readData();
-      io.endTransaction();
+      IO.startTransaction();
+      IO.writeCommand(nr);
+      rv |= IO.readData() << 8;
+      rv |= IO.readData();
+      IO.endTransaction();
       break;
     case 0xA1: // Get DDB
     case 0xB1: // Get LCD Mode
@@ -63,8 +63,8 @@ uint32_t GxCTRL_SSD1963::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
     case 0xE4: // Get PLL Status
     case 0xE7: // Get LSHIFT Frequency
     case 0xF1: // Get Pixel Data Interface
-      io.startTransaction();
-      io.writeCommand(nr);
+      IO.startTransaction();
+      IO.writeCommand(nr);
       for (uint8_t i = 0; i < index; i++)
       {
         IO.readData(); // skip
@@ -74,7 +74,7 @@ uint32_t GxCTRL_SSD1963::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
         rv <<= 8;
         rv |= IO.readData();
       }
-      io.endTransaction();
+      IO.endTransaction();
       break;
   }
   return rv;

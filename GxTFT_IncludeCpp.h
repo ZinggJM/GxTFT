@@ -29,6 +29,9 @@
 #ifdef _GxCTRL_RA8875S_H_
 #include "GxCTRL/GxCTRL_RA8875S/GxCTRL_RA8875S.cpp"
 #endif
+#ifdef _GxCTRL_RA8875P_H_
+#include "GxCTRL/GxCTRL_RA8875P/GxCTRL_RA8875P.cpp"
+#endif
 #ifdef _GxCTRL_SSD1963_H_
 #include "GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.cpp"
 #endif

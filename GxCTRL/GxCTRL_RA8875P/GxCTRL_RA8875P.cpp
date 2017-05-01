@@ -1,15 +1,12 @@
-// created by Jean-Marc Zingg to be the GxCTRL_RA8875S class for the GxTFT library
+// created by Jean-Marc Zingg to be the GxCTRL_RA8875P class for the GxTFT library
 // code extracts taken from https://github.com/adafruit/Adafruit_RA8875
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 //
-// This controller class is to be used with GxIO_SPI
-// It uses SPI calls that include the RS selection prefix
-//
-// note: readRect does not work correctly with my only RA8875 display (pixel sequence & garbage)
-//       workaround added, but needs further investigation
+// This controller class is to be used with the parallel connector
+// caution: only pins 1..24 can be connected directly to a CTE shield (DUE or MEGA)
 
-#include "GxCTRL_RA8875S.h"
+#include "GxCTRL_RA8875P.h"
 
 // Command/Data pins for SPI
 #define RA8875_DATAWRITE        0x00
@@ -214,20 +211,21 @@
 #define RA8875_INTC2_TP         0x04
 #define RA8875_INTC2_BTE        0x02
 
-uint32_t GxCTRL_RA8875S::readID()
+uint32_t GxCTRL_RA8875P::readID()
 {
   IO.setFrequency(4000000); // slow down for read
   writeCommand(0x0);
   IO.startTransaction();
-  IO.writeData(RA8875_DATAREAD);
+  IO.selectRegister(true);
   uint8_t dummy = IO.readData();
   uint32_t rv = IO.readData();
+  IO.selectRegister(false);
   IO.endTransaction();
   IO.setFrequency(16000000);
   return rv;
 }
 
-uint32_t GxCTRL_RA8875S::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
+uint32_t GxCTRL_RA8875P::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
 {
   uint32_t rv = 0;
   bytes = min(bytes, 4);
@@ -239,25 +237,24 @@ uint32_t GxCTRL_RA8875S::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
     bytes--;
     writeCommand(nr + index + bytes);
     IO.startTransaction();
-    IO.writeData(RA8875_DATAREAD);
+    IO.selectRegister(true);
     IO.readData16(); // dummy
     rv |= IO.readData();
+    IO.selectRegister(false);
     IO.endTransaction();
   }
   IO.setFrequency(16000000);
   return rv;
 }
 
-uint16_t GxCTRL_RA8875S::readPixel(uint16_t x, uint16_t y)
+uint16_t GxCTRL_RA8875P::readPixel(uint16_t x, uint16_t y)
 {
   uint16_t rv;
   readRect(x, y, 1, 1, &rv);
   return rv;
 }
 
-#if defined(RA8875_RAMRD_AUTO_INCREMENT_OK) // not ok on my display
-
-void GxCTRL_RA8875S::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+void GxCTRL_RA8875P::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
 {
   uint16_t xe = x + w - 1;
   uint16_t ye = y + h - 1;
@@ -271,57 +268,21 @@ void GxCTRL_RA8875S::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ui
   writeReg16(RA8875_RCURH0, x); // horizontal read cursor
   writeReg16(RA8875_RCURV0, y); // vertical read cursor
   IO.setFrequency(4000000); // slow down for read
+  IO.writeDataTransaction(RA8875_MRWC);
   IO.startTransaction();
-  IO.writeData(RA8875_CMDWRITE);
-  IO.writeData(RA8875_MRWC);
-  IO.writeData(RA8875_DATAREAD);
+  IO.selectRegister(true);
   IO.readData16(); // dummy
-  IO.readData16(); // dummy
+  //IO.readData16(); // dummy
   for (; num > 0; num--)
   {
     *data++ = IO.readData16();
   }
+  IO.selectRegister(false);
   IO.endTransaction();
   IO.setFrequency(16000000);
 }
 
-#else
-
-void GxCTRL_RA8875S::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
-{
-  _is_clipping = true; // no need to check for full screen
-  uint16_t xe = x + w - 1;
-  uint16_t ye = y + h - 1;
-  IO.setFrequency(4000000); // slow down for read
-  for (uint16_t yy = y; yy <= ye; yy++)
-  {
-    for (uint16_t xx = x; xx <= xe; xx++)
-    {
-      uint16_t xxx = xx;
-      uint16_t yyy = yy;
-      rotatePoint(xxx, yyy);
-      writeReg16(RA8875_HSAW0, xxx); // horizontal start point
-      writeReg16(RA8875_HEAW0, xxx); // horizontal end point
-      writeReg16(RA8875_VSAW0, yyy); // vertical start point
-      writeReg16(RA8875_VEAW0, yyy); // vertical end point
-      writeReg16(RA8875_RCURH0, xxx); // horizontal read cursor
-      writeReg16(RA8875_RCURV0, yyy); // vertical read cursor
-      IO.startTransaction();
-      IO.writeData(RA8875_CMDWRITE);
-      IO.writeData(RA8875_MRWC);
-      IO.writeData(RA8875_DATAREAD);
-      IO.readData16(); // dummy
-      IO.readData16(); // dummy, why two?
-      *data++ = IO.readData16();
-      IO.endTransaction();
-    }
-  }
-  IO.setFrequency(16000000);
-}
-
-#endif
-
-void GxCTRL_RA8875S::init()
+void GxCTRL_RA8875P::init()
 {
   _rotation = 1; // landscape is default
   IO.setFrequency(4000000);
@@ -329,7 +290,8 @@ void GxCTRL_RA8875S::init()
   delay(1);
   writeReg(RA8875_PLLC2, RA8875_PLLC2_DIV4);
   delay(1);
-  writeReg(RA8875_SYSR, RA8875_SYSR_16BPP | RA8875_SYSR_MCU8);
+  //writeReg(RA8875_SYSR, RA8875_SYSR_16BPP | RA8875_SYSR_MCU8);
+  writeReg(RA8875_SYSR, RA8875_SYSR_16BPP | RA8875_SYSR_MCU16);
 
   /* Timing values */
   uint8_t pixclk;
@@ -394,7 +356,7 @@ void GxCTRL_RA8875S::init()
   IO.setFrequency(16000000);
 }
 
-void GxCTRL_RA8875S::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void GxCTRL_RA8875P::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
   _is_clipping = (x0 != 0) || (y0 != 0) || ( x1 != _tft_width - 1) || (y1 != _tft_height - 1);
   rotateWindow(x0, y0, x1, y1);
@@ -405,12 +367,11 @@ void GxCTRL_RA8875S::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uin
   writeReg16(RA8875_CURH0, x0); // horizontal input cursor
   writeReg16(RA8875_CURV0, y0); // vertical input cursor
   IO.startTransaction();
-  IO.writeData(RA8875_CMDWRITE);
   IO.writeData(RA8875_MRWC);
-  IO.writeCommand(RA8875_DATAWRITE);
+  IO.selectRegister(true);
 }
 
-void GxCTRL_RA8875S::clearWindowAddress()
+void GxCTRL_RA8875P::clearWindowAddress()
 {
   _is_clipping = false;
   writeReg16(RA8875_HSAW0, 0); // horizontal start point
@@ -422,7 +383,7 @@ void GxCTRL_RA8875S::clearWindowAddress()
 }
 
 
-void GxCTRL_RA8875S::setRotation(uint8_t r)
+void GxCTRL_RA8875P::setRotation(uint8_t r)
 {
   _rotation = r;
   return;
@@ -449,7 +410,7 @@ void GxCTRL_RA8875S::setRotation(uint8_t r)
   return;
 }
 
-void GxCTRL_RA8875S::rotatePoint(int16_t& x, int16_t& y)
+void GxCTRL_RA8875P::rotatePoint(int16_t& x, int16_t& y)
 {
   int16_t x0 = x;
   switch (_rotation)
@@ -470,7 +431,7 @@ void GxCTRL_RA8875S::rotatePoint(int16_t& x, int16_t& y)
   }
 }
 
-void GxCTRL_RA8875S::rotatePoint(uint16_t& x, uint16_t& y)
+void GxCTRL_RA8875P::rotatePoint(uint16_t& x, uint16_t& y)
 {
   uint16_t x0 = x;
   switch (_rotation)
@@ -491,7 +452,7 @@ void GxCTRL_RA8875S::rotatePoint(uint16_t& x, uint16_t& y)
   }
 }
 
-void GxCTRL_RA8875S::rotateWindow(int16_t& x0, int16_t& y0, int16_t& x1, int16_t& y1)
+void GxCTRL_RA8875P::rotateWindow(int16_t& x0, int16_t& y0, int16_t& x1, int16_t& y1)
 {
   switch (_rotation)
   {
@@ -530,7 +491,7 @@ void GxCTRL_RA8875S::rotateWindow(int16_t& x0, int16_t& y0, int16_t& x1, int16_t
   }
 }
 
-void GxCTRL_RA8875S::rotateWindow(uint16_t& x0, uint16_t& y0, uint16_t& x1, uint16_t& y1)
+void GxCTRL_RA8875P::rotateWindow(uint16_t& x0, uint16_t& y0, uint16_t& x1, uint16_t& y1)
 {
   switch (_rotation)
   {
@@ -569,27 +530,27 @@ void GxCTRL_RA8875S::rotateWindow(uint16_t& x0, uint16_t& y0, uint16_t& x1, uint
   }
 }
 
-void GxCTRL_RA8875S::writeColor24(uint16_t color)
+void GxCTRL_RA8875P::writeColor24(uint16_t color)
 {
   writeReg(0x63, (color & 0xf800) >> 11);
   writeReg(0x64, (color & 0x07e0) >> 5);
   writeReg(0x65, (color & 0x001f));
 }
 
-void GxCTRL_RA8875S::drawPixel(uint16_t x, uint16_t y, uint16_t color)
+void GxCTRL_RA8875P::drawPixel(uint16_t x, uint16_t y, uint16_t color)
 {
   rotatePoint(x, y);
   writeReg16(RA8875_CURH0, x);
   writeReg16(RA8875_CURV0, y);
   writeCommand(RA8875_MRWC);
   IO.startTransaction();
-  IO.writeCommand(RA8875_DATAWRITE);
-  IO.writeData(color >> 8);
-  IO.writeData(color);
+  IO.selectRegister(true);
+  IO.writeData16(color);
+  IO.selectRegister(false);
   IO.endTransaction();
 }
 
-void GxCTRL_RA8875S::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
+void GxCTRL_RA8875P::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
   if (_is_clipping) clearWindowAddress();
   rotatePoint(x0, y0);
@@ -604,67 +565,67 @@ void GxCTRL_RA8875S::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, ui
   waitPoll(RA8875_DCR, RA8875_DCR_LINESQUTRI_STATUS);
 }
 
-void GxCTRL_RA8875S::drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void GxCTRL_RA8875P::drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
   rectHelper(x, y, w, h, color, false);
 }
 
-void GxCTRL_RA8875S::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void GxCTRL_RA8875P::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
   rectHelper(x, y, w, h, color, true);
 }
 
-bool GxCTRL_RA8875S::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+bool GxCTRL_RA8875P::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
 {
   return circleHelper(x0, y0, r, color, false);
 }
 
-bool GxCTRL_RA8875S::fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+bool GxCTRL_RA8875P::fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
 {
   return circleHelper(x0, y0, r, color, true);
 }
 
-bool GxCTRL_RA8875S::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
+bool GxCTRL_RA8875P::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
 {
   return triangleHelper(x0, y0, x1, y1, x2, y2, color, false);
 }
 
-bool GxCTRL_RA8875S::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
+bool GxCTRL_RA8875P::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
 {
   return triangleHelper(x0, y0, x1, y1, x2, y2, color, true);
 }
 
-bool GxCTRL_RA8875S::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color)
+bool GxCTRL_RA8875P::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color)
 {
   return roundRectHelper(x, y, w, h, radius, color, false);
 }
 
-bool GxCTRL_RA8875S::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color)
+bool GxCTRL_RA8875P::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color)
 {
   return roundRectHelper(x, y, w, h, radius, color, false);
 }
 
-bool GxCTRL_RA8875S::drawEllipse(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color)
+bool GxCTRL_RA8875P::drawEllipse(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color)
 {
   return ellipseHelper(xCenter, yCenter, longAxis, shortAxis, color, false);
 }
 
-bool GxCTRL_RA8875S::fillEllipse(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color)
+bool GxCTRL_RA8875P::fillEllipse(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color)
 {
   return ellipseHelper(xCenter, yCenter, longAxis, shortAxis, color, true);
 }
 
-bool GxCTRL_RA8875S::drawCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color)
+bool GxCTRL_RA8875P::drawCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color)
 {
   return curveHelper(xCenter, yCenter, longAxis, shortAxis, curvePart, color, false);
 }
 
-bool GxCTRL_RA8875S::fillCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color)
+bool GxCTRL_RA8875P::fillCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color)
 {
   return curveHelper(xCenter, yCenter, longAxis, shortAxis, curvePart, color, true);
 }
 
-void GxCTRL_RA8875S::rectHelper(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color, bool filled)
+void GxCTRL_RA8875P::rectHelper(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color, bool filled)
 {
   if (_is_clipping) clearWindowAddress();
   int16_t xe = x + w - 1;
@@ -680,7 +641,7 @@ void GxCTRL_RA8875S::rectHelper(int16_t x, int16_t y, int16_t w, int16_t h, uint
   waitPoll(RA8875_DCR, RA8875_DCR_LINESQUTRI_STATUS);
 }
 
-bool GxCTRL_RA8875S::circleHelper(int16_t x0, int16_t y0, int16_t r, uint16_t color, bool filled)
+bool GxCTRL_RA8875P::circleHelper(int16_t x0, int16_t y0, int16_t r, uint16_t color, bool filled)
 {
   if (_is_clipping) clearWindowAddress();
   rotatePoint(x0, y0);
@@ -696,7 +657,7 @@ bool GxCTRL_RA8875S::circleHelper(int16_t x0, int16_t y0, int16_t r, uint16_t co
   return true;
 }
 
-bool GxCTRL_RA8875S::triangleHelper(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color, bool filled)
+bool GxCTRL_RA8875P::triangleHelper(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color, bool filled)
 {
   if (_is_clipping) clearWindowAddress();
   rotatePoint(x0, y0);
@@ -715,7 +676,7 @@ bool GxCTRL_RA8875S::triangleHelper(int16_t x0, int16_t y0, int16_t x1, int16_t 
   return true;
 }
 
-bool GxCTRL_RA8875S::roundRectHelper(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color, bool filled)
+bool GxCTRL_RA8875P::roundRectHelper(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color, bool filled)
 {
   if (_is_clipping) clearWindowAddress();
   int16_t xe = x + w - 1;
@@ -733,7 +694,7 @@ bool GxCTRL_RA8875S::roundRectHelper(int16_t x, int16_t y, int16_t w, int16_t h,
   waitPoll(RA8875_ELLIPSE, RA8875_DCR_LINESQUTRI_STATUS);
 }
 
-bool GxCTRL_RA8875S::ellipseHelper(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color, bool filled)
+bool GxCTRL_RA8875P::ellipseHelper(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color, bool filled)
 {
   if (_is_clipping) clearWindowAddress();
   rotatePoint(xCenter, yCenter);
@@ -748,7 +709,7 @@ bool GxCTRL_RA8875S::ellipseHelper(int16_t xCenter, int16_t yCenter, int16_t lon
   return true;
 }
 
-bool GxCTRL_RA8875S::curveHelper(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color, bool filled)
+bool GxCTRL_RA8875P::curveHelper(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color, bool filled)
 {
   if (_is_clipping) clearWindowAddress();
   rotatePoint(xCenter, yCenter);
@@ -763,7 +724,7 @@ bool GxCTRL_RA8875S::curveHelper(int16_t xCenter, int16_t yCenter, int16_t longA
   return true;
 }
 
-boolean GxCTRL_RA8875S::waitPoll(uint8_t regname, uint8_t waitflag)
+boolean GxCTRL_RA8875P::waitPoll(uint8_t regname, uint8_t waitflag)
 {
   /* Wait for the command to finish */
   unsigned long timeout = millis();
@@ -776,13 +737,13 @@ boolean GxCTRL_RA8875S::waitPoll(uint8_t regname, uint8_t waitflag)
   return false;
 }
 
-void GxCTRL_RA8875S::writeReg(uint8_t reg, uint8_t val)
+void GxCTRL_RA8875P::writeReg(uint8_t reg, uint8_t val)
 {
   writeCommand(reg);
   writeData(val);
 }
 
-void GxCTRL_RA8875S::writeReg16(uint8_t reg, uint16_t val)
+void GxCTRL_RA8875P::writeReg16(uint8_t reg, uint16_t val)
 {
   writeCommand(reg);
   writeData(val);
@@ -790,44 +751,41 @@ void GxCTRL_RA8875S::writeReg16(uint8_t reg, uint16_t val)
   writeData(val >> 8);
 }
 
-uint8_t GxCTRL_RA8875S::readReg(uint8_t reg)
+uint8_t GxCTRL_RA8875P::readReg(uint8_t reg)
 {
   writeCommand(reg);
   return readData();
 }
 
-void GxCTRL_RA8875S::writeData(uint8_t d)
+void GxCTRL_RA8875P::writeData(uint8_t d)
 {
   IO.startTransaction();
-  IO.writeData(RA8875_DATAWRITE);
+  IO.selectRegister(true);
   IO.writeData(d);
+  IO.selectRegister(false);
   IO.endTransaction();
 }
 
-uint8_t  GxCTRL_RA8875S::readData(void)
+uint8_t  GxCTRL_RA8875P::readData(void)
 {
   IO.startTransaction();
-  IO.writeData(RA8875_DATAREAD);
+  IO.selectRegister(true);
   uint8_t x = IO.readData();
+  IO.selectRegister(false);
   IO.endTransaction();
   return x;
 }
 
-void  GxCTRL_RA8875S::writeCommand(uint8_t d)
+void  GxCTRL_RA8875P::writeCommand(uint8_t d)
 {
-  IO.startTransaction();
-  IO.writeData(RA8875_CMDWRITE);
-  IO.writeData(d);
-  IO.endTransaction();
+  IO.selectRegister(false);
+  IO.writeDataTransaction(d);
 }
 
-uint8_t  GxCTRL_RA8875S::readStatus(void)
+uint8_t  GxCTRL_RA8875P::readStatus(void)
 {
-  IO.startTransaction();
-  IO.writeData(RA8875_CMDREAD);
-  uint8_t x = IO.readData();
-  IO.endTransaction();
-  return x;
+  IO.selectRegister(false);
+  return IO.readDataTransaction();
 }
 
 

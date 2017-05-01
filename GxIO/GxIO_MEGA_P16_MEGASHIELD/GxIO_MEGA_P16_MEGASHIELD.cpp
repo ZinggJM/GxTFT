@@ -191,6 +191,11 @@ void GxIO_MEGA_P16_MEGASHIELD::endTransaction()
   PORTG |= _BV(1);
 }
 
+void GxIO_MEGA_P16_MEGASHIELD::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_MEGA_P16_MEGASHIELD::setBackLight(bool lit)
 {
   if (_bl >= 0) digitalWrite(_bl, (lit ? HIGH : LOW));

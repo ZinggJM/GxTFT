@@ -236,6 +236,11 @@ void GxIO_DUE_P16_HVGASHIELD::endTransaction()
   digitalWrite(_cs, HIGH);
 }
 
+void GxIO_DUE_P16_HVGASHIELD::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_DUE_P16_HVGASHIELD::setBackLight(bool lit)
 {
   if (_bl >= 0) digitalWrite(_bl, (lit ? HIGH : LOW));

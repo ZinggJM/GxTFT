@@ -254,6 +254,11 @@ void GxIO_STM32F103V_P16_TIKY::endTransaction()
   GPIOD_BASE->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
+void GxIO_STM32F103V_P16_TIKY::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_STM32F103V_P16_TIKY::setBackLight(bool lit)
 {
   digitalWrite(_bl, (lit ? HIGH : LOW));

@@ -33,6 +33,7 @@ class GxIO_DUE_P16_WIRED : public GxIO
     void writeAddrMSBfirst(uint16_t d);
     void startTransaction();
     void endTransaction();
+    void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
     void setDataPins(uint8_t mode);

@@ -91,6 +91,8 @@ uint16_t GxIO_DUE_P16_DUESHIELD::readData16()
   setDataPins(INPUT);
   REG_PIOA_CODR = 0x1 << 15; // PA15
   REG_PIOA_CODR = 0x1 << 15; // PA15
+  //REG_PIOA_CODR = 0x1 << 15; // PA15
+  //REG_PIOA_CODR = 0x1 << 15; // PA15
   uint32_t rv = ((REG_PIOC_PDSR >> 1) & 0xFF) | ((REG_PIOC_PDSR >> (12 - 8)) & 0xFF00);
   REG_PIOA_SODR = 0x1 << 15; //PA15
   setDataPins(OUTPUT);
@@ -181,6 +183,12 @@ void GxIO_DUE_P16_DUESHIELD::startTransaction()
 void GxIO_DUE_P16_DUESHIELD::endTransaction()
 {
   REG_PIOD_SODR = 0x1 << 2; // PD2 CS_H
+}
+
+void GxIO_DUE_P16_DUESHIELD::selectRegister(bool rs_low)
+{
+  if (rs_low) REG_PIOD_CODR = 0x1 << 0; // PD0 RS_L
+  else REG_PIOD_SODR = 0x1 << 0; // PD0 RS_H
 }
 
 void GxIO_DUE_P16_DUESHIELD::setBackLight(bool lit)

@@ -256,6 +256,11 @@ void GxIO_DUE_P16_WIRED::endTransaction()
   digitalWrite(_cs, HIGH);
 }
 
+void GxIO_DUE_P16_WIRED::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
+}
+
 void GxIO_DUE_P16_WIRED::setBackLight(bool lit)
 {
   digitalWrite(_bl, (lit == _bl_active_high));

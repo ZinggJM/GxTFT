@@ -33,6 +33,7 @@ class GxIO
     virtual void writeAddrMSBfirst(uint16_t d);
     virtual void startTransaction();
     virtual void endTransaction();
+    virtual void selectRegister(bool rs_low) {}; // for generalized readData & writeData (RA8875)
     virtual void setBackLight(bool lit);
 };
 

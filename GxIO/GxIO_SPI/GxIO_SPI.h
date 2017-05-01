@@ -1,5 +1,4 @@
 // created by Jean-Marc Zingg to be the GxIO_SPI io class for the GxTFT library
-// code extracts taken from
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 
@@ -9,7 +8,8 @@
 #include <SPI.h>
 #include "../GxIO.h"
 
-#if defined(__AVR) || defined(ESP8266)
+//#if defined(__AVR) || defined(ESP8266) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_STM32F1) // not yet ok
+#if defined(__AVR) || defined(ESP8266) || defined(ARDUINO_ARCH_SAM)
 
 #define GxIO_SPI_defaultFrequency 16000000
 
@@ -38,6 +38,7 @@ class GxIO_SPI : public GxIO
     void writeAddrMSBfirst(uint16_t d);
     void startTransaction();
     void endTransaction();
+    void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   protected:
     SPIClass& IOSPI;
@@ -49,7 +50,9 @@ class GxIO_SPI : public GxIO
 #if defined(SPI_HAS_TRANSACTION)
 
 // GxIO_SPI_USING_TRANSACTION is suboptimal for TFT, because of its single transfer transactions
-// some controllers require command with data in single transactions
+// some controllers require command with data in single transactions, e.g. RA8875
+
+// can't be used with RA8875, at least not with automatic selection handling (needs further investigation)
 
 class GxIO_SPI_USING_TRANSACTION : public GxIO
 {
@@ -76,11 +79,12 @@ class GxIO_SPI_USING_TRANSACTION : public GxIO
     void writeAddrMSBfirst(uint16_t d);
     void startTransaction();
     void endTransaction();
+    void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   protected:
     SPIClass& IOSPI;
-    SPISettings settings = SPISettings(GxIO_SPI_defaultFrequency, MSBFIRST, SPI_MODE0);
-    int8_t _cs, _dc, _rst, _bl; // Control lines
+    SPISettings settings;
+    int8_t _cs, _dc, _rst, _bl, _ss; // Control lines
 };
 
 #endif

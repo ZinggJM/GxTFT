@@ -37,6 +37,7 @@ class GxIO_STM32F407V_P16 : public GxIO
     void writeAddrMSBfirst(uint16_t d);
     void startTransaction();
     void endTransaction();
+    void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
     int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines

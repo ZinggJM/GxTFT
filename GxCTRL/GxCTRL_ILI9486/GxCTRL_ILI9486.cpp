@@ -26,19 +26,19 @@ uint32_t GxCTRL_ILI9486::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
 {
   uint32_t rv = 0;
   bytes = min(bytes, 4);
-  io.startTransaction();
-  io.writeCommand(nr);
-  io.readData(); // dummy
+  IO.startTransaction();
+  IO.writeCommand(nr);
+  IO.readData(); // dummy
   for (uint8_t i = 0; i < index; i++)
   {
-    io.readData(); // skip
+    IO.readData(); // skip
   }
   for (; bytes > 0; bytes--)
   {
     rv <<= 8;
-    rv |= io.readData();
+    rv |= IO.readData();
   }
-  io.endTransaction();
+  IO.endTransaction();
   return rv;
 }
 
