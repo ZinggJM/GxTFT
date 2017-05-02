@@ -106,8 +106,11 @@ uint16_t GxIO_STM32F407V_P16::readData16()
   // Set direction input
   GPIOD_BASE->MODER &= ~PD_MODE_DATA;
   GPIOE_BASE->MODER &= ~PE_MODE_DATA;
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low pulse
-  GPIOD_BASE->BSRRL = (0x1 << 4); // PD4 RD high
+//  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low pulse
+//  GPIOD_BASE->BSRRL = (0x1 << 4); // PD4 RD high
+  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
+  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
+  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
   GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
   uint16_t rv = 0;
   // The compiler efficiently codes this  so it is quite quick.
@@ -255,6 +258,11 @@ void GxIO_STM32F407V_P16::startTransaction()
 void GxIO_STM32F407V_P16::endTransaction()
 {
   GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+}
+
+void GxIO_STM32F407V_P16::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
 }
 
 void GxIO_STM32F407V_P16::setBackLight(bool lit)

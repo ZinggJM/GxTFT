@@ -2,6 +2,9 @@
 // code extracts taken from https://github.com/Bodmer/TFT_HX8357
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
+//
+// note: readRect does not work correctly with my only ILI9341 display (pixel sequence)
+//       workaround added
 
 #include "GxCTRL_ILI9341.h"
 
@@ -68,6 +71,93 @@
 #define ILI9341_MADCTL_RGB 0x00
 #define ILI9341_MADCTL_BGR 0x08
 #define ILI9341_MADCTL_MH  0x04
+
+uint32_t GxCTRL_ILI9341::readID()
+{
+  return readRegister(0xD3, 0, 3);
+}
+
+uint32_t GxCTRL_ILI9341::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
+{
+  uint32_t rv = 0;
+  bytes = min(bytes, 4);
+  IO.startTransaction();
+  IO.writeCommand(nr);
+  IO.readData(); // dummy
+  for (uint8_t i = 0; i < index; i++)
+  {
+    IO.readData(); // skip
+  }
+  for (; bytes > 0; bytes--)
+  {
+    rv <<= 8;
+    rv |= IO.readData();
+  }
+  IO.endTransaction();
+  return rv;
+}
+
+uint16_t GxCTRL_ILI9341::readPixel(uint16_t x, uint16_t y)
+{
+  uint16_t rv;
+  readRect(x, y, 1, 1, &rv);
+  return rv;
+}
+
+#if defined(ILI9341_RAMRD_AUTO_INCREMENT_OK) // not ok on my display
+
+void GxCTRL_ILI9341::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+{
+  uint16_t xe = x + w - 1;
+  uint16_t ye = y + h - 1;
+  uint32_t num = uint32_t(w) * uint32_t(h);
+  IO.startTransaction();
+  IO.writeCommand(ILI9341_CASET);  // Column addr set
+  IO.writeData(x >> 8);
+  IO.writeData(x & 0xFF);  // XSTART
+  IO.writeData(xe >> 8);
+  IO.writeData(xe & 0xFF); // XEND
+  IO.writeCommand(ILI9341_PASET);  // Row addr set
+  IO.writeData(y >> 8);
+  IO.writeData(y);         // YSTART
+  IO.writeData(ye >> 8);
+  IO.writeData(ye);        // YEND
+  IO.writeCommand(ILI9341_RAMRD);  // read from RAM
+  IO.readData(); // dummy
+  for (; num > 0; num--)
+  {
+    uint16_t g = IO.readData();
+    uint16_t r = IO.readData();
+    uint16_t b = IO.readData();
+    *data++ = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | ((b & 0xF8) >> 3);
+  }
+  IO.endTransaction();
+}
+
+#else
+
+void GxCTRL_ILI9341::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+{
+  uint16_t xe = x + w - 1;
+  uint16_t ye = y + h - 1;
+  for (uint16_t yy = y; yy <= ye; yy++)
+  {
+    for (uint16_t xx = x; xx <= xe; xx++)
+    {
+      IO.startTransaction();
+      setWindowAddress(xx, yy, xx, yy);
+      IO.writeCommand(ILI9341_RAMRD);  // read from RAM
+      IO.readData(); // dummy
+      uint16_t g = IO.readData();
+      uint16_t r = IO.readData();
+      uint16_t b = IO.readData();
+      *data++ = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | ((b & 0xF8) >> 3);
+      IO.endTransaction();
+    }
+  }
+}
+
+#endif
 
 void GxCTRL_ILI9341::init()
 {
@@ -183,26 +273,8 @@ void GxCTRL_ILI9341::init()
   IO.endTransaction();
 }
 
-void GxCTRL_ILI9341::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void GxCTRL_ILI9341::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
-  IO.startTransaction();
-  IO.writeCommand(ILI9341_CASET);  // Column addr set
-  IO.writeData(x0 >> 8);
-  IO.writeData(x0 & 0xFF); // XSTART
-  IO.writeData(x1 >> 8);
-  IO.writeData(x1 & 0xFF); // XEND
-  IO.writeCommand(ILI9341_PASET);  // Row addr set
-  IO.writeData(y0 >> 8);
-  IO.writeData(y0);        // YSTART
-  IO.writeData(y1 >> 8);
-  IO.writeData(y1);        // YEND
-  IO.writeCommand(ILI9341_RAMWR);  // write to RAM
-  IO.endTransaction();
-}
-
-void GxCTRL_ILI9341::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
-  IO.startTransaction();
   IO.writeCommand(ILI9341_CASET);  // Column addr set
   IO.writeData(x0 >> 8);
   IO.writeData(x0 & 0xFF); // XSTART
@@ -219,20 +291,20 @@ void GxCTRL_ILI9341::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t
 void GxCTRL_ILI9341::setRotation(uint8_t r)
 {
   IO.startTransaction();
-  IO.writeCommand(MADCTL);
+  IO.writeCommand(ILI9341_MADCTL);
   switch (r & 3)
   {
     case 0: // Portrait
-      IO.writeData(MADCTL_BGR | MADCTL_MX);
+      IO.writeData(ILI9341_MADCTL_BGR | ILI9341_MADCTL_MX);
       break;
     case 1: // Landscape (Portrait + 90)
-      IO.writeData(MADCTL_BGR | MADCTL_MV);
+      IO.writeData(ILI9341_MADCTL_BGR | ILI9341_MADCTL_MV);
       break;
     case 2: // Inverter portrait
-      IO.writeData( MADCTL_BGR | MADCTL_MY);
+      IO.writeData(ILI9341_MADCTL_BGR | ILI9341_MADCTL_MY);
       break;
     case 3: // Inverted landscape
-      IO.writeData(MADCTL_BGR | MADCTL_MV | MADCTL_MX | MADCTL_MY);
+      IO.writeData(ILI9341_MADCTL_BGR | ILI9341_MADCTL_MV | ILI9341_MADCTL_MX | ILI9341_MADCTL_MY);
       break;
   }
   IO.endTransaction();

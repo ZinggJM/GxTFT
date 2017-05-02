@@ -78,8 +78,8 @@ uint8_t GxIO_DUE_P16_TIKY::readData()
 uint16_t GxIO_DUE_P16_TIKY::readData16()
 {
   setDataPins(INPUT);
-  REG_PIOD_CODR = 0x1; // PD0 RD_L pulse
-  REG_PIOD_SODR = 0x1; // PD0 RD_H
+  //REG_PIOD_CODR = 0x1; // PD0 RD_L pulse
+  //REG_PIOD_SODR = 0x1; // PD0 RD_H
   REG_PIOD_CODR = 0x1; // PD0 RD_L read
   uint32_t rv = 0;
   // The compiler efficiently codes this
@@ -222,6 +222,11 @@ void GxIO_DUE_P16_TIKY::startTransaction()
 void GxIO_DUE_P16_TIKY::endTransaction()
 {
   REG_PIOB_SODR = 0x1 << 26; // PB26 CS_H
+}
+
+void GxIO_DUE_P16_TIKY::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
 }
 
 void GxIO_DUE_P16_TIKY::setBackLight(bool lit)

@@ -1,6 +1,8 @@
 // created by Jean-Marc Zingg to be the GxCTRL_ILI9486 class for the GxTFT library
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
+//
+// note: read functions are untested; my only ILI9486 display is write-only
 
 #include "GxCTRL_ILI9486.h"
 
@@ -14,6 +16,31 @@
 #define MADCTL_ML  0x10
 #define MADCTL_BGR 0x08
 #define MADCTL_MH  0x04
+
+uint32_t GxCTRL_ILI9486::readID()
+{
+  return readRegister(0xD3, 0, 3);
+}
+
+uint32_t GxCTRL_ILI9486::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
+{
+  uint32_t rv = 0;
+  bytes = min(bytes, 4);
+  IO.startTransaction();
+  IO.writeCommand(nr);
+  IO.readData(); // dummy
+  for (uint8_t i = 0; i < index; i++)
+  {
+    IO.readData(); // skip
+  }
+  for (; bytes > 0; bytes--)
+  {
+    rv <<= 8;
+    rv |= IO.readData();
+  }
+  IO.endTransaction();
+  return rv;
+}
 
 void GxCTRL_ILI9486::init()
 {
@@ -80,23 +107,7 @@ void GxCTRL_ILI9486::init()
   //Serial.println("GxCTRL_ILI9486::init() done..");
 }
 
-void GxCTRL_ILI9486::setWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
-  // this controller seems to need separate transactions; reason speed on SPI ?
-  IO.writeCommandTransaction(ILI9486_CASET);  // Column addr set
-  IO.writeDataTransaction(x0 >> 8);
-  IO.writeDataTransaction(x0 & 0xFF); // XSTART
-  IO.writeDataTransaction(x1 >> 8);
-  IO.writeDataTransaction(x1 & 0xFF); // XEND
-  IO.writeCommandTransaction(ILI9486_PASET);  // Row addr set
-  IO.writeDataTransaction(y0 >> 8);
-  IO.writeDataTransaction(y0);        // YSTART
-  IO.writeDataTransaction(y1 >> 8);
-  IO.writeDataTransaction(y1);        // YEND
-  IO.writeCommandTransaction(ILI9486_RAMWR);  // write to RAM
-}
-
-void GxCTRL_ILI9486::setWindowKeepTransaction(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void GxCTRL_ILI9486::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
   // this controller seems to need separate transactions; reason speed on SPI ?
   IO.writeCommandTransaction(ILI9486_CASET);  // Column addr set

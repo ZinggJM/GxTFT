@@ -39,6 +39,7 @@ class GxIO_STM32F103V_P16_TIKY : public GxIO
     void writeAddrMSBfirst(uint16_t addr);
     void startTransaction();
     void endTransaction();
+    void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
     void setDataPinsOutput();

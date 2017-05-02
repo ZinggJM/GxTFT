@@ -24,20 +24,18 @@ swap(T& a, T& b)
 /*****************************************************************************/
 GxTFT_GFX::GxTFT_GFX(GxIO& io, GxCTRL& controller, uint16_t w, uint16_t h) : Adafruit_GFX(w, h), IO(io), Controller(controller)
 {
-  _tft_width = w;
-  _tft_height = h;
+  _initial_rotation = w > h;
+  // setRotation expects _tft_width, _tft_height in portrait orientation
+  _tft_width = min(w, h);  // portrait width
+  _tft_height = max(w, h); // portrait height
 }
 /*****************************************************************************/
 void GxTFT_GFX::init()
 {
   IO.init();
-  Controller.init();
-  // match orientation and physical dimensions to constructor dimension
-  if (_tft_width > _tft_height)
-  {
-    Controller.setRotation(1); // landscape
-    swap(_tft_width, _tft_height);
-  }
+  Controller.init(); // may choose whatever is its default orientation
+  // set orientation according to constructor dimensions
+  setRotation(_initial_rotation);
   IO.setBackLight(true);
 }
 /*****************************************************************************/
@@ -54,7 +52,9 @@ void GxTFT_GFX::pushColor(uint16_t color)
 void GxTFT_GFX::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
   if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height)) return;
-  Controller.setWindowKeepTransaction(x, y, x, y);
+  return Controller.drawPixel(x, y, color);
+  IO.startTransaction();
+  Controller.setWindowAddress(x, y, x, y);
   IO.writeData16(color);
   IO.endTransaction();
 }
@@ -67,7 +67,9 @@ void GxTFT_GFX::drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
   {
     h = _height - y;
   }
-  Controller.setWindowKeepTransaction(x, y, x, y + h - 1);
+  return Controller.drawLine(x, y, x, y + h - 1, color);
+  IO.startTransaction();
+  Controller.setWindowAddress(x, y, x, y + h - 1);
   IO.writeData16(color, h);
   IO.endTransaction();
 }
@@ -80,7 +82,9 @@ void GxTFT_GFX::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
   {
     w = _width - x;
   }
-  Controller.setWindowKeepTransaction(x, y, x + w - 1, y);
+  return Controller.drawLine(x, y, x + w - 1, y, color);
+  IO.startTransaction();
+  Controller.setWindowAddress(x, y, x + w - 1, y);
   IO.writeData16(color, w);
   IO.endTransaction();
 }
@@ -88,7 +92,9 @@ void GxTFT_GFX::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
 /*****************************************************************************/
 void GxTFT_GFX::fillScreen(uint16_t color)
 {
-  Controller.setWindowKeepTransaction(0, 0, _width - 1, _height - 1);
+  return Controller.fillRect(0, 0, _width, _height, color);
+  IO.startTransaction();
+  Controller.setWindowAddress(0, 0, _width - 1, _height - 1);
   IO.writeData16(color, uint32_t(_width) * uint32_t(_height));
   IO.endTransaction();
 }
@@ -106,14 +112,13 @@ void GxTFT_GFX::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t co
   {
     h = _height - y;
   }
-  Controller.setWindowKeepTransaction(x, y, x + w - 1, y + h - 1);
+  return Controller.fillRect(x, y, w, h, color);
+  IO.startTransaction();
+  Controller.setWindowAddress(x, y, x + w - 1, y + h - 1);
   IO.writeData16(color, uint32_t(w) * uint32_t(h));
   IO.endTransaction();
 }
 
-/*
-  Draw lines faster by calculating straight sections and drawing them with fastVline and fastHline.
-*/
 /*****************************************************************************/
 void GxTFT_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
@@ -123,102 +128,9 @@ void GxTFT_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_
   if (x1 < 0) x1 = 0;
   if (y0 < 0) y0 = 0;
   if (y1 < 0) y1 = 0;
-
-  if (y0 == y1) {
-    if (x1 > x0) {
-      drawFastHLine(x0, y0, x1 - x0 + 1, color);
-    }
-    else if (x1 < x0) {
-      drawFastHLine(x1, y0, x0 - x1 + 1, color);
-    }
-    else {
-      drawPixel(x0, y0, color);
-    }
-    return;
-  }
-  else if (x0 == x1) {
-    if (y1 > y0) {
-      drawFastVLine(x0, y0, y1 - y0 + 1, color);
-    }
-    else {
-      drawFastVLine(x0, y1, y0 - y1 + 1, color);
-    }
-    return;
-  }
-
-  bool steep = abs(y1 - y0) > abs(x1 - x0);
-  if (steep) {
-    swap(x0, y0);
-    swap(x1, y1);
-  }
-  if (x0 > x1) {
-    swap(x0, x1);
-    swap(y0, y1);
-  }
-
-  int16_t dx, dy;
-  dx = x1 - x0;
-  dy = abs(y1 - y0);
-
-  int16_t err = dx / 2;
-  int16_t ystep;
-
-  if (y0 < y1) {
-    ystep = 1;
-  }
-  else {
-    ystep = -1;
-  }
-
-  int16_t xbegin = x0;
-  if (steep) {
-    for (; x0 <= x1; x0++) {
-      err -= dy;
-      if (err < 0) {
-        int16_t len = x0 - xbegin;
-        if (len) {
-          drawFastVLine (y0, xbegin, len + 1, color);
-          //writeVLine_cont_noCS_noFill(y0, xbegin, len + 1);
-        }
-        else {
-          drawPixel(y0, x0, color);
-          //writePixel_cont_noCS(y0, x0, color);
-        }
-        xbegin = x0 + 1;
-        y0 += ystep;
-        err += dx;
-      }
-    }
-    if (x0 > xbegin + 1) {
-      //writeVLine_cont_noCS_noFill(y0, xbegin, x0 - xbegin);
-      drawFastVLine(y0, xbegin, x0 - xbegin, color);
-    }
-
-  }
-  else {
-    for (; x0 <= x1; x0++) {
-      err -= dy;
-      if (err < 0) {
-        int16_t len = x0 - xbegin;
-        if (len) {
-          drawFastHLine(xbegin, y0, len + 1, color);
-          //writeHLine_cont_noCS_noFill(xbegin, y0, len + 1);
-        }
-        else {
-          drawPixel(x0, y0, color);
-          //writePixel_cont_noCS(x0, y0, color);
-        }
-        xbegin = x0 + 1;
-        y0 += ystep;
-        err += dx;
-      }
-    }
-    if (x0 > xbegin + 1) {
-      //writeHLine_cont_noCS_noFill(xbegin, y0, x0 - xbegin);
-      drawFastHLine(xbegin, y0, x0 - xbegin, color);
-    }
-  }
+  return Controller.drawLine(x0, y0, x1, y1, color);
 }
+
 /*****************************************************************************/
 // Pass 8-bit (each) R,G,B, get back 16-bit packed color
 /*****************************************************************************/
@@ -226,6 +138,7 @@ uint16_t GxTFT_GFX::color565(uint8_t r, uint8_t g, uint8_t b)
 {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
+
 /*****************************************************************************/
 void GxTFT_GFX::setRotation(uint8_t r)
 {
@@ -250,9 +163,68 @@ void GxTFT_GFX::setRotation(uint8_t r)
       break;
   }
 }
+
 /*****************************************************************************/
 void GxTFT_GFX::invertDisplay(boolean i)
 {
   Controller.invertDisplay(i);
+}
+
+void GxTFT_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+{
+  if (Controller.drawCircle(x0, y0, r, color)) return;
+  Adafruit_GFX::drawCircle(x0, y0, r, color);
+}
+
+void GxTFT_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color)
+{
+  if (Controller.fillCircle(x0, y0, r, color)) return;
+  Adafruit_GFX::fillCircle(x0, y0, r, color);
+}
+
+void GxTFT_GFX::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
+{
+  if (Controller.drawTriangle(x0, y0, x1, y1, x2, y2, color)) return;
+  Adafruit_GFX::drawTriangle(x0, y0, x1, y1, x2, y2, color);
+}
+
+void GxTFT_GFX::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
+{
+  if (Controller.fillTriangle(x0, y0, x1, y1, x2, y2, color)) return;
+  Adafruit_GFX::fillTriangle(x0, y0, x1, y1, x2, y2, color);
+}
+
+void GxTFT_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color)
+{
+  if (Controller.drawRoundRect(x, y, w, h, radius, color)) return;
+  Adafruit_GFX::drawRoundRect(x, y, w, h, radius, color);
+}
+
+void GxTFT_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t radius, uint16_t color)
+{
+  if (Controller.fillRoundRect(x, y, w, h, radius, color)) return;
+  Adafruit_GFX::fillRoundRect(x, y, w, h, radius, color);
+}
+
+void GxTFT_GFX::drawEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color)
+{
+  if (Controller.drawEllipse(x0, y0, rx, ry, color)) return;
+  //Adafruit_GFX::drawEllipse(x0, y0, rx, ry, color);
+}
+
+void GxTFT_GFX::fillEllipse(int16_t x0, int16_t y0, int16_t rx, int16_t ry, uint16_t color)
+{
+  if (Controller.fillEllipse(x0, y0, rx, ry, color)) return;
+  //Adafruit_GFX::fillEllipse(x0, y0, rx, ry, color);
+}
+
+void GxTFT_GFX::drawCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color)
+{
+  if (Controller.drawCurve(xCenter, yCenter, longAxis, shortAxis, curvePart, color)) return;
+}
+
+void GxTFT_GFX::fillCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint8_t curvePart, uint16_t color)
+{
+  if (Controller.fillCurve(xCenter, yCenter, longAxis, shortAxis, curvePart, color)) return;
 }
 

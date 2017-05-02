@@ -14,12 +14,14 @@ class GxIO
     const char* name = "GxIO";
     virtual void reset();
     virtual void init();
+    virtual void setFrequency(uint32_t freq){}; // for SPI
+    virtual void setClockDivider(uint32_t clockDiv){}; // for SPI
     virtual uint8_t transferTransaction(uint8_t d);
     virtual uint16_t transfer16Transaction(uint16_t d);
-    virtual uint8_t readDataTransaction(); 
-    virtual uint16_t readData16Transaction(); 
-    virtual uint8_t readData(); 
-    virtual uint16_t readData16(); 
+    virtual uint8_t readDataTransaction();
+    virtual uint16_t readData16Transaction();
+    virtual uint8_t readData();
+    virtual uint16_t readData16();
     virtual uint32_t readRawData32(uint8_t part); // debug purpose
     virtual void writeCommandTransaction(uint8_t c);
     virtual void writeDataTransaction(uint8_t d);
@@ -31,6 +33,7 @@ class GxIO
     virtual void writeAddrMSBfirst(uint16_t d);
     virtual void startTransaction();
     virtual void endTransaction();
+    virtual void selectRegister(bool rs_low) {}; // for generalized readData & writeData (RA8875)
     virtual void setBackLight(bool lit);
 };
 

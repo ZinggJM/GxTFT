@@ -115,8 +115,8 @@ uint8_t GxIO_STM32F103V_P16_TIKY::readData()
 uint16_t GxIO_STM32F103V_P16_TIKY::readData16()
 {
   setDataPinsInput();
-  GPIOD_BASE->BRR = (0x1 << 4);  // PD4 RD low pulse
-  GPIOD_BASE->BSRR = (0x1 << 4); // PD4 RD high
+//  GPIOD_BASE->BRR = (0x1 << 4);  // PD4 RD low pulse
+//  GPIOD_BASE->BSRR = (0x1 << 4); // PD4 RD high
   GPIOD_BASE->BRR = (0x1 << 4);  // PD4 RD low read
   uint16_t rv = 0;
   // The compiler efficiently codes this
@@ -252,6 +252,11 @@ void GxIO_STM32F103V_P16_TIKY::startTransaction()
 void GxIO_STM32F103V_P16_TIKY::endTransaction()
 {
   GPIOD_BASE->BSRR = (0x1 << 7);  // PD7 CS high
+}
+
+void GxIO_STM32F103V_P16_TIKY::selectRegister(bool rs_low)
+{
+  digitalWrite(_rs, (rs_low ? LOW : HIGH));
 }
 
 void GxIO_STM32F103V_P16_TIKY::setBackLight(bool lit)

@@ -21,42 +21,92 @@
 
 #include <GxTFT_GFX.h> // Hardware-specific library
 
-// select one
+// select one display class
 #define TFT_Class GxTFT_GFX
 
-// select one
+// select one GxIO class (or select a pre-configured display below)
+//#include <GxIO/GxIO_DUE_P16_DUESHIELD/GxIO_DUE_P16_DUESHIELD.h>
+//#include <GxIO/GxIO_DUE_P16_HVGASHIELD/GxIO_DUE_P16_HVGASHIELD.h>
+//#include <GxIO/GxIO_DUE_P16_TIKY/GxIO_DUE_P16_TIKY.h>
+//#include <GxIO/GxIO_DUE_P16_WIRED/GxIO_DUE_P16_WIRED.h>
+#include <GxIO/GxIO_MEGA_P16_MEGASHIELD/GxIO_MEGA_P16_MEGASHIELD.h>
 //#include <GxIO/GxIO_SPI/GxIO_SPI.h>
-#include <GxIO/GxIO_HVGAOnMEGA/GxIO_HVGAOnMEGA.h>
-//#include <GxIO/GxIO_HVGAOnDue/GxIO_HVGAOnDue.h>
+//#include <GxIO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
+//#include <GxIO/GxIO_STM32F103V_P16_TIKY/GxIO_STM32F103V_P16_TIKY.h>
+//#include <GxIO/GxIO_STM32F407V_P16/GxIO_STM32F407V_P16.h>
+//#include <GxIO/GxIO_UNO_P8_SHIELD/GxIO_UNO_P8_SHIELD.h>
 
-// select one
+
+// select one GxCTRL class (or select a pre-configured display below)
 //#include <GxCTRL/GxCTRL_HX8357B/GxCTRL_HX8357B.h>
 //#include <GxCTRL/GxCTRL_HX8357C/GxCTRL_HX8357C.h>
-//#include <GxCTRL/GxCTRL_HX8357B/GxCTRL_HX8357B.h>
 //#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
 #include <GxCTRL/GxCTRL_ILI9481/GxCTRL_ILI9481.h> // HVGA 320x480
 //#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
+//#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
+//#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 320x480 e.g. 3.5inch RPI Display
 
+// create instance for the selected GxIO class  (or select a pre-configured display below)
 GxIO_Class io; // #define GxIO_Class is in the selected header file
 
-// for SPI, the constructor needs parameters
+// or create instance for SPI, the constructor needs parameters (or ...)
 //GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
 //GxIO_Class io(SPI, SS, D4, D3); // 480x320 3.5inch RPI Display on Wemos D1 (ESP8266)
 
+// create instance for the selected GxCTRL class  (or select a pre-configured display below)
 GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
 
-// select one or adapt
-//TFT_Class tft(io, controller, 240, 320); // 240x320
+// select one or adapt (or select a pre-configured display below)
+//TFT_Class tft(io, controller, 240, 320); // portrait 240x320
+//TFT_Class tft(io, controller, 320, 240); // landscape 240x320
 //TFT_Class tft(io, controller, 320, 480); // portrait HVGA 320x480 or 3.5inch RPI Display
 TFT_Class tft(io, controller, 480, 320); // landscape HVGA 320x480 or 3.5inch RPI Display
+//TFT_Class tft(io, controller, 480, 800); // portrait 800x480 7inch Display
+//TFT_Class tft(io, controller, 800, 480); // landscape 800x480 7inch Display
+//TFT_Class tft(io, controller, 480, 854); // portrait 854x480 e.g. Tiky 5" TFT from Ruijia Industry
+//TFT_Class tft(io, controller, 854, 480); // landscape 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 
-void setup() 
+// or select a pre-configured display header
+//#include "myCompileTestTFT.h"
+//#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
+//#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
+//#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
+//#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h" // <== or select this
+//#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
+//#include "myTFTs/my_5_Tiky_854x480_DUE.h"
+//#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
+//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"
+//#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
+//#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
+
+// include the selected code
+#include "GxTFT_IncludeCpp.h"
+
+#include "GxReadRegisters.h"
+
+#if !defined(ESP8266)
+#define yield()
+#endif
+
+void setup()
 {
   Serial.begin(115200);
   Serial.println();
   Serial.println(String(controller.name) + " Test on " + String(io.name));
 
   tft.init();
+
+  Serial.println("tft.init() done");
+
+  reportID();
+  GxReportRegisters();
+  delay(5000);
+  //while(1) yield();
+  GxTestReadGRAM();
+  delay(5000);
+  //while(1) yield();
+  
 
   Serial.println(F("Benchmark                Time (microseconds)"));
 
@@ -70,9 +120,13 @@ void setup()
   Serial.println(testText());
   delay(3000);
 
+  //return;
+
   Serial.print(F("Lines                    "));
   Serial.println(testLines(CYAN));
   delay(500);
+
+  //return;
 
   Serial.print(F("Horiz/Vert Lines         "));
   Serial.println(testFastLines(RED, BLUE));
@@ -97,26 +151,36 @@ void setup()
   Serial.println(testTriangles());
   delay(500);
 
+  //while(1) yield();
+
   Serial.print(F("Triangles (filled)       "));
   Serial.println(testFilledTriangles());
   delay(500);
+
+  //return;
 
   Serial.print(F("Rounded rects (outline)  "));
   Serial.println(testRoundRects());
   delay(500);
 
+  //while(1) yield();
+
   Serial.print(F("Rounded rects (filled)   "));
   Serial.println(testFilledRoundRects());
   delay(500);
+
+  //while (1) yield();
+
+  testEllipses();
+  testCurves();
 
   Serial.println(F("Done!"));
 
 }
 
-
-void loop(void) 
+void loop(void)
 {
-  for (uint8_t rotation = 0; rotation < 4; rotation++) 
+  for (uint8_t rotation = 0; rotation < 4; rotation++)
   {
     tft.setRotation(rotation);
     testText();
@@ -128,12 +192,16 @@ unsigned long testFillScreen() {
   unsigned long start = micros();
   tft.fillScreen(BLACK);
   yield();
+  if (controller.ID == 0x8875) delay(200); // too fast to be seen
   tft.fillScreen(RED);
   yield();
+  if (controller.ID == 0x8875) delay(200); // too fast to be seen
   tft.fillScreen(GREEN);
   yield();
+  if (controller.ID == 0x8875) delay(200); // too fast to be seen
   tft.fillScreen(BLUE);
   yield();
+  if (controller.ID == 0x8875) delay(200); // too fast to be seen
   tft.fillScreen(BLACK);
   yield();
   return micros() - start;
@@ -389,6 +457,65 @@ unsigned long testFilledRoundRects() {
   }
 
   return micros() - start;
+}
+
+void testEllipses() 
+{
+  tft.fillScreen(BLACK);
+  for (int i = 0; i < 40; i++)
+  {
+    int rx = random(60);
+    int ry = random(60);
+    int x = rx + random(480 - rx - rx);
+    int y = ry + random(320 - ry - ry);
+    tft.fillEllipse(x, y, rx, ry, random(0xFFFF));
+  }
+  delay(2000);
+  tft.fillScreen(BLACK);
+  for (int i = 0; i < 40; i++)
+  {
+    int rx = random(60);
+    int ry = random(60);
+    int x = rx + random(480 - rx - rx);
+    int y = ry + random(320 - ry - ry);
+    tft.drawEllipse(x, y, rx, ry, random(0xFFFF));
+  }
+  delay(2000);
+}
+
+void testCurves() 
+{
+  uint16_t x = tft.width() / 2;
+  uint16_t y = tft.height() / 2;
+  tft.fillScreen(BLACK);
+
+  tft.drawEllipse(x, y, 100, 60, PURPLE);
+  tft.fillCurve(x, y, 80, 30, 0, CYAN);
+  tft.fillCurve(x, y, 80, 30, 1, MAGENTA);
+  tft.fillCurve(x, y, 80, 30, 2, YELLOW);
+  tft.fillCurve(x, y, 80, 30, 3, RED);
+  delay(2000);
+
+  tft.drawCurve(x, y, 90, 50, 0, CYAN);
+  tft.drawCurve(x, y, 90, 50, 1, MAGENTA);
+  tft.drawCurve(x, y, 90, 50, 2, YELLOW);
+  tft.drawCurve(x, y, 90, 50, 3, RED);
+  tft.fillCircle(x, y, 30, BLUE);
+  delay(5000);
+}
+
+void reportID()
+{
+  uint32_t id = controller.readID();
+  tft.fillScreen(BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextColor(WHITE);
+  tft.setTextSize((tft.width() > 320) ? 2 : 1);
+  tft.print("Controller "); tft.println(controller.name);
+  tft.println();
+  tft.print("ID 0x"); tft.print(controller.ID, HEX);
+  tft.print(" readID() 0x"); tft.println(id, HEX);
+  tft.println();
 }
 
 // Original sketch header
