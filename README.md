@@ -27,3 +27,5 @@ Updated GxCTRL and its subclasses; added GxCTRL_RA8875S
 Updated read support; read support is controller specific, issues remain to be investigated.
 
 Added GxTFT & RA8875P
+
+Added FSMC GxIO classes for STM32 GxIO_STM32F1_FSMC and GxIO_STM32F4_FSMC and FSMC examples

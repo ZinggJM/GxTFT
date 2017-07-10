@@ -69,6 +69,17 @@ void GxReportRegisters()
     uint32_t rv2 = controller.readRegister(0x19, 0, 2);
     tft.print("readRegister(0x19, 0, 2) : 0x"); tft.println(rv2, HEX);
   }
+  else if (controller.ID == 0x9806)
+  {
+    reportRegister(0xD3, 4, "Device Code ILI9806");
+    reportRegister(0x04, 4, "Manufacturer ID");
+    reportRegister(0x09, 5, "Status Register");
+    reportRegister(0x0A, 2, "Power Mode");
+    reportRegister(0x0B, 2, "MADCTL");
+    reportRegister(0x0C, 2, "Pixel Format");
+    reportRegister(0x54, 2, "Display CTRL");
+    reportRegister(0x54, 2, "Display CABC");
+  }
   else
   {
     reportRegister(0x00, 2, "ID: ILI9320, ILI9325, ILI9335, ...");

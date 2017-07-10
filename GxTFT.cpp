@@ -1265,7 +1265,7 @@ size_t GxTFT::write(uint8_t utf8)
       {
         // Uses the fontinfo struct array to avoid lots of 'if' or 'switch' statements
         // A tad slower than above but this is not significant and is more convenient for the RLE fonts
-        width = pgm_read_byte( pgm_read_dword( &(fontdata[textfont].widthtbl ) ) + uniCode - 32 );
+        width = pgm_read_byte( (uint8_t *)pgm_read_dword( &(fontdata[textfont].widthtbl ) ) + uniCode - 32 );
         height = pgm_read_byte( &fontdata[textfont].height );
       }
     }
@@ -1342,39 +1342,39 @@ size_t GxTFT::write(uint8_t utf8)
 ***************************************************************************************/
 int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y)
 {
-    return drawChar(uniCode, x, y, textfont);
+  return drawChar(uniCode, x, y, textfont);
 }
 
 int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
 {
 
-  if (font==1)
+  if (font == 1)
   {
 #ifdef LOAD_GLCD
-  #ifndef LOAD_GFXFF
+#ifndef LOAD_GFXFF
     drawChar(x, y, uniCode, textcolor, textbgcolor, textsize);
     return 6 * textsize;
-  #endif
+#endif
 #else
-  #ifndef LOAD_GFXFF
+#ifndef LOAD_GFXFF
     return 0;
-  #endif
+#endif
 #endif
 
 #ifdef LOAD_GFXFF
     drawChar(x, y, uniCode, textcolor, textbgcolor, textsize);
-    if(!gfxFont) { // 'Classic' built-in font
-    #ifdef LOAD_GLCD
+    if (!gfxFont) { // 'Classic' built-in font
+#ifdef LOAD_GLCD
       return 6 * textsize;
-    #else
+#else
       return 0;
-    #endif
+#endif
     }
     else
     {
       if (uniCode > pgm_read_byte(&gfxFont->last)) uniCode = pgm_read_byte(&gfxFont->first);
 
-      if(uniCode >= pgm_read_byte(&gfxFont->first))
+      if (uniCode >= pgm_read_byte(&gfxFont->first))
       {
         uint8_t   c2    = uniCode - pgm_read_byte(&gfxFont->first);
         GFXglyph *glyph = &(((GFXglyph *)pgm_read_dword(&gfxFont->glyph))[c2]);
@@ -1401,19 +1401,19 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
     width = pgm_read_byte(widtbl_f16 + uniCode);
     height = chr_hgt_f16;
   }
-  #ifdef LOAD_RLE
+#ifdef LOAD_RLE
   else
-  #endif
+#endif
 #endif
 
 #ifdef LOAD_RLE
   {
-    if ((font>2) && (font<9))
+    if ((font > 2) && (font < 9))
     {
       // This is slower than above but is more convenient for the RLE fonts
-      flash_address = pgm_read_dword( pgm_read_dword( &(fontdata[font].chartbl ) ) + uniCode*sizeof(void *) );
-      width = pgm_read_byte( pgm_read_dword( &(fontdata[font].widthtbl ) ) + uniCode );
-      height= pgm_read_byte( &fontdata[font].height );
+      flash_address = pgm_read_dword( pgm_read_dword( &(fontdata[font].chartbl ) ) + uniCode * sizeof(void *) );
+      width = pgm_read_byte( (uint8_t *)pgm_read_dword( &(fontdata[font].widthtbl ) ) + uniCode );
+      height = pgm_read_byte( &fontdata[font].height );
     }
   }
 #endif
@@ -1437,7 +1437,7 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
 
         for (int k = 0; k < w; k++)
         {
-          line = pgm_read_byte(flash_address + w * i + k);
+          line = pgm_read_byte((uint8_t *)flash_address + w * i + k);
           if (line) {
             if (textsize == 1) {
               pX = x + k * 8;
@@ -1477,7 +1477,7 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
       {
         for (int k = 0; k < w; k++)
         {
-          line = pgm_read_byte(flash_address + w * i + k);
+          line = pgm_read_byte((uint8_t *)flash_address + w * i + k);
           pX = x + k * 8;
           mask = 0x80;
           while (mask) {
@@ -1497,13 +1497,13 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
     }
   }
 
-  #ifdef LOAD_RLE
+#ifdef LOAD_RLE
   else
-  #endif
+#endif
 #endif  //FONT2
 
 #ifdef LOAD_RLE  //674 bytes of code
-  // Font is not 2 and hence is RLE encoded
+    // Font is not 2 and hence is RLE encoded
   {
 
     w *= height; // Now w is total number of pixels in the character
@@ -1520,7 +1520,7 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
       IO.startTransaction();
       while (pc < w)
       {
-        line = pgm_read_byte(flash_address);
+        line = pgm_read_byte((uint8_t *)flash_address);
         flash_address++; // 20 bytes smaller by incrementing here
         if (line & 0x80) {
           line &= 0x7F;
@@ -1563,7 +1563,7 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
       IO.endTransaction();
     }
     else // Text colour != background && textsize = 1
-         // so use faster drawing of characters and background using block write
+      // so use faster drawing of characters and background using block write
     {
       //spi_begin();
       //setAddrWindow(x, y, x + width - 1, y + height - 1);
@@ -1576,7 +1576,7 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
       // Maximum font size is equivalent to 180x180 pixels in area
       while (w > 0)
       {
-        line = pgm_read_byte(flash_address++); // 8 bytes smaller when incrementing here
+        line = pgm_read_byte((uint8_t *)flash_address++); // 8 bytes smaller when incrementing here
         if (line & 0x80) {
           line &= 0x7F;
           line++; w -= line;
@@ -1603,6 +1603,7 @@ int16_t GxTFT::drawChar(unsigned int uniCode, int x, int y, int font)
 int16_t GxTFT::drawString(const String& string, int poX, int poY)
 {
   int16_t len = string.length() + 2;
+  if (len <= 2) return 0;
   char buffer[len];
   string.toCharArray(buffer, len);
   return drawString(buffer, poX, poY, textfont);
@@ -1611,6 +1612,7 @@ int16_t GxTFT::drawString(const String& string, int poX, int poY)
 int16_t GxTFT::drawString(const String& string, int poX, int poY, int font)
 {
   int16_t len = string.length() + 2;
+  if (len <= 2) return 0;
   char buffer[len];
   string.toCharArray(buffer, len);
   return drawString(buffer, poX, poY, font);
@@ -1631,11 +1633,11 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
 
 #ifdef LOAD_GFXFF
   if (font == 1) {
-    if(gfxFont) {
+    if (gfxFont) {
       cheight = glyph_ab * textsize;
       poY += cheight; // Adjust for baseline datum of free fonts
       baseline = cheight;
-      padding =101; // Different padding method used for Free Fonts
+      padding = 101; // Different padding method used for Free Fonts
 
       // We need to make an adjustment for the botom of the string (eg 'y' character)
       if ((textdatum == BL_DATUM) || (textdatum == BC_DATUM) || (textdatum == BR_DATUM)) {
@@ -1649,14 +1651,14 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
   {
 
     // If it is not font 1 (GLCD or free font) get the basline and pixel height of the font
-    if (font!=1) {
+    if (font != 1) {
       baseline = pgm_read_byte( &fontdata[font].baseline ) * textsize;
       cheight = fontHeight(font);
     }
 
-    switch(textdatum) {
+    switch (textdatum) {
       case TC_DATUM:
-        poX -= cwidth/2;
+        poX -= cwidth / 2;
         padding += 1;
         break;
       case TR_DATUM:
@@ -1664,17 +1666,17 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
         padding += 2;
         break;
       case ML_DATUM:
-        poY -= cheight/2;
+        poY -= cheight / 2;
         //padding += 0;
         break;
       case MC_DATUM:
-        poX -= cwidth/2;
-        poY -= cheight/2;
+        poX -= cwidth / 2;
+        poY -= cheight / 2;
         padding += 1;
         break;
       case MR_DATUM:
         poX -= cwidth;
-        poY -= cheight/2;
+        poY -= cheight / 2;
         padding += 2;
         break;
       case BL_DATUM:
@@ -1682,7 +1684,7 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
         //padding += 0;
         break;
       case BC_DATUM:
-        poX -= cwidth/2;
+        poX -= cwidth / 2;
         poY -= cheight;
         padding += 1;
         break;
@@ -1696,7 +1698,7 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
         //padding += 0;
         break;
       case C_BASELINE:
-        poX -= cwidth/2;
+        poX -= cwidth / 2;
         poY -= baseline;
         padding += 1;
         break;
@@ -1708,63 +1710,63 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
     }
     // Check coordinates are OK, adjust if not
     if (poX < 0) poX = 0;
-    if (poX+cwidth>_width)   poX = _width - cwidth;
+    if (poX + cwidth > _width)   poX = _width - cwidth;
     if (poY < 0) poY = 0;
-    if (poY+cheight-baseline>_height) poY = _height - cheight;
+    if (poY + cheight - baseline > _height) poY = _height - cheight;
   }
 
 
   int8_t xo = 0;
 #ifdef LOAD_GFXFF
-  if ((font == 1) && (gfxFont) && (textcolor!=textbgcolor))
-    {
-      cheight = (glyph_ab + glyph_bb) * textsize;
-      // Get the offset for the first character only to allow for negative offsets
-      uint8_t   c2    = *string - pgm_read_byte(&gfxFont->first);
-      GFXglyph *glyph = &(((GFXglyph *)pgm_read_dword(&gfxFont->glyph))[c2]);
-      xo = pgm_read_byte(&glyph->xOffset) * textsize;
-      // Adjust for negative xOffset, also see line 3095 below
-      //if (xo < 0) 
-          cwidth -= xo;
-      // Add 1 pixel of padding all round
-      cheight +=2;
-      fillRect(poX+xo-1, poY - 1 - glyph_ab * textsize, cwidth+2, cheight, textbgcolor);
-      padding -=100;
-    }
+  if ((font == 1) && (gfxFont) && (textcolor != textbgcolor))
+  {
+    cheight = (glyph_ab + glyph_bb) * textsize;
+    // Get the offset for the first character only to allow for negative offsets
+    uint8_t   c2    = *string - pgm_read_byte(&gfxFont->first);
+    GFXglyph *glyph = &(((GFXglyph *)pgm_read_dword(&gfxFont->glyph))[c2]);
+    xo = pgm_read_byte(&glyph->xOffset) * textsize;
+    // Adjust for negative xOffset, also see line 3095 below
+    //if (xo < 0)
+    cwidth -= xo;
+    // Add 1 pixel of padding all round
+    cheight += 2;
+    fillRect(poX + xo - 1, poY - 1 - glyph_ab * textsize, cwidth + 2, cheight, textbgcolor);
+    padding -= 100;
+  }
 #endif
 
-  while (*string) sumX += drawChar(*(string++), poX+sumX, poY, font);
+  while (*string) sumX += drawChar(*(string++), poX + sumX, poY, font);
 
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv DEBUG vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-// Switch on debugging for the padding areas
-//#define PADDING_DEBUG
+  //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv DEBUG vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+  // Switch on debugging for the padding areas
+  //#define PADDING_DEBUG
 
 #ifndef PADDING_DEBUG
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ DEBUG ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ DEBUG ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  if((padX>cwidth) && (textcolor!=textbgcolor))
+  if ((padX > cwidth) && (textcolor != textbgcolor))
   {
-    int16_t padXc = poX+cwidth+xo;
+    int16_t padXc = poX + cwidth + xo;
 #ifdef LOAD_GFXFF
     if ((font == 1) && (gfxFont))
     {
-      poX +=xo; // Adjust for negative offset start character
+      poX += xo; // Adjust for negative offset start character
       poY -= 1 + glyph_ab * textsize;
     }
 #endif
-    switch(padding) {
+    switch (padding) {
       case 1:
-        fillRect(padXc,poY,padX-cwidth,cheight, textbgcolor);
+        fillRect(padXc, poY, padX - cwidth, cheight, textbgcolor);
         break;
       case 2:
-        fillRect(padXc,poY,(padX-cwidth)>>1,cheight, textbgcolor);
-        padXc = (padX-cwidth)>>1;
-        if (padXc>poX) padXc = poX;
-        fillRect(poX - padXc,poY,(padX-cwidth)>>1,cheight, textbgcolor);
+        fillRect(padXc, poY, (padX - cwidth) >> 1, cheight, textbgcolor);
+        padXc = (padX - cwidth) >> 1;
+        if (padXc > poX) padXc = poX;
+        fillRect(poX - padXc, poY, (padX - cwidth) >> 1, cheight, textbgcolor);
         break;
       case 3:
-        if (padXc>padX) padXc = padX;
-        fillRect(poX + cwidth - padXc,poY,padXc-cwidth,cheight, textbgcolor);
+        if (padXc > padX) padXc = padX;
+        fillRect(poX + cwidth - padXc, poY, padXc - cwidth, cheight, textbgcolor);
         break;
     }
   }
@@ -1772,37 +1774,37 @@ int16_t GxTFT::drawString(const char *string, int poX, int poY, int font)
 
 #else
 
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv DEBUG vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-// This is debug code to show text (green box) and blanked (white box) areas
-// It shows that the padding areas are being correctly sized and positioned
+  //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv DEBUG vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+  // This is debug code to show text (green box) and blanked (white box) areas
+  // It shows that the padding areas are being correctly sized and positioned
 
-  if((padX>sumX) && (textcolor!=textbgcolor))
+  if ((padX > sumX) && (textcolor != textbgcolor))
   {
-    int16_t padXc = poX+sumX; // Maximum left side padding
+    int16_t padXc = poX + sumX; // Maximum left side padding
 #ifdef LOAD_GFXFF
     if ((font == 1) && (gfxFont)) poY -= glyph_ab;
 #endif
-    drawRect(poX,poY,sumX,cheight, TFT_GREEN);
-    switch(padding) {
+    drawRect(poX, poY, sumX, cheight, TFT_GREEN);
+    switch (padding) {
       case 1:
-        drawRect(padXc,poY,padX-sumX,cheight, TFT_WHITE);
+        drawRect(padXc, poY, padX - sumX, cheight, TFT_WHITE);
         break;
       case 2:
-        drawRect(padXc,poY,(padX-sumX)>>1, cheight, TFT_WHITE);
-        padXc = (padX-sumX)>>1;
-        if (padXc>poX) padXc = poX;
-        drawRect(poX - padXc,poY,(padX-sumX)>>1,cheight, TFT_WHITE);
+        drawRect(padXc, poY, (padX - sumX) >> 1, cheight, TFT_WHITE);
+        padXc = (padX - sumX) >> 1;
+        if (padXc > poX) padXc = poX;
+        drawRect(poX - padXc, poY, (padX - sumX) >> 1, cheight, TFT_WHITE);
         break;
       case 3:
-        if (padXc>padX) padXc = padX;
-        drawRect(poX + sumX - padXc,poY,padXc-sumX,cheight, TFT_WHITE);
+        if (padXc > padX) padXc = padX;
+        drawRect(poX + sumX - padXc, poY, padXc - sumX, cheight, TFT_WHITE);
         break;
     }
   }
 #endif
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ DEBUG ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ DEBUG ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-return sumX;
+  return sumX;
 }
 
 /***************************************************************************************
@@ -1912,7 +1914,7 @@ void GxTFT::setFreeFont(const GFXfont *f)
   glyph_ab = 0;
   glyph_bb = 0;
   uint8_t numChars = pgm_read_byte(&gfxFont->last) - pgm_read_byte(&gfxFont->first);
-  
+
   // Find the biggest above and below baseline offsets
   for (uint8_t c = 0; c < numChars; c++)
   {
@@ -1937,7 +1939,7 @@ void GxTFT::setTextFont(uint8_t f)
 
 #else
 
-    
+
 /***************************************************************************************
 ** Function name:           setFreeFont
 ** Descriptions:            Sets the GFX free font to use
@@ -1973,7 +1975,7 @@ void GxTFT::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* d
 
 void GxTFT::writeRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t *data)
 {
-  
+
 }
 
 void GxTFT::pushRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t *data)
