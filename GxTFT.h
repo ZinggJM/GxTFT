@@ -25,7 +25,10 @@
 
 #include "GxIO/GxIO.h"
 #include "GxCTRL/GxCTRL.h"
-#include <GxTFT_Fonts.h>
+
+// include helper file to find the fonts from my development path
+// should be commented out or removed on release, but may get forgotten
+//#include <GxTFT_Fonts.h>
 
 #define LOAD_GLCD   // Font 1. Original Adafruit 8 pixel font needs ~1820 bytes in FLASH
 #define LOAD_FONT2  // Font 2. Small 16 pixel high font, needs ~3534 bytes in FLASH, 96 characters
