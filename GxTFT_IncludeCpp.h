@@ -56,6 +56,9 @@
 #ifdef _GxIO_SPI_H_
 #include "GxIO/GxIO_SPI/GxIO_SPI.cpp"
 #endif
+#ifdef _GxIO_SPI_RS_H_
+#include "GxIO/GxIO_SPI_RS/GxIO_SPI_RS.cpp"
+#endif
 #ifdef _GxIO_STM32F103BluePill_P16_H_
 #include "GxIO/GxIO_STM32F103BluePill_P16/GxIO_STM32F103BluePill_P16.cpp"
 #endif
