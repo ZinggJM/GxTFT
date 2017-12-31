@@ -3,11 +3,10 @@
 #ifndef FONT5X7_H
 #define FONT5X7_H
 
-//#if defined(__AVR) || defined(ARDUINO_ARCH_SAM)
-#if !defined(ESP8266)
-#include <avr/pgmspace.h>
-#else
+#if defined(ESP8266) || defined(ESP32)
 #include <pgmspace.h>
+#else
+#include <avr/pgmspace.h>
 #endif
 
 // Standard ASCII 5x7 font
