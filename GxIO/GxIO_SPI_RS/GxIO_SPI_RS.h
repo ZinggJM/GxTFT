@@ -10,7 +10,7 @@
 
 #define GxIO_SPI_RS_defaultFrequency 16000000
 
-#if defined(ESP8266)
+#if defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 class GxIO_SPI_RS : public GxIO
 {
@@ -40,7 +40,9 @@ class GxIO_SPI_RS : public GxIO
     void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   protected:
+#if defined(ESP8266)
     inline void setDataBits(uint16_t bits);
+#endif
     uint8_t transfer(uint8_t data, bool rs_data);
     uint16_t transfer16(uint16_t data, bool rs_data);
     SPIClass& IOSPI;

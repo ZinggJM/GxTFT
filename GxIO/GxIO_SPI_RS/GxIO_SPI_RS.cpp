@@ -5,7 +5,7 @@
 
 #include "GxIO_SPI_RS.h"
 
-#if defined(ESP8266)
+#if defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 GxIO_SPI_RS::GxIO_SPI_RS(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst, int8_t bl) : IOSPI(spi)
 {
@@ -48,17 +48,95 @@ void GxIO_SPI_RS::init()
   IOSPI.setDataMode(SPI_MODE0);
   IOSPI.setBitOrder(MSBFIRST);
   setFrequency(GxIO_SPI_RS_defaultFrequency);
+#if defined(ARDUINO_ARCH_SAMD)
+  while(SERCOM1->SPI.SYNCBUSY.bit.ENABLE);
+  SERCOM1->SPI.CTRLA.bit.ENABLE = 0;
+  SERCOM1->SPI.CTRLB.reg = SERCOM_SPI_CTRLB_CHSIZE(SPI_CHAR_SIZE_9_BITS) | SERCOM_SPI_CTRLB_RXEN;
+  SERCOM1->SPI.CTRLA.bit.ENABLE = 1;
+  while(SERCOM1->SPI.SYNCBUSY.bit.ENABLE);
+#endif
 }
 
 void GxIO_SPI_RS::setFrequency(uint32_t freq)
 {
+  //freq = 4000000; // for debug or analyzer
+#if defined(ESP8266) || defined(ESP32)
   IOSPI.setFrequency(freq);
+#elif defined(SPI_HAS_TRANSACTION)
+  SPISettings settings(freq, MSBFIRST, SPI_MODE0);
+  IOSPI.beginTransaction(settings);
+  IOSPI.endTransaction();
+#else
+  // keep the SPI default (should be 4MHz)
+#endif
 }
 
 void GxIO_SPI_RS::setClockDivider(uint32_t clockDiv)
 {
   IOSPI.setClockDivider(clockDiv);
 }
+
+#if defined(ARDUINO_ARCH_SAM)
+
+uint8_t GxIO_SPI_RS::transfer(uint8_t data, bool rs_data)
+{
+  uint32_t ch = BOARD_PIN_TO_SPI_CHANNEL(BOARD_SPI_DEFAULT_SS);
+  SPI_INTERFACE->SPI_CSR[ch] |= 0x10; // 9bits
+  uint32_t d = data | (rs_data << 8) | SPI_PCS(ch) | SPI_TDR_LASTXFER;
+  //uint32_t d = (data << 1)| rs_data | SPI_PCS(ch) | SPI_TDR_LASTXFER;
+  while ((SPI_INTERFACE->SPI_SR & SPI_SR_TDRE) == 0);
+  SPI_INTERFACE->SPI_TDR = d;
+  while ((SPI_INTERFACE->SPI_SR & SPI_SR_RDRF) == 0);
+  d = SPI_INTERFACE->SPI_RDR;
+  return (d >> 1) & 0xFF;
+}
+
+#endif
+
+#if defined(ARDUINO_ARCH_SAMD)
+
+uint8_t GxIO_SPI_RS::transfer(uint8_t data, bool rs_data)
+{
+  SERCOM1->SPI.DATA.bit.DATA = (rs_data << 8) | data;
+  while (SERCOM1->SPI.INTFLAG.bit.RXC == 0);
+  uint32_t d = SERCOM1->SPI.DATA.bit.DATA;
+  return (d >> 1) & 0xFF;
+}
+
+#endif
+
+#if defined(ESP32)
+
+//#include "soc/spi_struct.h"
+#include "spi_struct_type.h"
+
+struct spi_struct_t
+{
+  spi_dev_t * dev;
+#if !CONFIG_DISABLE_HAL_LOCKS
+  xSemaphoreHandle lock;
+#endif
+  uint8_t num;
+};
+
+uint8_t GxIO_SPI_RS::transfer(uint8_t data, bool rs_data)
+{
+  spi_t* spi = IOSPI.bus();
+  if (!spi) return 0;
+  //SPI_MUTEX_LOCK();
+  spi->dev->mosi_dlen.usr_mosi_dbitlen = 8;
+  spi->dev->miso_dlen.usr_miso_dbitlen = 7;
+  spi->dev->data_buf[0] = (data >> 1) | (data << 15) | (rs_data << 7);
+  spi->dev->cmd.usr = 1;
+  while (spi->dev->cmd.usr);
+  data = spi->dev->data_buf[0] & 0xFF;
+  //SPI_MUTEX_UNLOCK();
+  return data;
+}
+
+#endif
+
+#if defined(ESP8266)
 
 inline void GxIO_SPI_RS::setDataBits(uint16_t bits)
 {
@@ -75,10 +153,11 @@ uint8_t GxIO_SPI_RS::transfer(uint8_t data, bool rs_data)
   SPI1W0 = (data >> 1) | (data << 15) | (rs_data << 7);
   SPI1CMD |= SPIBUSY;
   while (SPI1CMD & SPIBUSY) {}
-  //return 0;
   uint16_t rv = SPI1W0;
   return uint8_t(rv & 0xFF);
 }
+
+#endif
 
 uint16_t GxIO_SPI_RS::transfer16(uint16_t data, bool rs_data)
 {

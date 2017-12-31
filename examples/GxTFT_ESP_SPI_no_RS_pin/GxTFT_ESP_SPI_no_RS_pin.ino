@@ -49,7 +49,13 @@
 // or create instance for SPI, the constructor needs parameters (or ...)
 //GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
 #if defined(ESP8266)
-GxIO_Class io(SPI, SS, -1, 0); // on ESP8266, no dc, rst on GPIO0 (D3 on Wemos D1 mini)
+GxIO_Class io(SPI, SS, -1, 2); // on ESP8266, no dc, rst on GPIO2 (D4 on Wemos D1 mini)
+#elif defined(ESP32)
+GxIO_Class io(SPI, SS, -1, 16); // on ESP32, no dc, rst on GPIO16
+#elif defined(ARDUINO_ARCH_SAM)
+GxIO_Class io(SPI, SS, -1, 9); // on Arduino Due, no dc, rst on 9
+#elif defined(ARDUINO_ARCH_SAMD)
+GxIO_Class io(SPI, 4, -1, 6); // on Arduino MKR1000, use 4 for SS (SS(24) not usable), no dc, rst on 6
 #endif
 // create instance for the selected GxCTRL class  (or select a pre-configured display below)
 GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file

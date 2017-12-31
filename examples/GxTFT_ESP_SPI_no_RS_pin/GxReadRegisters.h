@@ -41,7 +41,7 @@ void reportRegister(uint16_t reg, uint8_t n, const char *msg)
   tft.println(msg);
   Serial.print("\t");
   Serial.println(msg);
-  //delay(1000);
+  //delay(500);
 }
 
 void GxReportRegisters()
@@ -103,9 +103,9 @@ void GxReportRegisters()
     reportRegister(0x70, 2, "Panel Himax HX8347-A");
     reportRegister(0xA1, 5, "RD_DDB SSD1963");
     reportRegister(0xB0, 2, "RGB Interface Signal Control");
-    reportRegister(0xB4, 2, "Inversion Control");
-    reportRegister(0xB6, 5, "Display Control");
-    reportRegister(0xB7, 2, "Entry Mode Set");
+    //reportRegister(0xB4, 2, "Inversion Control");
+    //reportRegister(0xB6, 5, "Display Control");
+    //reportRegister(0xB7, 2, "Entry Mode Set");
     reportRegister(0xBF, 6, "ILI9481, HX8357-B");
     reportRegister(0xC0, 9, "Panel Control");
     reportRegister(0xC8, 13, "GAMMA");
@@ -119,8 +119,8 @@ void GxReportRegisters()
     reportRegister(0xE0, 16, "GAMMA-P");
     reportRegister(0xE1, 16, "GAMMA-N");
     reportRegister(0xEF, 6, "ILI9327");
-    reportRegister(0xF2, 12, "Adjust Control 2");
-    reportRegister(0xF6, 4, "Interface Control");
+    //reportRegister(0xF2, 12, "Adjust Control 2");
+    //reportRegister(0xF6, 4, "Interface Control");
   }
 }
 
