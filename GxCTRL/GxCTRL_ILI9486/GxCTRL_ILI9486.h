@@ -2,7 +2,6 @@
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 //
-// note: read functions are untested; my only ILI9486 display is write-only
 
 #ifndef _GxCTRL_ILI9486_H_
 #define _GxCTRL_ILI9486_H_
@@ -17,6 +16,8 @@ class GxCTRL_ILI9486 : public GxCTRL
     const uint32_t ID = 0x9486;
     uint32_t readID();
     uint32_t readRegister(uint8_t nr, uint8_t index = 0, uint8_t bytes = 1);
+    uint16_t readPixel(uint16_t x, uint16_t y);
+    void     readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data);
     void init();
     void setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
     void setRotation(uint8_t r);

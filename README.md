@@ -31,3 +31,5 @@ Updated read support; read support is controller specific, issues remain to be i
 Added GxTFT & RA8875P
 
 Added FSMC GxIO classes for STM32 GxIO_STM32F1_FSMC and GxIO_STM32F4_FSMC and FSMC examples
+
+Added FSMC and P16 GxIO classes for STM32F407ZGM4 board

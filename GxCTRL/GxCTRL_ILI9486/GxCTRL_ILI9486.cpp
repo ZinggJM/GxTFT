@@ -2,13 +2,13 @@
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 //
-// note: read functions are untested; my only ILI9486 display is write-only
 
 #include "GxCTRL_ILI9486.h"
 
 #define ILI9486_CASET 0x2A
 #define ILI9486_PASET 0x2B
 #define ILI9486_RAMWR 0x2C
+#define ILI9486_RAMRD   0x2E
 #define ILI9486_MADCTL 0x36
 #define MADCTL_MY  0x80
 #define MADCTL_MX  0x40
@@ -40,6 +40,38 @@ uint32_t GxCTRL_ILI9486::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
   }
   IO.endTransaction();
   return rv;
+}
+
+uint16_t GxCTRL_ILI9486::readPixel(uint16_t x, uint16_t y)
+{
+  uint16_t rv;
+  readRect(x, y, 1, 1, &rv);
+  return rv;
+}
+
+void GxCTRL_ILI9486::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* data)
+{
+  uint16_t xe = x + w - 1;
+  uint16_t ye = y + h - 1;
+  uint32_t num = uint32_t(w) * uint32_t(h);
+  IO.startTransaction();
+  IO.writeCommand(ILI9486_CASET);  // Column addr set
+  IO.writeData(x >> 8);
+  IO.writeData(x & 0xFF);  // XSTART
+  IO.writeData(xe >> 8);
+  IO.writeData(xe & 0xFF); // XEND
+  IO.writeCommand(ILI9486_PASET);  // Row addr set
+  IO.writeData(y >> 8);
+  IO.writeData(y);         // YSTART
+  IO.writeData(ye >> 8);
+  IO.writeData(ye);        // YEND
+  IO.writeCommand(ILI9486_RAMRD);  // read from RAM
+  IO.readData(); // dummy
+  for (; num > 0; num--)
+  {
+    *data++ = IO.readData16();
+  }
+  IO.endTransaction();
 }
 
 void GxCTRL_ILI9486::init()
