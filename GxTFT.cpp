@@ -45,7 +45,7 @@
 #if defined(__AVR)
 #include <avr/pgmspace.h>
 #endif
-#if !defined(__AVR) && !defined(ESP8266)
+#if !defined(__AVR) && !defined(ESP8266) && !defined(ESP32)
 #include <itoa.h>
 #endif
 
