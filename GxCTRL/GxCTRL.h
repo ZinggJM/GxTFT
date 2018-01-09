@@ -47,6 +47,14 @@ class GxCTRL
     virtual void invertDisplay(bool i);
   protected:
     GxIO& IO;
+    static inline uint8_t gx_uint8_min(uint8_t a, uint8_t b) {return (a < b ? a : b);};
+    static inline uint8_t gx_uint8_max(uint8_t a, uint8_t b) {return (a > b ? a : b);};
+    static inline uint16_t gx_uint16_min(uint16_t a, uint16_t b) {return (a < b ? a : b);};
+    static inline uint16_t gx_uint16_max(uint16_t a, uint16_t b) {return (a > b ? a : b);};
+#if !defined(min)
+    // this avoids the need to change all classes, but does not interfere with any min template
+    static inline uint8_t min(uint8_t a, uint8_t b) {return (a < b ? a : b);};
+#endif
 };
 
 #endif
