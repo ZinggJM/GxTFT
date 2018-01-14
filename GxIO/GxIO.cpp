@@ -41,5 +41,17 @@ uint32_t GxIO::readRawData32(uint8_t part)
   return 0;
 };
 
+void GxIO::writeCommand16Transaction(uint16_t c)
+{
+  startTransaction();
+  writeCommand16(c);
+  endTransaction();
+}
+
+void GxIO::writeCommand16(uint16_t c)
+{
+  writeCommand(c >> 8);
+  writeCommand(c);
+}
 
 

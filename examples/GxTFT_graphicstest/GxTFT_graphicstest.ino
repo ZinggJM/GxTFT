@@ -55,6 +55,7 @@
 //#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
 //#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 //#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 320x480 e.g. 3.5inch RPI Display
+//#include <GxCTRL/GxCTRL_OTM8009A_RV047/GxCTRL_OTM8009A_RV047.h> // 854x480 e.g. RV047 4.7" TFT from Ruijia Industry
 
 // create instance for the selected GxIO class  (or select a pre-configured display below)
 //GxIO_Class io; // #define GxIO_Class is in the selected header file
@@ -80,7 +81,7 @@
 //#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
-#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h"
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
 //#include "myTFTs/my_3.5_RPi_480x320_DUE.h"
@@ -88,6 +89,7 @@
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
+#include "myTFTs/my_4.7_RV047_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"

@@ -187,6 +187,15 @@ void GxIO_STM32F407ZGM4_P16::writeCommandTransaction(uint8_t c)
   GPIOG->BSRR = (0x1 << 12);        // PG12 CS high
 }
 
+void GxIO_STM32F407ZGM4_P16::writeCommand16Transaction(uint16_t c)
+{
+  GPIOG->BSRR = (0x1 << (12 + 16)); // PG12 CS low
+  GPIOG->BSRR = (0x1 << ( 0 + 16)); // PG0  RS low
+  writeData16(c);
+  GPIOG->BSRR = (0x1 <<  0);        // PG0  RS high
+  GPIOG->BSRR = (0x1 << 12);        // PG12 CS high
+}
+
 void GxIO_STM32F407ZGM4_P16::writeDataTransaction(uint8_t d)
 {
   GPIOG->BSRR = (0x1 << (12 + 16)); // PG12 CS low
@@ -202,6 +211,13 @@ void GxIO_STM32F407ZGM4_P16::writeData16Transaction(uint16_t d, uint32_t num)
 }
 
 void GxIO_STM32F407ZGM4_P16::writeCommand(uint8_t c)
+{
+  GPIOG->BSRR = (0x1 << ( 0 + 16)); // PG0  RS low
+  writeData16(c);
+  GPIOG->BSRR = (0x1 <<  0);        // PG0  RS high
+}
+
+void GxIO_STM32F407ZGM4_P16::writeCommand16(uint16_t c)
 {
   GPIOG->BSRR = (0x1 << ( 0 + 16)); // PG0  RS low
   writeData16(c);

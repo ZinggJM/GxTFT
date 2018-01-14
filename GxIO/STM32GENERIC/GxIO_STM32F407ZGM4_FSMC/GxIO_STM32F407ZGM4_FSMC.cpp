@@ -72,7 +72,7 @@
 
 //#define ADDSET 15 // (ADDSET+1)*6ns = CS to RW
 //#define DATAST 30 // (DATAST+1)*6ns = RW length
-#define ADDSET 4 // (ADDSET+1)*6ns = CS to RW
+#define ADDSET 5 // (ADDSET+1)*6ns = CS to RW
 #define DATAST 4 // (DATAST+1)*6ns = RW length
 
 // these are defined for STM32F103V in
@@ -181,6 +181,11 @@ void GxIO_STM32F407ZGM4_FSMC::writeCommandTransaction(uint8_t c)
   *(uint8_t*)CommandAccess = c;
 }
 
+void GxIO_STM32F407ZGM4_FSMC::writeCommand16Transaction(uint16_t c)
+{
+  *(uint16_t*)CommandAccess = c;
+}
+
 void GxIO_STM32F407ZGM4_FSMC::writeDataTransaction(uint8_t d)
 {
   *(uint8_t*)DataAccess = d;
@@ -198,6 +203,11 @@ void GxIO_STM32F407ZGM4_FSMC::writeData16Transaction(uint16_t d, uint32_t num)
 void GxIO_STM32F407ZGM4_FSMC::writeCommand(uint8_t c)
 {
   *(uint8_t*)CommandAccess = c;
+}
+
+void GxIO_STM32F407ZGM4_FSMC::writeCommand16(uint16_t c)
+{
+  *(uint16_t*)CommandAccess = c;
 }
 
 void GxIO_STM32F407ZGM4_FSMC::writeData(uint8_t d)

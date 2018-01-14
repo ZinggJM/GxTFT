@@ -80,6 +80,20 @@ void GxReportRegisters()
     reportRegister(0x54, 2, "Display CTRL");
     reportRegister(0x54, 2, "Display CABC");
   }
+  else if (controller.ID == 0x8009A)
+  {
+    reportRegister(0x0A, 1, "Read Power Mode");
+    reportRegister(0x0B, 1, "Read MADCTL");
+    reportRegister(0x0C, 1, "Read Pixel Format");
+    reportRegister(0x0D, 1, "Read Image Mode");
+    reportRegister(0x45, 2, "Read Scan Line");
+    reportRegister(0x52, 1, "Read Display Brightness Value");
+    reportRegister(0x54, 1, "Read Display CTRL");
+    reportRegister(0x56, 1, "Read Content Adaptive Brighness Control");
+    reportRegister(0xA1, 5, "Read DDB Start");
+    reportRegister(0xDB, 1, "Read ID2");
+    reportRegister(0xDC, 1, "Read ID3");
+  }
   else
   {
     reportRegister(0x00, 2, "ID: ILI9320, ILI9325, ILI9335, ...");

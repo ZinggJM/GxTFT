@@ -35,6 +35,9 @@
 #ifdef _GxCTRL_SSD1963_H_
 #include "GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.cpp"
 #endif
+#ifdef _GxCTRL_OTM8009A_RV047_H_
+#include "GxCTRL/GxCTRL_OTM8009A_RV047/GxCTRL_OTM8009A_RV047.cpp"
+#endif
 
 #include "GxIO/GxIO.cpp"
 
