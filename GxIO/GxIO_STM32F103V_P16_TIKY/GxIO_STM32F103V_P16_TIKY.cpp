@@ -14,6 +14,15 @@
 
 #include "GxIO_STM32F103V_P16_TIKY.h"
 
+// TFT connector uses FSMC pins
+// D0   D1   D2  D3  D4  D5  D6  D7   D8   D9   D10  D11  D12  D13 D14 D15
+// PD14 PD15 PD0 PD1 PE7 PE8 PE9 PE10 PE11 PE12 PE13 PE14 PE15 PD8 PD9 PD10
+
+// connector pins
+// 01  02  03  04  05  06  07  08  09  10  11  12   13  14  15   16   17   18  19  20  21  22  23   24   25   26   27   28   29  30  31   32  33  34  35  36  37  38  39  40
+// 5V  GND D23 D22 D21 D20 D19 D18 D17 D16 CS  RS   WR  RD  RST  D0   D1   D2  D3  D4  D5  D6  D7   D8   D9   D10  D11  D12  D13 D14 D15  SCK TCS TCK TDO TDI TIQ BL  GND 3.3
+// 5V  GND                                 PD7 PD11 PD5 PD4 PD13 PD14 PD15 PD0 PD1 PE7 PE8 PE9 PE10 PE11 PE12 PE13 PE14 PE15 PD8 PD9 PD10
+
 //                    |       |        | // Ruler on 8 & 16
 #define PD_DATA_BITS 0b1100011100000011;
 //                    |       |        |
