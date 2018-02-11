@@ -33,3 +33,5 @@ Added GxTFT & RA8875P
 Added FSMC GxIO classes for STM32 GxIO_STM32F1_FSMC and GxIO_STM32F4_FSMC and FSMC examples
 
 Added FSMC and P16 GxIO classes for STM32F407ZGM4 board
+
+Added OTM8009A support for 3.95" & 4.7" TFTs with FSMC connector on STM32 boards
