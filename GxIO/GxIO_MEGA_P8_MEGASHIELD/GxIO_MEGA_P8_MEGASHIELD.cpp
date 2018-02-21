@@ -11,34 +11,40 @@
 
 #include "GxIO_MEGA_P8_MEGASHIELD.h"
 
+//#define INHAOS_LCD_2000_9225
+
 GxIO_MEGA_P8_MEGASHIELD::GxIO_MEGA_P8_MEGASHIELD()
 {
-//  _cs   = 40; //PORT G bit _BV(1)
-//  _rs   = 38; //PORT D bit _BV(7)
-//  _rst  = 41; //PORT G bit _BV(0)
-//  _wr   = 39; //PORT G bit _BV(2)
-//  _rd   = 43; //PORT L bit _BV(6)
-
+#ifndef INHAOS_LCD_2000_9225
+  _cs   = 40; //PORT G bit _BV(1)
+  _rs   = 38; //PORT D bit _BV(7)
+  _rst  = 41; //PORT G bit _BV(0)
+  _wr   = 39; //PORT G bit _BV(2)
+  _rd   = 43; //PORT L bit _BV(6)
+#else
 // INHAOS LCD-2000-9225 on INHAOS MEGA shield (info is wrong)
   _cs   = 40; //PORT G bit _BV(1)
   _rs   = 39; //PORT D bit _BV(2)
   _rst  = 41; //PORT G bit _BV(0)
   _wr   = 38; //PORT G bit _BV(7)
   _rd   = 43; //PORT L bit _BV(6)
+#endif
 }
 
-//#define RS_L PORTD &= ~_BV(7);
-//#define RS_H PORTD |= _BV(7);
-//#define WR_L PORTG &= ~_BV(2);
-//#define WR_H PORTG |= _BV(2);
-//#define WR_STB PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2);
-
+#ifndef INHAOS_LCD_2000_9225
+#define RS_L PORTD &= ~_BV(7);
+#define RS_H PORTD |= _BV(7);
+#define WR_L PORTG &= ~_BV(2);
+#define WR_H PORTG |= _BV(2);
+#define WR_STB PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2);
+#else
 // INHAOS LCD-2000-9225 on INHAOS MEGA shield (info is wrong)
 #define WR_L PORTD &= ~_BV(7);
 #define WR_H PORTD |= _BV(7);
 #define RS_L PORTG &= ~_BV(2);
 #define RS_H PORTG |= _BV(2);
 #define WR_STB WR_L WR_L WR_H
+#endif
 
 void GxIO_MEGA_P8_MEGASHIELD::reset()
 {
