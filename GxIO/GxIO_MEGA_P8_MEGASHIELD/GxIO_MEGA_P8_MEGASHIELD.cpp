@@ -3,7 +3,7 @@
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 //
-// for 16 bit parallel displays on shields or on adapter shields for MEGA/DUE, e.g. HVGA MEGA or MEGA Shield V2.2
+// for 8 bit parallel displays on shields or on adapter shields for MEGA/DUE, e.g. HVGA MEGA or MEGA Shield V2.2
 
 // read functions untested, waiting for CTE TFT LCD/SD Shield for MEGA to arrive
 
@@ -11,40 +11,14 @@
 
 #include "GxIO_MEGA_P8_MEGASHIELD.h"
 
-//#define INHAOS_LCD_2000_9225
-
 GxIO_MEGA_P8_MEGASHIELD::GxIO_MEGA_P8_MEGASHIELD()
 {
-#ifndef INHAOS_LCD_2000_9225
   _cs   = 40; //PORT G bit _BV(1)
   _rs   = 38; //PORT D bit _BV(7)
   _rst  = 41; //PORT G bit _BV(0)
   _wr   = 39; //PORT G bit _BV(2)
   _rd   = 43; //PORT L bit _BV(6)
-#else
-// INHAOS LCD-2000-9225 on INHAOS MEGA shield (info is wrong)
-  _cs   = 40; //PORT G bit _BV(1)
-  _rs   = 39; //PORT D bit _BV(2)
-  _rst  = 41; //PORT G bit _BV(0)
-  _wr   = 38; //PORT G bit _BV(7)
-  _rd   = 43; //PORT L bit _BV(6)
-#endif
 }
-
-#ifndef INHAOS_LCD_2000_9225
-#define RS_L PORTD &= ~_BV(7);
-#define RS_H PORTD |= _BV(7);
-#define WR_L PORTG &= ~_BV(2);
-#define WR_H PORTG |= _BV(2);
-#define WR_STB PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2);
-#else
-// INHAOS LCD-2000-9225 on INHAOS MEGA shield (info is wrong)
-#define WR_L PORTD &= ~_BV(7);
-#define WR_H PORTD |= _BV(7);
-#define RS_L PORTG &= ~_BV(2);
-#define RS_H PORTG |= _BV(2);
-#define WR_STB WR_L WR_L WR_H
-#endif
 
 void GxIO_MEGA_P8_MEGASHIELD::reset()
 {
@@ -115,10 +89,10 @@ uint16_t GxIO_MEGA_P8_MEGASHIELD::readData16()
 void GxIO_MEGA_P8_MEGASHIELD::writeCommandTransaction(uint8_t c)
 {
   PORTG &= ~_BV(1); // CS_L;
-  RS_L;
+  PORTD &= ~_BV(7); // RS_L
   PORTC = c;
-  WR_STB;
-  RS_H;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB
+  PORTD |= _BV(7); // RS_H;
   PORTG |= _BV(1); // CS_H;
 }
 
@@ -126,7 +100,7 @@ void GxIO_MEGA_P8_MEGASHIELD::writeDataTransaction(uint8_t d)
 {
   PORTG &= ~_BV(1); // CS_L;
   PORTC = d;
-  WR_STB;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB
   PORTG |= _BV(1); // CS_H;
 }
 
@@ -139,16 +113,16 @@ void GxIO_MEGA_P8_MEGASHIELD::writeData16Transaction(uint16_t d, uint32_t num)
 
 void GxIO_MEGA_P8_MEGASHIELD::writeCommand(uint8_t c)
 {
-  RS_L;
+  PORTD &= ~_BV(7); // RS_L
   PORTC = c;
-  WR_STB;
-  RS_H;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB
+  PORTD |= _BV(7); // RS_H;
 }
 
 void GxIO_MEGA_P8_MEGASHIELD::writeData(uint8_t d)
 {
   PORTC = d;
-  WR_STB;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB
 }
 
 void GxIO_MEGA_P8_MEGASHIELD::writeData(uint8_t* d, uint32_t num)
@@ -174,9 +148,9 @@ void GxIO_MEGA_P8_MEGASHIELD::writeData16(uint16_t d, uint32_t num)
 void GxIO_MEGA_P8_MEGASHIELD::writeAddrMSBfirst(uint16_t d)
 {
   PORTC = d >> 8;
-  WR_STB;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB
   PORTC = d;
-  WR_STB;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB
 }
 
 void GxIO_MEGA_P8_MEGASHIELD::startTransaction()

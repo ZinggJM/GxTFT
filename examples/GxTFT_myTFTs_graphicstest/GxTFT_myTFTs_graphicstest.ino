@@ -27,6 +27,7 @@
 #define TFT_Class GxTFT
 
 // select a pre-configured display header file
+#include "myTFTs/my_2.0_TFT_INHAOS_LCD_2000_9225.h"
 //#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
 
@@ -44,7 +45,7 @@
 
 // STM32GENERIC, board "BLACK F407VE/ZE/ZG boards", Specific Board "BLACK F407ZG (M4 DEMO)
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
-#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
