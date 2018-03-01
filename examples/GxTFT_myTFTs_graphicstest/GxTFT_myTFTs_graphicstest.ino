@@ -27,9 +27,11 @@
 #define TFT_Class GxTFT
 
 // select a pre-configured display header file
-#include "myTFTs/my_2.0_TFT_INHAOS_LCD_2000_9225.h"
+//#include "myTFTs/my_2.0_TFT_INHAOS_LCD_2000_9225.h"
 //#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
+#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h"
+//#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h"
 
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
 
