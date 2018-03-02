@@ -5,7 +5,8 @@
 //
 // for 8 bit parallel displays on shields or on adapter shields for MEGA, using PORTA to high byte
 
-// read functions work only partially on my modified INHAOS MEGA shield
+// read functions work on my modified INHAOS MEGA shield (remove R7, add 1k from there to pin 43)
+// I had to add 3k9 pull-up resistors to the data lines on the MEGA side of the series resistors
 
 #ifndef _GxIO_MEGA_P8_MEGASHIELD_H_H_
 #define _GxIO_MEGA_P8_MEGASHIELD_H_H_

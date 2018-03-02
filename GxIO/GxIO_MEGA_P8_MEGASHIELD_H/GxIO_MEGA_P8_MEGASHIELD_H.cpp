@@ -5,7 +5,8 @@
 //
 // for 8 bit parallel displays on shields or on adapter shields for MEGA, using PORTA to high byte
 
-// read functions work only partially on my modified INHAOS MEGA shield
+// read functions work on my modified INHAOS MEGA shield (remove R7, add 1k from there to pin 43)
+// I had to add 3k9 pull-up resistors to the data lines on the MEGA side of the series resistors
 
 #if defined(__AVR_ATmega2560__)
 
@@ -18,6 +19,7 @@ GxIO_MEGA_P8_MEGASHIELD_H::GxIO_MEGA_P8_MEGASHIELD_H()
   _rst  = 41; //PORT G bit _BV(0)
   _wr   = 39; //PORT G bit _BV(2)
   _rd   = 43; //PORT L bit _BV(6)
+  _bl   = -1;
 }
 
 void GxIO_MEGA_P8_MEGASHIELD_H::reset()
@@ -83,12 +85,11 @@ uint16_t GxIO_MEGA_P8_MEGASHIELD_H::readData16()
   DDRA = 0x00; // Set direction input
   PORTL &= ~_BV(6); // RD_L
   PORTL &= ~_BV(6); // RD_L
-  uint16_t rv = PINA;
-  PORTL |= _BV(6); // RD_H
+  uint16_t rv = PINA << 8;
   PORTL |= _BV(6); // RD_H
   PORTL &= ~_BV(6); // RD_L
   PORTL &= ~_BV(6); // RD_L
-  rv |= PINA << 8;
+  rv |= PINA;
   PORTL |= _BV(6); // RD_H
   DDRA = 0xFF; // Set direction output again
   return rv;
