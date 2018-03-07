@@ -75,66 +75,66 @@ void GxCTRL_ILI9488::init()
 {
   IO.writeCommandTransaction(0x01); // Soft Reset
   delay(150);
-  IO.writeCommandTransaction(0x28); // Display Off
-  IO.writeCommandTransaction(0x3A); // Pixel read=565, write=565.
-  IO.writeDataTransaction(0x55);
-  IO.writeCommandTransaction(0xC0); // Power Control 1
-  IO.writeDataTransaction(0x10);
-  IO.writeDataTransaction(0x10);
-  IO.writeCommandTransaction(0xC1); // Power Control 2
-  IO.writeDataTransaction(0x41);
-  IO.writeCommandTransaction(0xC5); // VCOM  Control 1
-  IO.writeDataTransaction(0x00);
-  IO.writeDataTransaction(0x22);
-  IO.writeDataTransaction(0x80);
-  IO.writeDataTransaction(0x40);
-  IO.writeCommandTransaction(0x36); // Memory Access
-  IO.writeDataTransaction(0x68);
-  IO.writeCommandTransaction(0xB0); // Interface
-  IO.writeDataTransaction(0x00);
-  IO.writeCommandTransaction(0xB1); // Frame Rate Control [B0 11]
-  IO.writeDataTransaction(0xB0);
-  IO.writeDataTransaction(0x11);
-  IO.writeCommandTransaction(0xB4); //Inversion Control [02]
-  IO.writeDataTransaction(0x02);
-  IO.writeCommandTransaction(0xB6); // Display Function Control [02 02 3B] .kbv NL=480
-  IO.writeDataTransaction(0x02);
-  IO.writeDataTransaction(0x02);
-  IO.writeDataTransaction(0x3B);
-  IO.writeCommandTransaction(0xB7); // Entry Mode
-  IO.writeDataTransaction(0xC6);
-  IO.writeCommandTransaction(0x3A); // Interlace Pixel Format
-  IO.writeDataTransaction(0x55);
-  IO.writeCommandTransaction(0xF7); // Adjustment Control 3 [A9 51 2C 82]
-  IO.writeDataTransaction(0xA9);
-  IO.writeDataTransaction(0x51);
-  IO.writeDataTransaction(0x2C);
-  IO.writeDataTransaction(0x82);
-  IO.writeCommandTransaction(0x11); // Sleep Out
+  IO.startTransaction();
+  IO.writeCommand(0x28); // Display Off
+  IO.writeCommand(0x3A); // Pixel read=565, write=565.
+  IO.writeData(0x55);
+  IO.writeCommand(0xC0); // Power Control 1
+  IO.writeData(0x10);
+  IO.writeData(0x10);
+  IO.writeCommand(0xC1); // Power Control 2
+  IO.writeData(0x41);
+  IO.writeCommand(0xC5); // VCOM  Control 1
+  IO.writeData(0x00);
+  IO.writeData(0x22);
+  IO.writeData(0x80);
+  IO.writeData(0x40);
+  IO.writeCommand(0x36); // Memory Access
+  IO.writeData(0x68);
+  IO.writeCommand(0xB0); // Interface
+  IO.writeData(0x00);
+  IO.writeCommand(0xB1); // Frame Rate Control [B0 11]
+  IO.writeData(0xB0);
+  IO.writeData(0x11);
+  IO.writeCommand(0xB4); //Inversion Control [02]
+  IO.writeData(0x02);
+  IO.writeCommand(0xB6); // Display Function Control [02 02 3B] .kbv NL=480
+  IO.writeData(0x02);
+  IO.writeData(0x02);
+  IO.writeData(0x3B);
+  IO.writeCommand(0xB7); // Entry Mode
+  IO.writeData(0xC6);
+  IO.writeCommand(0x3A); // Interlace Pixel Format
+  IO.writeData(0x55);
+  IO.writeCommand(0xF7); // Adjustment Control 3 [A9 51 2C 82]
+  IO.writeData(0xA9);
+  IO.writeData(0x51);
+  IO.writeData(0x2C);
+  IO.writeData(0x82);
+  IO.writeCommand(0x11); // Sleep Out
+  IO.endTransaction();
   delay(150);
   IO.writeCommandTransaction(0x29); // Display On
 }
 
 void GxCTRL_ILI9488::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
-  // this controller seems to need separate transactions; reason speed on SPI ?
-  IO.writeCommandTransaction(ILI9488_CASET);  // Column addr set
-  IO.writeDataTransaction(x0 >> 8);
-  IO.writeDataTransaction(x0 & 0xFF); // XSTART
-  IO.writeDataTransaction(x1 >> 8);
-  IO.writeDataTransaction(x1 & 0xFF); // XEND
-  IO.writeCommandTransaction(ILI9488_PASET);  // Row addr set
-  IO.writeDataTransaction(y0 >> 8);
-  IO.writeDataTransaction(y0);        // YSTART
-  IO.writeDataTransaction(y1 >> 8);
-  IO.writeDataTransaction(y1);        // YEND
-  IO.writeCommandTransaction(ILI9488_RAMWR);  // write to RAM
   IO.startTransaction();
+  IO.writeCommand(ILI9488_CASET);  // Column addr set
+  IO.writeData(x0 >> 8);
+  IO.writeData(x0 & 0xFF); // XSTART
+  IO.writeData(x1 >> 8);
+  IO.writeData(x1 & 0xFF); // XEND
+  IO.writeCommand(ILI9488_PASET);  // Row addr set
+  IO.writeData(y0 >> 8);
+  IO.writeData(y0);        // YSTART
+  IO.writeData(y1 >> 8);
+  IO.writeData(y1);        // YEND
+  IO.writeCommand(ILI9488_RAMWR);  // write to RAM
 }
 
 void GxCTRL_ILI9488::setRotation(uint8_t r)
 {
-  // this controller seems to need separate transactions; reason speed on SPI ?
   IO.writeCommandTransaction(ILI9488_MADCTL);
   switch (r & 3)
   {

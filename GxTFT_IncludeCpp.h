@@ -26,6 +26,12 @@
 #ifdef _GxCTRL_ILI9486_H_
 #include "GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.cpp"
 #endif
+#ifdef _GxCTRL_ILI9488_H_
+#include "GxCTRL/GxCTRL_ILI9488/GxCTRL_ILI9488.cpp"
+#endif
+#ifdef _GxCTRL_ILI9488_ST_H_
+#include "GxCTRL/GxCTRL_ILI9488_ST/GxCTRL_ILI9488_ST.cpp"
+#endif
 #ifdef _GxCTRL_ILI9806_H_
 #include "GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.cpp"
 #endif

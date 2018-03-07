@@ -30,7 +30,7 @@
 //#include "myTFTs/my_2.0_TFT_INHAOS_LCD_2000_9225.h"
 //#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
-#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h"
+//#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h"
 //#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h"
 
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
@@ -44,6 +44,7 @@
 //#include "myTFTs/my_3.5_RPi_480x320_STM.h" // not yet ok
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
+#include "myTFTs/my_3.5_ILI9488_480x320_MEGA.h"
 
 // STM32GENERIC, board "BLACK F407VE/ZE/ZG boards", Specific Board "BLACK F407ZG (M4 DEMO)
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
