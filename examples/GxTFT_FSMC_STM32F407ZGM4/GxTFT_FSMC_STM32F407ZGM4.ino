@@ -15,7 +15,7 @@
 // I use it with ST-LINK-V2, Upload method "STLink[Automatic serial = SerialUSB]", USB disabled.
 // For Serial I use a Serial to USB converter on PA9, PA10, "SerialUART1".
 // https://github.com/danieleff/STM32GENERIC
-#include <GxIO/STM32GENERIC/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.cpp>
+#include <GxIO/STM32GENERIC/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
 // create instance for the selected GxIO class
 GxIO_Class io; // #define GxIO_Class is in the selected header file
 // note: "error: 'GxIO_Class' does not name a type": indicates target board selection mismatch
@@ -25,7 +25,7 @@ GxIO_Class io; // #define GxIO_Class is in the selected header file
 // For 3.2" TFT of bundle 1 of:
 // https://www.aliexpress.com/item/STM32F407ZGT6-Development-Board-ARM-M4-STM32F4-cortex-M4-core-Board-Compatibility-Multiple-Extension/32795142050.html
 // select one GxCTRL class
-#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.cpp> // 240x320
+#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
 // create instance for the selected GxCTRL class
 GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
 // select one or adapt
@@ -37,7 +37,7 @@ TFT_Class tft(io, controller, 320, 240); // landscape 240x320
 // For 3.5" TFT with matching connector:
 // https://www.aliexpress.com/item/Smart-Electronics-3-5-inch-TFT-Touch-Screen-LCD-Module-Display-320-480-ILI9486-with-PCB/32586941686.html
 // select one GxCTRL class
-#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.cpp> // 320x480
+#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480
 // create instance for the selected GxCTRL class
 GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
 // select one or adapt
@@ -45,10 +45,6 @@ TFT_Class tft(io, controller, 320, 480); // portrait HVGA 320x480 or 3.5inch RPI
 //TFT_Class tft(io, controller, 480, 320); // landscape HVGA 320x480 or 3.5inch RPI Display
 
 #endif
-
-// include GxIO and GxCTRL base classes
-#include <GxIO/GxIO.cpp>
-#include <GxCTRL/GxCTRL.cpp>
 
 #include "GxReadRegisters.h"
 

@@ -80,9 +80,6 @@ TFT_Class tft(io, controller, 480, 320); // landscape HVGA 320x480 or 3.5inch RP
 //#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
 
-// include the selected code
-#include "GxTFT_IncludeCpp.h"
-
 #include "GxReadRegisters.h"
 
 #if !defined(ESP8266)

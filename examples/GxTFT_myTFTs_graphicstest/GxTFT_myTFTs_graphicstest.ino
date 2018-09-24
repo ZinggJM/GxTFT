@@ -59,9 +59,6 @@
 //#include "myTFTs/my_7_Waveshare_800x480_SPI_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_CTE_DUE.h"
 
-// include the selected code
-#include "GxTFT_IncludeCpp.h"
-
 #include "GxReadRegisters.h"
 
 #if !defined(ESP8266)

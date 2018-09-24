@@ -26,7 +26,7 @@ uint32_t GxCTRL_HX8357B::readID()
   return IO.readData16Transaction();
 }
 
-uint32_t GxCTRL_HX8357B::readRegister(uint8_t nr, uint8_t index = 0, uint8_t bytes)
+uint32_t GxCTRL_HX8357B::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
 {
   uint32_t rv = 0;
   bytes = min(bytes, 4);

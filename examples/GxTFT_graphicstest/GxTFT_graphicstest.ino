@@ -90,7 +90,7 @@
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
-#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
@@ -99,9 +99,6 @@
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_CTE_DUE.h"
-
-// include the selected code
-#include "GxTFT_IncludeCpp.h"
 
 #include "GxReadRegisters.h"
 

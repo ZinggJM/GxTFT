@@ -11,12 +11,12 @@
 // select one GxIO class
 // note: "error: 'GxIO_Class' does not name a type": indicates target board selection mismatch
 // this version is for use with Arduino package STM32DUINO, board "Generic STM32F103V series" variant "STM32F103VC".
-#include <GxIO/STM32DUINO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.cpp>
+#include <GxIO/STM32DUINO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
 // this version is for use with Arduino package STM32GENERIC, works with board "huaweiwx F103Z boards" variants "RedBull(F103ZE)" or "GENERIC(STM32F103ZE)".
-//#include <GxIO/STM32GENERIC/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.cpp>
+//#include <GxIO/STM32GENERIC/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
 
 // select one GxCTRL class
-#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.cpp> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
+#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 
 // create instance for the selected GxIO class
 GxIO_Class io; // #define GxIO_Class is in the selected header file
@@ -28,10 +28,6 @@ GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header f
 // select one or adapt
 //TFT_Class tft(io, controller, 480, 854); // portrait 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 TFT_Class tft(io, controller, 854, 480); // landscape 854x480 e.g. Tiky 5" TFT from Ruijia Industry
-
-// include GxIO and GxCTRL base classes
-#include <GxIO/GxIO.cpp>
-#include <GxCTRL/GxCTRL.cpp>
 
 #include "GxReadRegisters.h"
 

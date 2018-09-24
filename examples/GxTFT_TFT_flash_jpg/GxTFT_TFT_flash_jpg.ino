@@ -32,10 +32,6 @@
 //#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
 
-// include the selected code
-#include "GxTFT_IncludeCpp.h"
-
-
 
 // JPEG decoder library
 #include <JPEGDecoder.h>

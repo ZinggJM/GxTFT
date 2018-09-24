@@ -81,9 +81,6 @@ TFT_Class tft(io, controller, 800, 480); // landscape 800x480 7inch Display
 //#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h" // <== or select this
 
-// include the selected code
-#include "GxTFT_IncludeCpp.h"
-
 #include "GxReadRegisters.h"
 
 #if !defined(ESP8266)

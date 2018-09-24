@@ -80,9 +80,6 @@ TFT_Class tft(io, controller, 854, 480); // landscape 854x480 e.g. Tiky 5" TFT f
 //#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
 
-// include the selected code
-#include "GxTFT_IncludeCpp.h"
-
 #include "GxReadRegisters.h"
 
 #if !defined(ESP8266)

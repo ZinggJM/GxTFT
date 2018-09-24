@@ -12,7 +12,7 @@ uint32_t GxCTRL_SSD1963::readID()
   IO.startTransaction();
   IO.writeCommand(0xA1);
   rv |= IO.readData16();
-  rv |= IO.readData16() << 16;
+  rv |= uint32_t(IO.readData16()) << 16;
   IO.endTransaction();
   return rv;
 }

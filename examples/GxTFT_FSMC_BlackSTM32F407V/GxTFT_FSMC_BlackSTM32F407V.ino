@@ -11,12 +11,12 @@
 // select one GxIO class, 
 // note: "error: 'GxIO_Class' does not name a type": indicates target board selection mismatch
 // this version is for use with Arduino package STM32DUINO, board "STM32 Discovery F407".
-//#include <GxIO/STM32DUINO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.cpp>
+//#include <GxIO/STM32DUINO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
 // this version is for use with Arduino package STM32GENERIC, board "BLACK F407VE/ZE/ZG boards".
-#include <GxIO/STM32GENERIC/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.cpp>
+#include <GxIO/STM32GENERIC/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
 
 // select one GxCTRL class
-#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.cpp> // 240x320
+#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
 
 // create instance for the selected GxIO class
 GxIO_Class io; // #define GxIO_Class is in the selected header file
@@ -28,10 +28,6 @@ GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header f
 // select one or adapt
 //TFT_Class tft(io, controller, 240, 320); // portrait 240x320
 TFT_Class tft(io, controller, 320, 240); // landscape 240x320
-
-// include GxIO and GxCTRL base classes
-#include <GxIO/GxIO.cpp>
-#include <GxCTRL/GxCTRL.cpp>
 
 #include "GxReadRegisters.h"
 
