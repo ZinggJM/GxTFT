@@ -120,6 +120,17 @@ void GxIO_MEGA_P16_MEGASHIELD::writeCommandTransaction(uint8_t c)
   PORTG |= _BV(1); // CS_H;
 }
 
+void GxIO_MEGA_P16_MEGASHIELD::writeCommand16Transaction(uint16_t c)
+{
+  PORTG &= ~_BV(1); // CS_L;
+  PORTD &= ~_BV(7); // RS_L;
+  PORTA = c >> 8;
+  PORTC = c;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB;
+  PORTD |= _BV(7); // RS_H;
+  PORTG |= _BV(1); // CS_H;
+}
+
 void GxIO_MEGA_P16_MEGASHIELD::writeDataTransaction(uint8_t d)
 {
   PORTG &= ~_BV(1); // CS_L;
@@ -140,6 +151,15 @@ void GxIO_MEGA_P16_MEGASHIELD::writeCommand(uint8_t c)
 {
   PORTD &= ~_BV(7); // RS_L;
   PORTA = 0;
+  PORTC = c;
+  PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB;
+  PORTD |= _BV(7); // RS_H;
+}
+
+void GxIO_MEGA_P16_MEGASHIELD::writeCommand16(uint16_t c)
+{
+  PORTD &= ~_BV(7); // RS_L;
+  PORTA = c >> 8;
   PORTC = c;
   PORTG &= ~_BV(2); PORTG &= ~_BV(2); PORTG |= _BV(2); // WR_STB;
   PORTD |= _BV(7); // RS_H;
@@ -202,4 +222,3 @@ void GxIO_MEGA_P16_MEGASHIELD::setBackLight(bool lit)
 }
 
 #endif
-

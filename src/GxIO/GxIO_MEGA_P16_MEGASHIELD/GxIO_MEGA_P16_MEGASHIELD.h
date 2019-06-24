@@ -24,9 +24,11 @@ class GxIO_MEGA_P16_MEGASHIELD : public GxIO
     uint8_t readData();
     uint16_t readData16();
     void writeCommandTransaction(uint8_t c);
+    void writeCommand16Transaction(uint16_t c);
     void writeDataTransaction(uint8_t d);
     void writeData16Transaction(uint16_t d, uint32_t num = 1);
     void writeCommand(uint8_t c);
+    void writeCommand16(uint16_t c);
     void writeData(uint8_t d);
     void writeData(uint8_t* d, uint32_t num);
     void writeData16(uint16_t d, uint32_t num = 1);
@@ -44,5 +46,3 @@ class GxIO_MEGA_P16_MEGASHIELD : public GxIO
 #endif
 
 #endif
-
-

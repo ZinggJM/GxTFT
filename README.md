@@ -11,7 +11,10 @@ A New Approach for a General TFT Library.
 - I recommend to use other common Arduino TFT libraries whenever possible, as these are better supported
 - my recommendations are MCUFRIEND_kbv, TFT_eSPI, and the whole range of Adafruit libraries
 
-### Version 2.0.0
+### Version 2.0.1
+- added 16 bit command transfers to all GxIO classes for parallel 16 bit interfaces to support OTM8009A
+- added GxIO_DUE_P16_R_SHIELD class (variant of GxIO_DUE_P16_DUESHIELD, e.g. for rDuinoScope)
+#### Version 2.0.0
 - new src directory structure avoids the need for .cpp includes
 - only header files includes are needed
 - Arduino IDE 1.8.x automatically includes needed code from .cpp files

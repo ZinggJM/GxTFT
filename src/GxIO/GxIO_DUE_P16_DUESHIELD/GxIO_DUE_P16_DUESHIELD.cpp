@@ -119,6 +119,15 @@ void GxIO_DUE_P16_DUESHIELD::writeCommandTransaction(uint8_t c)
   REG_PIOD_SODR = 0x1 << 2; // PD2 CS_H
 }
 
+void GxIO_DUE_P16_DUESHIELD::writeCommand16Transaction(uint16_t c)
+{
+  REG_PIOD_CODR = 0x1 << 2; // PD2 CS_L
+  REG_PIOD_CODR = 0x1 << 0; // PD0 RS_L
+  writeData16(c);
+  REG_PIOD_SODR = 0x1 << 0; // PD0 RS_H
+  REG_PIOD_SODR = 0x1 << 2; // PD2 CS_H
+}
+
 void GxIO_DUE_P16_DUESHIELD::writeDataTransaction(uint8_t d)
 {
   REG_PIOD_CODR = 0x1 << 2; // PD2 CS_L
@@ -134,6 +143,13 @@ void GxIO_DUE_P16_DUESHIELD::writeData16Transaction(uint16_t d, uint32_t num)
 }
 
 void GxIO_DUE_P16_DUESHIELD::writeCommand(uint8_t c)
+{
+  REG_PIOD_CODR = 0x1 << 0; // PD0 RS_L
+  writeData16(c);
+  REG_PIOD_SODR = 0x1 << 0; // PD0 RS_H
+}
+
+void GxIO_DUE_P16_DUESHIELD::writeCommand16(uint16_t c)
 {
   REG_PIOD_CODR = 0x1 << 0; // PD0 RS_L
   writeData16(c);
@@ -197,4 +213,3 @@ void GxIO_DUE_P16_DUESHIELD::setBackLight(bool lit)
 }
 
 #endif
-

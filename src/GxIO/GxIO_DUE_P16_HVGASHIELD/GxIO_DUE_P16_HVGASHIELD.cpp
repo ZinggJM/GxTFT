@@ -143,6 +143,15 @@ void GxIO_DUE_P16_HVGASHIELD::writeCommandTransaction(uint8_t c)
   digitalWrite(_cs, HIGH);
 }
 
+void GxIO_DUE_P16_HVGASHIELD::writeCommand16Transaction(uint16_t c)
+{
+  digitalWrite(_cs, LOW);
+  digitalWrite(_rs, LOW);
+  writeData16(c);
+  digitalWrite(_rs, HIGH);
+  digitalWrite(_cs, HIGH);
+}
+
 void GxIO_DUE_P16_HVGASHIELD::writeDataTransaction(uint8_t d)
 {
   digitalWrite(_cs, LOW);
@@ -158,6 +167,13 @@ void GxIO_DUE_P16_HVGASHIELD::writeData16Transaction(uint16_t d, uint32_t num)
 }
 
 void GxIO_DUE_P16_HVGASHIELD::writeCommand(uint8_t c)
+{
+  digitalWrite(_rs, LOW);
+  writeData16(c);
+  digitalWrite(_rs, HIGH);
+}
+
+void GxIO_DUE_P16_HVGASHIELD::writeCommand16(uint16_t c)
 {
   digitalWrite(_rs, LOW);
   writeData16(c);
@@ -247,4 +263,3 @@ void GxIO_DUE_P16_HVGASHIELD::setBackLight(bool lit)
 }
 
 #endif
-

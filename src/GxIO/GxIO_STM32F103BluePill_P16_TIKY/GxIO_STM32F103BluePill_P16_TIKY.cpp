@@ -203,6 +203,15 @@ void GxIO_STM32F103BluePill_P16_TIKY::writeCommandTransaction(uint8_t c)
   GPIOB_BASE->BSRR = (0x1 << 11);  // B11 CS high
 }
 
+void GxIO_STM32F103BluePill_P16_TIKY::writeCommand16Transaction(uint16_t c)
+{
+  GPIOB_BASE->BRR = (0x1 << 11);  // B11 CS low
+  GPIOB_BASE->BRR = (0x1 << 12);  // B12 RS low
+  writeData16(c);
+  GPIOB_BASE->BSRR = (0x1 << 12);  // B12 RS high
+  GPIOB_BASE->BSRR = (0x1 << 11);  // B11 CS high
+}
+
 void GxIO_STM32F103BluePill_P16_TIKY::writeDataTransaction(uint8_t d)
 {
   GPIOB_BASE->BRR = (0x1 << 11);  // B11 CS low
@@ -218,6 +227,13 @@ void GxIO_STM32F103BluePill_P16_TIKY::writeData16Transaction(uint16_t d, uint32_
 }
 
 void GxIO_STM32F103BluePill_P16_TIKY::writeCommand(uint8_t c)
+{
+  GPIOB_BASE->BRR = (0x1 << 12);  // B12 RS low
+  writeData16(c);
+  GPIOB_BASE->BSRR = (0x1 << 12);  // B12 RS high
+}
+
+void GxIO_STM32F103BluePill_P16_TIKY::writeCommand16(uint16_t c)
 {
   GPIOB_BASE->BRR = (0x1 << 12);  // B12 RS low
   writeData16(c);
@@ -300,4 +316,3 @@ void GxIO_STM32F103BluePill_P16_TIKY::setBackLight(bool lit)
 }
 
 #endif
-

@@ -168,6 +168,15 @@ void GxIO_STM32F407V_P16::writeCommandTransaction(uint8_t c)
   GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
 }
 
+void GxIO_STM32F407V_P16::writeCommand16Transaction(uint16_t c)
+{
+  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
+  GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
+  writeData16(c);
+  GPIOD_BASE->BSRRL = (0x1 << 13);  // PD13 RS high
+  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+}
+
 void GxIO_STM32F407V_P16::writeDataTransaction(uint8_t d)
 {
   GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
@@ -183,6 +192,13 @@ void GxIO_STM32F407V_P16::writeData16Transaction(uint16_t d, uint32_t num)
 }
 
 void GxIO_STM32F407V_P16::writeCommand(uint8_t c)
+{
+  GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
+  writeData16(c);
+  GPIOD_BASE->BSRRL = (0x1 << 13);  // PD13 RS high
+}
+
+void GxIO_STM32F407V_P16::writeCommand16(uint16_t c)
 {
   GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
   writeData16(c);
@@ -271,4 +287,3 @@ void GxIO_STM32F407V_P16::setBackLight(bool lit)
 }
 
 #endif
-

@@ -145,6 +145,11 @@ void GxIO_STM32F4_FSMC::writeCommandTransaction(uint8_t c)
   *(uint8_t*)CommandAccess = c;
 }
 
+void GxIO_STM32F4_FSMC::writeCommand16Transaction(uint16_t c)
+{
+  *(uint16_t*)CommandAccess = c;
+}
+
 void GxIO_STM32F4_FSMC::writeDataTransaction(uint8_t d)
 {
   *(uint8_t*)DataAccess = d;
@@ -162,6 +167,11 @@ void GxIO_STM32F4_FSMC::writeData16Transaction(uint16_t d, uint32_t num)
 void GxIO_STM32F4_FSMC::writeCommand(uint8_t c)
 {
   *(uint8_t*)CommandAccess = c;
+}
+
+void GxIO_STM32F4_FSMC::writeCommand16(uint16_t c)
+{
+  *(uint16_t*)CommandAccess = c;
 }
 
 void GxIO_STM32F4_FSMC::writeData(uint8_t d)
@@ -212,4 +222,3 @@ void GxIO_STM32F4_FSMC::setBackLight(bool lit)
 }
 
 #endif
-

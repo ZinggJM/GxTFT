@@ -173,6 +173,15 @@ void GxIO_SPI::writeCommandTransaction(uint8_t c)
   if (_dc >= 0) digitalWrite(_dc, HIGH);
 }
 
+void GxIO_SPI::writeCommand16Transaction(uint16_t c)
+{
+  if (_dc >= 0) digitalWrite(_dc, LOW);
+  if (_cs >= 0) digitalWrite(_cs, LOW);
+  IOSPI.transfer16(c);
+  if (_cs >= 0) digitalWrite(_cs, HIGH);
+  if (_dc >= 0) digitalWrite(_dc, HIGH);
+}
+
 void GxIO_SPI::writeDataTransaction(uint8_t d)
 {
   if (_cs >= 0) digitalWrite(_cs, LOW);
@@ -191,6 +200,13 @@ void GxIO_SPI::writeCommand(uint8_t c)
 {
   if (_dc >= 0) digitalWrite(_dc, LOW);
   IOSPI.transfer(c);
+  if (_dc >= 0) digitalWrite(_dc, HIGH);
+}
+
+void GxIO_SPI::writeCommand16(uint16_t c)
+{
+  if (_dc >= 0) digitalWrite(_dc, LOW);
+  IOSPI.transfer16(c);
   if (_dc >= 0) digitalWrite(_dc, HIGH);
 }
 
@@ -676,6 +692,3 @@ void GxIO_SPI_USING_TRANSACTION::setBackLight(bool lit)
 #endif
 
 //#endif
-
-
-

@@ -190,6 +190,15 @@ void GxIO_STM32F103BluePill_P16::writeCommandTransaction(uint8_t c)
   GPIOA_BASE->BSRR = (0x1 << 0);  // A0 CS high
 }
 
+void GxIO_STM32F103BluePill_P16::writeCommand16Transaction(uint16_t c)
+{
+  GPIOA_BASE->BRR = (0x1 << 0);  // A0 CS low
+  GPIOB_BASE->BRR = (0x1 << 11);  // B11 RS low
+  writeData16(c);
+  GPIOB_BASE->BSRR = (0x1 << 11);  // B11 RS high
+  GPIOA_BASE->BSRR = (0x1 << 0);  // A0 CS high
+}
+
 void GxIO_STM32F103BluePill_P16::writeDataTransaction(uint8_t d)
 {
   GPIOA_BASE->BRR = (0x1 << 0);  // A0 CS low
@@ -205,6 +214,13 @@ void GxIO_STM32F103BluePill_P16::writeData16Transaction(uint16_t d, uint32_t num
 }
 
 void GxIO_STM32F103BluePill_P16::writeCommand(uint8_t c)
+{
+  GPIOB_BASE->BRR = (0x1 << 11);  // B11 RS low
+  writeData16(c);
+  GPIOB_BASE->BSRR = (0x1 << 11);  // B11 RS high
+}
+
+void GxIO_STM32F103BluePill_P16::writeCommand16(uint16_t c)
 {
   GPIOB_BASE->BRR = (0x1 << 11);  // B11 RS low
   writeData16(c);
@@ -290,4 +306,3 @@ void GxIO_STM32F103BluePill_P16::setBackLight(bool lit)
 }
 
 #endif
-

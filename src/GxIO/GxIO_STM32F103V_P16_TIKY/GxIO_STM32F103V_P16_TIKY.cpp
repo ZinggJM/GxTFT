@@ -175,6 +175,15 @@ void GxIO_STM32F103V_P16_TIKY::writeCommandTransaction(uint8_t c)
   GPIOD_BASE->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
+void GxIO_STM32F103V_P16_TIKY::writeCommand16Transaction(uint16_t c)
+{
+  GPIOD_BASE->BRR = (0x1 << 7);  // PD7 CS low
+  GPIOD_BASE->BRR = (0x1 << 11);  // PD11 RS low
+  writeData16(c);
+  GPIOD_BASE->BSRR = (0x1 << 11);  // PD11 RS high
+  GPIOD_BASE->BSRR = (0x1 << 7);  // PD7 CS high
+}
+
 void GxIO_STM32F103V_P16_TIKY::writeDataTransaction(uint8_t d)
 {
   GPIOD_BASE->BRR = (0x1 << 7);  // PD7 CS low
@@ -190,6 +199,13 @@ void GxIO_STM32F103V_P16_TIKY::writeData16Transaction(uint16_t d, uint32_t num)
 }
 
 void GxIO_STM32F103V_P16_TIKY::writeCommand(uint8_t c)
+{
+  GPIOD_BASE->BRR = (0x1 << 11);  // PD11 RS low
+  writeData16(c);
+  GPIOD_BASE->BSRR = (0x1 << 11);  // PD11 RS high
+}
+
+void GxIO_STM32F103V_P16_TIKY::writeCommand16(uint16_t c)
 {
   GPIOD_BASE->BRR = (0x1 << 11);  // PD11 RS low
   writeData16(c);
@@ -274,5 +290,3 @@ void GxIO_STM32F103V_P16_TIKY::setBackLight(bool lit)
 }
 
 #endif
-
-

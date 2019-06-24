@@ -130,6 +130,15 @@ void GxIO_DUE_P16_TIKY::writeCommandTransaction(uint8_t c)
   REG_PIOB_SODR = 0x1 << 26; // PB26 CS_H
 }
 
+void GxIO_DUE_P16_TIKY::writeCommand16Transaction(uint16_t c)
+{
+  REG_PIOB_CODR = 0x1 << 26; // PB26 CS_L
+  REG_PIOA_CODR = 0x1 << 14; // PA14 RS_L
+  writeData16(c);
+  REG_PIOA_SODR = 0x1 << 14; // PA14 RS_H
+  REG_PIOB_SODR = 0x1 << 26; // PB26 CS_H
+}
+
 void GxIO_DUE_P16_TIKY::writeDataTransaction(uint8_t d)
 {
   REG_PIOB_CODR = 0x1 << 26; // PB26 CS_L
@@ -145,6 +154,13 @@ void GxIO_DUE_P16_TIKY::writeData16Transaction(uint16_t d, uint32_t num)
 }
 
 void GxIO_DUE_P16_TIKY::writeCommand(uint8_t c)
+{
+  REG_PIOA_CODR = 0x1 << 14; // PA14 RS_L
+  writeData16(c);
+  REG_PIOA_SODR = 0x1 << 14; // PA14 RS_H
+}
+
+void GxIO_DUE_P16_TIKY::writeCommand16(uint16_t c)
 {
   REG_PIOA_CODR = 0x1 << 14; // PA14 RS_L
   writeData16(c);
@@ -235,4 +251,3 @@ void GxIO_DUE_P16_TIKY::setBackLight(bool lit)
 }
 
 #endif
-
