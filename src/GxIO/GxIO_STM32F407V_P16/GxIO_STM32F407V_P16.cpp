@@ -64,18 +64,18 @@ void GxIO_STM32F407V_P16::reset()
 void GxIO_STM32F407V_P16::init()
 {
   GPIOD->BSRR |= PD_USED_BITS; // preset all output high
-  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PD_MODE_MASK;
-  ((GPIO_TypeDef*)GPIOD_BASE)->MODER |= PD_MODE_BITS;
-  ((GPIO_TypeDef*)GPIOD_BASE)->OTYPER &= ~PD_USED_BITS; // 0 : output push-pull
-  ((GPIO_TypeDef*)GPIOD_BASE)->OSPEEDR &= ~PD_MODE_MASK; // 0 : low speed
-  ((GPIO_TypeDef*)GPIOD_BASE)->PUPDR &= ~PD_MODE_MASK; // 0 : no pull-up, no pull-down
+  GPIOD->MODER &= ~PD_MODE_MASK;
+  GPIOD->MODER |= PD_MODE_BITS;
+  GPIOD->OTYPER &= ~PD_USED_BITS; // 0 : output push-pull
+  GPIOD->OSPEEDR &= ~PD_MODE_MASK; // 0 : low speed
+  GPIOD->PUPDR &= ~PD_MODE_MASK; // 0 : no pull-up, no pull-down
 
   GPIOD->BSRR |= PE_USED_BITS; // preset all output high
-  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PE_MODE_MASK;
-  ((GPIO_TypeDef*)GPIOD_BASE)->MODER |= PE_MODE_BITS;
-  ((GPIO_TypeDef*)GPIOD_BASE)->OTYPER &= ~PE_USED_BITS; // 0 : output push-pull
-  ((GPIO_TypeDef*)GPIOD_BASE)->OSPEEDR &= ~PE_MODE_MASK; // 0 : low speed
-  ((GPIO_TypeDef*)GPIOD_BASE)->PUPDR &= ~PE_MODE_MASK; // 0 : no pull-up, no pull-down
+  GPIOD->MODER &= ~PE_MODE_MASK;
+  GPIOD->MODER |= PE_MODE_BITS;
+  GPIOD->OTYPER &= ~PE_USED_BITS; // 0 : output push-pull
+  GPIOD->OSPEEDR &= ~PE_MODE_MASK; // 0 : low speed
+  GPIOD->PUPDR &= ~PE_MODE_MASK; // 0 : no pull-up, no pull-down
 
   digitalWrite(_bl, LOW);
   pinMode(_bl, OUTPUT);
@@ -104,8 +104,8 @@ uint8_t GxIO_STM32F407V_P16::readData()
 uint16_t GxIO_STM32F407V_P16::readData16()
 {
   // Set direction input
-  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PD_MODE_DATA;
-  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PE_MODE_DATA;
+  GPIOD->MODER &= ~PD_MODE_DATA;
+  GPIOD->MODER &= ~PE_MODE_DATA;
 //  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low pulse
 //  GPIOD->BSRR = (0x1 << 4); // PD4 RD high
   GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
@@ -114,22 +114,22 @@ uint16_t GxIO_STM32F407V_P16::readData16()
   GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
   uint16_t rv = 0;
   // The compiler efficiently codes this  so it is quite quick.
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 10)) << (15 - 10); // PD10
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 9)) << (14 - 9); // PD9
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 8)) << (13 - 8); // PD8
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 15)) >> -(12 - 15); // PE15
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 14)) >> -(11 - 14); // PE14
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 13)) >> -(10 - 13); // PE13
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 12)) >> -(9 - 12); // PE12
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 11)) >> -(8 - 11); // PE11
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 10)) >> -(7 - 10); // PE10
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 9)) >> -(6 - 9); // PE9
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 8)) >> -(5 - 8); // PE8
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 7)) >> -(4 - 7); // PE7
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 1)) << (3 - 1); // PD1
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 0)) << (2 - 0); // PD0
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 15)) >> -(1 - 15); // PD15
-  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 14)) >> -(0 - 14); // PD14
+  rv |= (GPIOD->IDR & (0x1 << 10)) << (15 - 10); // PD10
+  rv |= (GPIOD->IDR & (0x1 << 9)) << (14 - 9); // PD9
+  rv |= (GPIOD->IDR & (0x1 << 8)) << (13 - 8); // PD8
+  rv |= (GPIOE->IDR & (0x1 << 15)) >> -(12 - 15); // PE15
+  rv |= (GPIOE->IDR & (0x1 << 14)) >> -(11 - 14); // PE14
+  rv |= (GPIOE->IDR & (0x1 << 13)) >> -(10 - 13); // PE13
+  rv |= (GPIOE->IDR & (0x1 << 12)) >> -(9 - 12); // PE12
+  rv |= (GPIOE->IDR & (0x1 << 11)) >> -(8 - 11); // PE11
+  rv |= (GPIOE->IDR & (0x1 << 10)) >> -(7 - 10); // PE10
+  rv |= (GPIOE->IDR & (0x1 << 9)) >> -(6 - 9); // PE9
+  rv |= (GPIOE->IDR & (0x1 << 8)) >> -(5 - 8); // PE8
+  rv |= (GPIOE->IDR & (0x1 << 7)) >> -(4 - 7); // PE7
+  rv |= (GPIOD->IDR & (0x1 << 1)) << (3 - 1); // PD1
+  rv |= (GPIOD->IDR & (0x1 << 0)) << (2 - 0); // PD0
+  rv |= (GPIOD->IDR & (0x1 << 15)) >> -(1 - 15); // PD15
+  rv |= (GPIOD->IDR & (0x1 << 14)) >> -(0 - 14); // PD14
   GPIOD->BSRR = (0x1 << 4); // PD4 RD high
   // Set direction output again
   GPIOD->MODER &= ~PD_MODE_DATA;
