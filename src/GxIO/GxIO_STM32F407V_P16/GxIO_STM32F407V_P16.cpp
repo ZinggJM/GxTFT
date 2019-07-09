@@ -63,19 +63,19 @@ void GxIO_STM32F407V_P16::reset()
 
 void GxIO_STM32F407V_P16::init()
 {
-  GPIOD_BASE->BSRRL |= PD_USED_BITS; // preset all output high
-  GPIOD_BASE->MODER &= ~PD_MODE_MASK;
-  GPIOD_BASE->MODER |= PD_MODE_BITS;
-  GPIOD_BASE->OTYPER &= ~PD_USED_BITS; // 0 : output push-pull
-  GPIOD_BASE->OSPEEDR &= ~PD_MODE_MASK; // 0 : low speed
-  GPIOD_BASE->PUPDR &= ~PD_MODE_MASK; // 0 : no pull-up, no pull-down
+  GPIOD->BSRR |= PD_USED_BITS; // preset all output high
+  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PD_MODE_MASK;
+  ((GPIO_TypeDef*)GPIOD_BASE)->MODER |= PD_MODE_BITS;
+  ((GPIO_TypeDef*)GPIOD_BASE)->OTYPER &= ~PD_USED_BITS; // 0 : output push-pull
+  ((GPIO_TypeDef*)GPIOD_BASE)->OSPEEDR &= ~PD_MODE_MASK; // 0 : low speed
+  ((GPIO_TypeDef*)GPIOD_BASE)->PUPDR &= ~PD_MODE_MASK; // 0 : no pull-up, no pull-down
 
-  GPIOE_BASE->BSRRL |= PE_USED_BITS; // preset all output high
-  GPIOE_BASE->MODER &= ~PE_MODE_MASK;
-  GPIOE_BASE->MODER |= PE_MODE_BITS;
-  GPIOE_BASE->OTYPER &= ~PE_USED_BITS; // 0 : output push-pull
-  GPIOE_BASE->OSPEEDR &= ~PE_MODE_MASK; // 0 : low speed
-  GPIOE_BASE->PUPDR &= ~PE_MODE_MASK; // 0 : no pull-up, no pull-down
+  GPIOD->BSRR |= PE_USED_BITS; // preset all output high
+  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PE_MODE_MASK;
+  ((GPIO_TypeDef*)GPIOD_BASE)->MODER |= PE_MODE_BITS;
+  ((GPIO_TypeDef*)GPIOD_BASE)->OTYPER &= ~PE_USED_BITS; // 0 : output push-pull
+  ((GPIO_TypeDef*)GPIOD_BASE)->OSPEEDR &= ~PE_MODE_MASK; // 0 : low speed
+  ((GPIO_TypeDef*)GPIOD_BASE)->PUPDR &= ~PE_MODE_MASK; // 0 : no pull-up, no pull-down
 
   digitalWrite(_bl, LOW);
   pinMode(_bl, OUTPUT);
@@ -90,9 +90,9 @@ uint8_t GxIO_STM32F407V_P16::readDataTransaction()
 
 uint16_t GxIO_STM32F407V_P16::readData16Transaction()
 {
-  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS low
   uint16_t rv = readData16();
-  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS high
   return rv;
 }
 
@@ -104,105 +104,105 @@ uint8_t GxIO_STM32F407V_P16::readData()
 uint16_t GxIO_STM32F407V_P16::readData16()
 {
   // Set direction input
-  GPIOD_BASE->MODER &= ~PD_MODE_DATA;
-  GPIOE_BASE->MODER &= ~PE_MODE_DATA;
-//  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low pulse
-//  GPIOD_BASE->BSRRL = (0x1 << 4); // PD4 RD high
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
+  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PD_MODE_DATA;
+  ((GPIO_TypeDef*)GPIOD_BASE)->MODER &= ~PE_MODE_DATA;
+//  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low pulse
+//  GPIOD->BSRR = (0x1 << 4); // PD4 RD high
+  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
+  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
+  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
+  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
   uint16_t rv = 0;
   // The compiler efficiently codes this  so it is quite quick.
-  rv |= (GPIOD_BASE->IDR & (0x1 << 10)) << (15 - 10); // PD10
-  rv |= (GPIOD_BASE->IDR & (0x1 << 9)) << (14 - 9); // PD9
-  rv |= (GPIOD_BASE->IDR & (0x1 << 8)) << (13 - 8); // PD8
-  rv |= (GPIOE_BASE->IDR & (0x1 << 15)) >> -(12 - 15); // PE15
-  rv |= (GPIOE_BASE->IDR & (0x1 << 14)) >> -(11 - 14); // PE14
-  rv |= (GPIOE_BASE->IDR & (0x1 << 13)) >> -(10 - 13); // PE13
-  rv |= (GPIOE_BASE->IDR & (0x1 << 12)) >> -(9 - 12); // PE12
-  rv |= (GPIOE_BASE->IDR & (0x1 << 11)) >> -(8 - 11); // PE11
-  rv |= (GPIOE_BASE->IDR & (0x1 << 10)) >> -(7 - 10); // PE10
-  rv |= (GPIOE_BASE->IDR & (0x1 << 9)) >> -(6 - 9); // PE9
-  rv |= (GPIOE_BASE->IDR & (0x1 << 8)) >> -(5 - 8); // PE8
-  rv |= (GPIOE_BASE->IDR & (0x1 << 7)) >> -(4 - 7); // PE7
-  rv |= (GPIOD_BASE->IDR & (0x1 << 1)) << (3 - 1); // PD1
-  rv |= (GPIOD_BASE->IDR & (0x1 << 0)) << (2 - 0); // PD0
-  rv |= (GPIOD_BASE->IDR & (0x1 << 15)) >> -(1 - 15); // PD15
-  rv |= (GPIOD_BASE->IDR & (0x1 << 14)) >> -(0 - 14); // PD14
-  GPIOD_BASE->BSRRL = (0x1 << 4); // PD4 RD high
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 10)) << (15 - 10); // PD10
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 9)) << (14 - 9); // PD9
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 8)) << (13 - 8); // PD8
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 15)) >> -(12 - 15); // PE15
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 14)) >> -(11 - 14); // PE14
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 13)) >> -(10 - 13); // PE13
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 12)) >> -(9 - 12); // PE12
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 11)) >> -(8 - 11); // PE11
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 10)) >> -(7 - 10); // PE10
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 9)) >> -(6 - 9); // PE9
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 8)) >> -(5 - 8); // PE8
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 7)) >> -(4 - 7); // PE7
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 1)) << (3 - 1); // PD1
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 0)) << (2 - 0); // PD0
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 15)) >> -(1 - 15); // PD15
+  rv |= (((CRC_TypeDef*)GPIOD_BASE)->IDR & (0x1 << 14)) >> -(0 - 14); // PD14
+  GPIOD->BSRR = (0x1 << 4); // PD4 RD high
   // Set direction output again
-  GPIOD_BASE->MODER &= ~PD_MODE_DATA;
-  GPIOD_BASE->MODER |= PD_MODE_OUTP;
-  GPIOE_BASE->MODER &= ~PD_MODE_DATA;
-  GPIOE_BASE->MODER |= PE_MODE_OUTP;
+  GPIOD->MODER &= ~PD_MODE_DATA;
+  GPIOD->MODER |= PD_MODE_OUTP;
+  GPIOE->MODER &= ~PD_MODE_DATA;
+  GPIOE->MODER |= PE_MODE_OUTP;
   return rv;
 }
 
 uint32_t GxIO_STM32F407V_P16::readRawData32(uint8_t part)
 {
   // Set direction input
-  GPIOD_BASE->MODER &= ~PD_MODE_DATA;
-  GPIOE_BASE->MODER &= ~PE_MODE_DATA;
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low pulse
-  GPIOD_BASE->BSRRL = (0x1 << 4); // PD4 RD high
-  GPIOD_BASE->BSRRH = (0x1 << 4);  // PD4 RD low read
+  GPIOD->MODER &= ~PD_MODE_DATA;
+  GPIOE->MODER &= ~PE_MODE_DATA;
+  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low pulse
+  GPIOD->BSRR = (0x1 << 4); // PD4 RD high
+  GPIOD->BSRR = (0x1 << 4);  // PD4 RD low read
   uint32_t rv = 0;
-  if (part == 0) rv = GPIOD_BASE->IDR & PD_DATA_BITS;
-  if (part == 1) rv = GPIOE_BASE->IDR & PE_DATA_BITS;
-  GPIOD_BASE->BSRRL = (0x1 << 4); // PD4 RD high
+  if (part == 0) rv = GPIOD->IDR & PD_DATA_BITS;
+  if (part == 1) rv = GPIOE->IDR & PE_DATA_BITS;
+  GPIOD->BSRR = (0x1 << 4); // PD4 RD high
   // Set direction output again
-  GPIOD_BASE->MODER &= ~PD_MODE_DATA;
-  GPIOD_BASE->MODER |= PD_MODE_OUTP;
-  GPIOE_BASE->MODER &= ~PD_MODE_DATA;
-  GPIOE_BASE->MODER |= PE_MODE_OUTP;
+  GPIOD->MODER &= ~PD_MODE_DATA;
+  GPIOD->MODER |= PD_MODE_OUTP;
+  GPIOE->MODER &= ~PD_MODE_DATA;
+  GPIOE->MODER |= PE_MODE_OUTP;
   return rv;
 }
 
 void GxIO_STM32F407V_P16::writeCommandTransaction(uint8_t c)
 {
-  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
-  GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS low
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS low
   writeData16(c);
-  GPIOD_BASE->BSRRL = (0x1 << 13);  // PD13 RS high
-  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS high
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
 void GxIO_STM32F407V_P16::writeCommand16Transaction(uint16_t c)
 {
-  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
-  GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS low
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS low
   writeData16(c);
-  GPIOD_BASE->BSRRL = (0x1 << 13);  // PD13 RS high
-  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS high
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
 void GxIO_STM32F407V_P16::writeDataTransaction(uint8_t d)
 {
-  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS low
   writeData16(d);
-  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
 void GxIO_STM32F407V_P16::writeData16Transaction(uint16_t d, uint32_t num)
 {
-  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS low
   writeData16(d, num);
-  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
 void GxIO_STM32F407V_P16::writeCommand(uint8_t c)
 {
-  GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS low
   writeData16(c);
-  GPIOD_BASE->BSRRL = (0x1 << 13);  // PD13 RS high
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS high
 }
 
 void GxIO_STM32F407V_P16::writeCommand16(uint16_t c)
 {
-  GPIOD_BASE->BSRRH = (0x1 << 13);  // PD13 RS low
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS low
   writeData16(c);
-  GPIOD_BASE->BSRRL = (0x1 << 13);  // PD13 RS high
+  GPIOD->BSRR = (0x1 << 13);  // PD13 RS high
 }
 
 void GxIO_STM32F407V_P16::writeData(uint8_t d)
@@ -222,38 +222,38 @@ void GxIO_STM32F407V_P16::writeData(uint8_t* d, uint32_t num)
 
 void GxIO_STM32F407V_P16::writeData16(uint16_t d, uint32_t num)
 {
-  GPIOD_BASE->BSRRH = PD_DATA_BITS; // clear bits
-  GPIOE_BASE->BSRRH = PE_DATA_BITS; // clear bits
+  GPIOD->BSRR = PD_DATA_BITS; // clear bits
+  GPIOE->BSRR = PE_DATA_BITS; // clear bits
 
   // TFT connector uses FSMC pins
   // D0   D1   D2  D3  D4  D5  D6  D7   D8   D9   D10  D11  D12  D13 D14 D15
   // PD14 PD15 PD0 PD1 PE7 PE8 PE9 PE10 PE11 PE12 PE13 PE14 PE15 PD8 PD9 PD10
 
   // The compiler efficiently codes this  so it is quite quick.
-  if (d & 0x8000) GPIOD_BASE->BSRRL = 0x1 << 10; // PD10
-  if (d & 0x4000) GPIOD_BASE->BSRRL = 0x1 << 9; // PD9
-  if (d & 0x2000) GPIOD_BASE->BSRRL = 0x1 << 8; // PD8
-  if (d & 0x1000) GPIOE_BASE->BSRRL = 0x1 << 15; // PE15
-  if (d & 0x0800) GPIOE_BASE->BSRRL = 0x1 << 14; // PE14
-  if (d & 0x0400) GPIOE_BASE->BSRRL = 0x1 << 13; // PE13
-  if (d & 0x0200) GPIOE_BASE->BSRRL = 0x1 << 12; // PE12
-  if (d & 0x0100) GPIOE_BASE->BSRRL = 0x1 << 11; // PE11
+  if (d & 0x8000) GPIOD->BSRR = 0x1 << 10; // PD10
+  if (d & 0x4000) GPIOD->BSRR = 0x1 << 9; // PD9
+  if (d & 0x2000) GPIOD->BSRR = 0x1 << 8; // PD8
+  if (d & 0x1000) GPIOE->BSRR = 0x1 << 15; // PE15
+  if (d & 0x0800) GPIOE->BSRR = 0x1 << 14; // PE14
+  if (d & 0x0400) GPIOE->BSRR = 0x1 << 13; // PE13
+  if (d & 0x0200) GPIOE->BSRR = 0x1 << 12; // PE12
+  if (d & 0x0100) GPIOE->BSRR = 0x1 << 11; // PE11
 
-  if (d & 0x0080) GPIOE_BASE->BSRRL = 0x1 << 10; // PE10
-  if (d & 0x0040) GPIOE_BASE->BSRRL = 0x1 << 9; // PE9
-  if (d & 0x0020) GPIOE_BASE->BSRRL = 0x1 << 8; // PE8
-  if (d & 0x0010) GPIOE_BASE->BSRRL = 0x1 << 7; // PE7
-  if (d & 0x0008) GPIOD_BASE->BSRRL = 0x1 << 1; // PD1
-  if (d & 0x0004) GPIOD_BASE->BSRRL = 0x1 << 0; // PD0
-  if (d & 0x0002) GPIOD_BASE->BSRRL = 0x1 << 15; // PD15
-  if (d & 0x0001) GPIOD_BASE->BSRRL = 0x1 << 14; // PD14
+  if (d & 0x0080) GPIOE->BSRR = 0x1 << 10; // PE10
+  if (d & 0x0040) GPIOE->BSRR = 0x1 << 9; // PE9
+  if (d & 0x0020) GPIOE->BSRR = 0x1 << 8; // PE8
+  if (d & 0x0010) GPIOE->BSRR = 0x1 << 7; // PE7
+  if (d & 0x0008) GPIOD->BSRR = 0x1 << 1; // PD1
+  if (d & 0x0004) GPIOD->BSRR = 0x1 << 0; // PD0
+  if (d & 0x0002) GPIOD->BSRR = 0x1 << 15; // PD15
+  if (d & 0x0001) GPIOD->BSRR = 0x1 << 14; // PD14
   while (num)
   {
-    GPIOD_BASE->BSRRH = (0x1 << 5);  // PD5 WR low
-    GPIOD_BASE->BSRRH = (0x1 << 5);  // PD5 WR low
-    GPIOD_BASE->BSRRH = (0x1 << 5);  // PD5 WR low
-    GPIOD_BASE->BSRRH = (0x1 << 5);  // PD5 WR low
-    GPIOD_BASE->BSRRL = (0x1 << 5); // PD5 WR high
+    GPIOD->BSRR = (0x1 << 5);  // PD5 WR low
+    GPIOD->BSRR = (0x1 << 5);  // PD5 WR low
+    GPIOD->BSRR = (0x1 << 5);  // PD5 WR low
+    GPIOD->BSRR = (0x1 << 5);  // PD5 WR low
+    GPIOD->BSRR = (0x1 << 5); // PD5 WR high
     //digitalWrite(_wr, LOW);
     //digitalWrite(_wr, HIGH);
     num--;
@@ -268,12 +268,12 @@ void GxIO_STM32F407V_P16::writeAddrMSBfirst(uint16_t d)
 
 void GxIO_STM32F407V_P16::startTransaction()
 {
-  GPIOD_BASE->BSRRH = (0x1 << 7);  // PD7 CS low
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS low
 }
 
 void GxIO_STM32F407V_P16::endTransaction()
 {
-  GPIOD_BASE->BSRRL = (0x1 << 7);  // PD7 CS high
+  GPIOD->BSRR = (0x1 << 7);  // PD7 CS high
 }
 
 void GxIO_STM32F407V_P16::selectRegister(bool rs_low)

@@ -60,10 +60,11 @@
 #define ADDSET 15 // (ADDSET+1)*6ns = CS to RW
 #define DATAST 30 // (DATAST+1)*6ns = RW length
 
-typedef struct
-{
-  volatile uint32_t BTCR[8];
-} FSMC_Bank1_TypeDef;
+// TODO commented by me due to duplicate in /Users/vkozlov/Documents/PlatformIO/Projects/F407_Display_Test/lib/GxTFT/src/GxIO/STM32DUINO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.cpp
+// typedef struct
+// {
+//   volatile uint32_t BTCR[8];
+// } FSMC_Bank1_TypeDef;
 
 #define FSMC_BASE             ((uint32_t)0x60000000) /*!< FSMC base address */
 #define FSMC_R_BASE           ((uint32_t)0xA0000000) /*!< FSMC registers base address */
@@ -93,25 +94,25 @@ void GxIO_STM32F4_FSMC::reset()
 
 void GxIO_STM32F4_FSMC::init()
 {
-  RCC_BASE->AHB1ENR   |= 0x00000078;
-  volatile uint32_t t = RCC_BASE->AHB1ENR; // delay
+  RCC->AHB1ENR   |= 0x00000078;
+  volatile uint32_t t = ((RCC_TypeDef *)RCC_BASE)->AHB1ENR; // delay
 
-  GPIOD_BASE->AFR[0]  = (GPIOD_BASE->AFR[0] & ~PD_AFR0_MASK) | PD_AFR0_FSMC;
-  GPIOD_BASE->AFR[1]  = (GPIOD_BASE->AFR[1] & ~PD_AFR1_MASK) | PD_AFR1_FSMC;
-  GPIOD_BASE->MODER   = (GPIOD_BASE->MODER & ~PD_MODE_MASK) | PD_MODE_FSMC;
-  GPIOD_BASE->OSPEEDR = (GPIOD_BASE->OSPEEDR & ~PD_MODE_MASK) | PD_OSPD_FSMC;
-  GPIOD_BASE->OTYPER &= ~PD_MODE_MASK;
-  GPIOD_BASE->PUPDR  &= ~PD_MODE_MASK;
+  GPIOD->AFR[0]  = (GPIOD->AFR[0] & ~PD_AFR0_MASK) | PD_AFR0_FSMC;
+  GPIOD->AFR[1]  = (GPIOD->AFR[1] & ~PD_AFR1_MASK) | PD_AFR1_FSMC;
+  GPIOD->MODER   = (GPIOD->MODER & ~PD_MODE_MASK) | PD_MODE_FSMC;
+  GPIOD->OSPEEDR = (GPIOD->OSPEEDR & ~PD_MODE_MASK) | PD_OSPD_FSMC;
+  GPIOD->OTYPER &= ~PD_MODE_MASK;
+  GPIOD->PUPDR  &= ~PD_MODE_MASK;
 
-  GPIOE_BASE->AFR[0]  = (GPIOE_BASE->AFR[0] & ~PE_AFR0_MASK) | PE_AFR0_FSMC;
-  GPIOE_BASE->AFR[1]  = (GPIOE_BASE->AFR[1] & ~PE_AFR1_MASK) | PE_AFR1_FSMC;
-  GPIOE_BASE->MODER   = (GPIOE_BASE->MODER & ~PE_MODE_MASK) | PE_MODE_FSMC;
-  GPIOE_BASE->OSPEEDR = (GPIOE_BASE->OSPEEDR & ~PE_MODE_MASK) | PE_OSPD_FSMC;
-  GPIOE_BASE->OTYPER &= ~PE_MODE_MASK;
-  GPIOE_BASE->PUPDR  &= ~PE_MODE_MASK;
+  GPIOE->AFR[0]  = (GPIOE->AFR[0] & ~PE_AFR0_MASK) | PE_AFR0_FSMC;
+  GPIOE->AFR[1]  = (GPIOE->AFR[1] & ~PE_AFR1_MASK) | PE_AFR1_FSMC;
+  GPIOE->MODER   = (GPIOE->MODER & ~PE_MODE_MASK) | PE_MODE_FSMC;
+  GPIOE->OSPEEDR = (GPIOE->OSPEEDR & ~PE_MODE_MASK) | PE_OSPD_FSMC;
+  GPIOE->OTYPER &= ~PE_MODE_MASK;
+  GPIOE->PUPDR  &= ~PE_MODE_MASK;
 
-  RCC_BASE->AHB3ENR         |= 0x00000001;
-  t = RCC_BASE->AHB1ENR; // delay
+  RCC->AHB3ENR         |= 0x00000001;
+  t = RCC->AHB1ENR; // delay
   (void)(t);
 
   FSMC_Bank1->BTCR[0] = 0x000010D9;
