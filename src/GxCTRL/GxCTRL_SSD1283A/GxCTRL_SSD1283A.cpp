@@ -122,8 +122,8 @@ void GxCTRL_SSD1283A::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, ui
       IO.writeData(_tft_width - x0 - 1);
       IO.writeData(_tft_width - x1 - 1);
       IO.writeCommand(0x21);
-      IO.writeData(_tft_width - x1 - 1);
-      IO.writeData(_tft_height - y1 + 1);
+      IO.writeData(_tft_width - x0 - 1);
+      IO.writeData(_tft_height - y0 + 1);
       break;
     case 2:
       IO.writeCommand(0x44);
@@ -133,8 +133,8 @@ void GxCTRL_SSD1283A::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, ui
       IO.writeData(_tft_height - y0 + 1);
       IO.writeData(_tft_height - y1 + 1);
       IO.writeCommand(0x21);
-      IO.writeData(_tft_height - y1 + 1);
-      IO.writeData(_tft_width - x1 + 1);
+      IO.writeData(_tft_height - y0 + 1);
+      IO.writeData(_tft_width - x0 + 1);
       break;
     case 3:
       IO.writeCommand(0x44);
