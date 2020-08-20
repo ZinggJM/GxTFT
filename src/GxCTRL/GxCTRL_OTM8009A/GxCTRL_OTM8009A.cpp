@@ -417,36 +417,47 @@ void GxCTRL_OTM8009A::init()
   delay(100);
   IO.writeCommand16Transaction(0x2900);
   delay(50);
-  IO.writeCommand16Transaction(0x2C00);
-  IO.writeCommand16Transaction(0x2A00);     IO.writeData16Transaction(0x00);
-  IO.writeCommand16Transaction(0x2A01);     IO.writeData16Transaction(0x00);
-  IO.writeCommand16Transaction(0x2A02);     IO.writeData16Transaction(0x01);
-  IO.writeCommand16Transaction(0x2A03);     IO.writeData16Transaction(0xe0);
-  IO.writeCommand16Transaction(0x2B00);     IO.writeData16Transaction(0x00);
-  IO.writeCommand16Transaction(0x2B01);     IO.writeData16Transaction(0x00);
-  IO.writeCommand16Transaction(0x2B02);     IO.writeData16Transaction(0x03);
-  IO.writeCommand16Transaction(0x2B03);     IO.writeData16Transaction(0x20);
+  //  IO.writeCommand16Transaction(0x2C00);
+  //  IO.writeCommand16Transaction(0x2A00);     IO.writeData16Transaction(0x00);
+  //  IO.writeCommand16Transaction(0x2A01);     IO.writeData16Transaction(0x00);
+  //  IO.writeCommand16Transaction(0x2A02);     IO.writeData16Transaction(0x01);
+  //  IO.writeCommand16Transaction(0x2A03);     IO.writeData16Transaction(0xe0);
+  //  IO.writeCommand16Transaction(0x2B00);     IO.writeData16Transaction(0x00);
+  //  IO.writeCommand16Transaction(0x2B01);     IO.writeData16Transaction(0x00);
+  //  IO.writeCommand16Transaction(0x2B02);     IO.writeData16Transaction(0x03);
+  //  IO.writeCommand16Transaction(0x2B03);     IO.writeData16Transaction(0x20);
+  setWindowAddress(0, 0, 0x01e0, 0x0320);
 }
 
 void GxCTRL_OTM8009A::setWindowAddress(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
+  uint16_t t_delay = 0;
   IO.writeCommand16(0x2A00);
   IO.writeData16(x0 >> 8);
+  //t_delay++;
   IO.writeCommand16(0x2A01);
   IO.writeData16(x0 & 0x00ff);
+  //t_delay++;
   IO.writeCommand16(0x2A02);
   IO.writeData16(x1 >> 8);
+  //t_delay++;
   IO.writeCommand16(0x2A03);
   IO.writeData16(x1 & 0x00ff);
+  //t_delay++;
   IO.writeCommand16(0x2B00);
   IO.writeData16(y0 >> 8);
+  //t_delay++;
   IO.writeCommand16(0x2B01);
   IO.writeData16(y0 & 0x00ff);
+  //t_delay++;
   IO.writeCommand16(0x2B02);
   IO.writeData16(y1 >> 8);
+  //t_delay++;
   IO.writeCommand16(0x2B03);
   IO.writeData16(y1 & 0x00ff);
+  //t_delay++;
   IO.writeCommand16(0x2C00);
+  t_delay++;
 }
 
 void GxCTRL_OTM8009A::setRotation(uint8_t r)
@@ -470,4 +481,3 @@ void GxCTRL_OTM8009A::setRotation(uint8_t r)
   }
   IO.endTransaction();
 }
-

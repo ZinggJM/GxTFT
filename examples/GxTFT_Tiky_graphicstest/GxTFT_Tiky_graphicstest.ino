@@ -19,67 +19,40 @@
 // modified by Jean-Marc Zingg to be an example for the GxTFT library
 // original source taken from https://github.com/Bodmer/TFT_HX8357
 
-#include <GxTFT_GFX.h> // Hardware-specific library
+////#include <GxTFT_GFX.h> // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
+#include <GxTFT.h> // Hardware-specific library
 
 // select one display class
-#define TFT_Class GxTFT_GFX
+////#define TFT_Class GxTFT_GFX // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
+#define TFT_Class GxTFT
 
 // select one GxIO class (or select a pre-configured display below)
-//#include <GxIO/GxIO_DUE_P16_DUESHIELD/GxIO_DUE_P16_DUESHIELD.h>
-//#include <GxIO/GxIO_DUE_P16_HVGASHIELD/GxIO_DUE_P16_HVGASHIELD.h>
 //#include <GxIO/GxIO_DUE_P16_TIKY/GxIO_DUE_P16_TIKY.h>
-//#include <GxIO/GxIO_DUE_P16_WIRED/GxIO_DUE_P16_WIRED.h>
-//#include <GxIO/GxIO_MEGA_P16_MEGASHIELD/GxIO_MEGA_P16_MEGASHIELD.h>
-//#include <GxIO/GxIO_SPI/GxIO_SPI.h>
-//#include <GxIO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
-#include <GxIO/STM32MICRO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
-//#include <GxIO/GxIO_STM32F103V_P16_TIKY/GxIO_STM32F103V_P16_TIKY.h>
-//#include <GxIO/GxIO_STM32F407V_P16/GxIO_STM32F407V_P16.h>
-//#include <GxIO/GxIO_UNO_P8_SHIELD/GxIO_UNO_P8_SHIELD.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F103BluePill_P16_TIKY/GxIO_STM32F103BluePill_P16_TIKY.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F103V_P16_TIKY/GxIO_STM32F103V_P16_TIKY.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
 
 
 // select one GxCTRL class (or select a pre-configured display below)
-//#include <GxCTRL/GxCTRL_HX8357B/GxCTRL_HX8357B.h>
-//#include <GxCTRL/GxCTRL_HX8357C/GxCTRL_HX8357C.h>
-//#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
-//#include <GxCTRL/GxCTRL_ILI9481/GxCTRL_ILI9481.h> // HVGA 320x480
-//#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
 #include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
-//#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 320x480 e.g. 3.5inch RPI Display
 
 // create instance for the selected GxIO class  (or select a pre-configured display below)
 GxIO_Class io; // #define GxIO_Class is in the selected header file
-
-// or create instance for SPI, the constructor needs parameters (or ...)
-//GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
-//GxIO_Class io(SPI, SS, D4, D3); // 480x320 3.5inch RPI Display on Wemos D1 (ESP8266)
 
 // create instance for the selected GxCTRL class  (or select a pre-configured display below)
 GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
 
 // select one or adapt (or select a pre-configured display below)
-//TFT_Class tft(io, controller, 240, 320); // portrait 240x320
-//TFT_Class tft(io, controller, 320, 240); // landscape 240x320
-//TFT_Class tft(io, controller, 320, 480); // portrait HVGA 320x480 or 3.5inch RPI Display
-//TFT_Class tft(io, controller, 480, 320); // landscape HVGA 320x480 or 3.5inch RPI Display
-//TFT_Class tft(io, controller, 480, 800); // portrait 800x480 7inch Display
-//TFT_Class tft(io, controller, 800, 480); // landscape 800x480 7inch Display
 //TFT_Class tft(io, controller, 480, 854); // portrait 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 TFT_Class tft(io, controller, 854, 480); // landscape 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 
 // or select a pre-configured display header
-//#include "myCompileTestTFT.h"
-//#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
-//#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
-//#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
-//#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
-//#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
+//#include "myTFTs/my_5_Tiky_854x480_BluePill.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
-//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h" // <== or select this
-//#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
-//#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
+//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"
+//#include "myTFTs/my_5_Tiky_854x480_FSMC.h"
 
 #include "GxReadRegisters.h"
 

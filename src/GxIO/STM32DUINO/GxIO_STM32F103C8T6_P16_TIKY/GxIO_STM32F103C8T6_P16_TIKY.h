@@ -1,25 +1,25 @@
-// created by Jean-Marc Zingg to be the GxIO_STM32F103BluePill_P16 io class for the GxTFT library
+// created by Jean-Marc Zingg to be the GxIO_STM32F103C8T6_P16_TIKY io class for the GxTFT library
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 //
 // this is a special wiring for
-// https://www.aliexpress.com/item/New-7-inch-TFT-LCD-module-800x480-SSD1963-Touch-PWM-For-Arduino-AVR-STM32-ARM/32667404985.html
+// https://www.aliexpress.com/item/5-0-inch-HD-IPS-TFT-LCD-module-resistance-touch-with-PCB-adapter-board-854-480/32666829945.html
 //
-// for STM32F103C8T6 Minimum System, also known as BluePill
-// https://www.aliexpress.com/item/10pcs-lot-STM32F103C8T6-ARM-STM32-Minimum-System-Development-Board-Module-For-Arduino/32581770994.html
+// for STM32F103C8T6 Minimum System (not a BluePill, but only slightly different)
+// https://www.aliexpress.com/item/1pcs-STM32F103C8T6-ARM-STM32-Minimum-System-Development-Board-Module-For-arduino/32653883227.html
 
-#ifndef _GxIO_STM32F103BluePill_P16_H_
-#define _GxIO_STM32F103BluePill_P16_H_
+#ifndef _GxIO_STM32F103C8T6_P16_TIKY_H_
+#define _GxIO_STM32F103C8T6_P16_TIKY_H_
 
-#include "../GxIO.h"
+#include "../../GxIO.h"
 
 #if defined(ARDUINO_ARCH_STM32F1)
 
-class GxIO_STM32F103BluePill_P16 : public GxIO
+class GxIO_STM32F103C8T6_P16_TIKY : public GxIO
 {
   public:
-    GxIO_STM32F103BluePill_P16();
-    const char* name = "GxIO_STM32F103BluePill_P16";
+    GxIO_STM32F103C8T6_P16_TIKY();
+    const char* name = "GxIO_STM32F103C8T6_P16_TIKY";
     void reset();
     void init();
     uint8_t readDataTransaction();
@@ -47,7 +47,7 @@ class GxIO_STM32F103BluePill_P16 : public GxIO
     int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
 };
 
-#define GxIO_Class GxIO_STM32F103BluePill_P16
+#define GxIO_Class GxIO_STM32F103C8T6_P16_TIKY
 
 #endif
 

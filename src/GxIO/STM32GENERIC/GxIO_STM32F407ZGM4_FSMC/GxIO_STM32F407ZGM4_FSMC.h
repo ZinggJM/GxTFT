@@ -22,7 +22,8 @@
 
 #include "../../GxIO.h"
 
-#if defined(ARDUINO_ARCH_STM32) && (defined(STM32F407VE) || defined(STM32F407ZE) || defined(STM32F407ZG))
+//#if defined(ARDUINO_ARCH_STM32) && (defined(STM32F407VE) || defined(STM32F407ZE) || defined(STM32F407ZG))
+#if defined(ARDUINO_ARCH_STM32) && defined(STM32F407ZG)
 
 class GxIO_STM32F407ZGM4_FSMC : public GxIO
 {
@@ -60,4 +61,3 @@ class GxIO_STM32F407ZGM4_FSMC : public GxIO
 #endif
 
 #endif
-

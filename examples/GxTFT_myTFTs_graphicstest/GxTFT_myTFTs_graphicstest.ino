@@ -19,47 +19,64 @@
 // modified by Jean-Marc Zingg to be an example for the GxTFT library
 // original source taken from https://github.com/Bodmer/TFT_HX8357
 
-//#include <GxTFT_GFX.h> // Hardware-specific library
+////#include <GxTFT_GFX.h> // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #include <GxTFT.h> // Hardware-specific library
 
 // select one display class
-//#define TFT_Class GxTFT_GFX
+////#define TFT_Class GxTFT_GFX // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #define TFT_Class GxTFT
+
+// all STM32 targets are for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics)
 
 // ***> select a pre-configured display header file <***
 // *****************************************************
-//#include "myTFTs/my_1.6_transflective_SSD1283A_ESP.h"
-//#include "myTFTs/my_2.0_TFT_INHAOS_LCD_2000_9225.h"
-//#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
-//#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
-//#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h"
-//#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h"
-
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
-
-// STM32GENERIC, board "BLACK F407VE/ZE/ZG boards", Specific Board "BLACK F407ZG (M4 DEMO)
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h"
-
-//#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
-//#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
-//#include "myTFTs/my_3.5_RPi_480x320_DUE.h"
+//#include "myTFTs/my_1.6_transflective_SSD1283A_ESP.h" // ok
+//#include "myTFTs/my_2.0_TFT_INHAOS_LCD_2000_9225.h" // not re-tested
+//#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h" // ok
+//#include "myTFTs/my_2.8_blue_ili9341_UNO.h" // ok
+//#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h" // not re-tested
+//#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h" // not re-tested
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok 
+//#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h" // ok
+//#include "myTFTs/my_3.5_RPi_480x320_ESP.h" // ok
+//#include "myTFTs/my_3.5_RPi_480x320_DUE.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_STM.h" // not yet ok
-//#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
-//#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
-//#include "myTFTs/my_3.5_ILI9488_480x320_MEGA.h"
+//#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h" // ok
+//#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h" // ok
+//#include "myTFTs/my_3.5_ILI9488_480x320_MEGA.h" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h" // ok
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V on pin 24
+//#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V jumper on processor board (to pin 28)
+//#include "myTFTs/my_5_Tiky_854x480_DUE.h" // not re-tested, connector missing
+//#include "myTFTs/my_5_Tiky_854x480_BluePill.h" // ok
+//#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h" // ok
+//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h" // ok
+//#include "myTFTs/my_5_Tiky_854x480_FSMC.h" // ok
+//#include "myTFTs/my_7_SSD1963_800x480_DUE.h" // not re-tested
+//#include "myTFTs/my_7_SSD1963_800x480_STM32F103C.h" // ok
+//#include "myTFTs/my_7_Waveshare_800x480_SPI.h" // ok
+//#include "myTFTs/my_7_Waveshare_800x480_SPI_DUE.h" // ok
+//#include "myTFTs/my_7_Waveshare_800x480_CTE_DUE.h" // not re-tested
 
+// these are for test with Arduino package STM32DUINO (Roger Clark)
+//#include "myTFTs/STM32DUINO/my_3.2_TFT_320x240_ILI9341_STM32F4.h" // ok
+//#include "myTFTs/STM32DUINO/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h" // ok
+//#include "myTFTs/STM32DUINO/my_5_Tiky_854x480_BluePill.h" // ok
+//#include "myTFTs/STM32DUINO/my_5_Tiky_854x480_STM32F103C.h" // ok
+//#include "myTFTs/STM32DUINO/my_5_Tiky_854x480_STM32F103V.h" // ok
+//#include "myTFTs/STM32DUINO/my_5_Tiky_854x480_FSMC.h" // ok
+//#include "myTFTs/STM32DUINO/my_7_SSD1963_800x480_STM32F103C.h" // ok
+
+// these are for test with Arduino packange STM32GENERIC
 // STM32GENERIC, board "BLACK F407VE/ZE/ZG boards", Specific Board "BLACK F407ZG (M4 DEMO)
-//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
-//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
-//#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"
-
-//#include "myTFTs/my_5_Tiky_854x480_DUE.h"
-//#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
-//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"
-//#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
-//#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
-//#include "myTFTs/my_7_Waveshare_800x480_SPI_DUE.h"
-//#include "myTFTs/my_7_Waveshare_800x480_CTE_DUE.h"
+//#include "myTFTs/STM32GENERIC/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4.h" // ok
+//#include "myTFTs/STM32GENERIC/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok
+//#include "myTFTs/STM32GENERIC/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h" // ok
+//#include "myTFTs/STM32GENERIC/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V on pin 24
+//#include "myTFTs/STM32GENERIC/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V jumper on processor board (to pin 28)
 
 #include "GxReadRegisters.h"
 

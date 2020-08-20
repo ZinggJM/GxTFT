@@ -7,6 +7,9 @@
 //
 // for STM32F103C8T6 Minimum System (not a BluePill, but only slightly different)
 // https://www.aliexpress.com/item/1pcs-STM32F103C8T6-ARM-STM32-Minimum-System-Development-Board-Module-For-arduino/32653883227.html
+//
+// this version is for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics), board "Generic STM32F1 series" part "BluePill F103C8".
+// preferences Additional Boards Manager URLs https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/master/STM32/package_stm_index.json
 
 #ifndef _GxIO_STM32F103C8T6_P16_TIKY_H_
 #define _GxIO_STM32F103C8T6_P16_TIKY_H_

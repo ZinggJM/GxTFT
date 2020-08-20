@@ -1,25 +1,25 @@
-// created by Jean-Marc Zingg to be the GxIO_STM32F103C8T6_P16_TIKY io class for the GxTFT library
+// created by Jean-Marc Zingg to be the GxIO_STM32F407V_P16 io class for the GxTFT library
 //
 // License: GNU GENERAL PUBLIC LICENSE V3, see LICENSE
 //
-// this is a special wiring for
-// https://www.aliexpress.com/item/5-0-inch-HD-IPS-TFT-LCD-module-resistance-touch-with-PCB-adapter-board-854-480/32666829945.html
+// this is a wiring for the TFT  connector, e.g. of
+// https://www.aliexpress.com/item/Free-shipping-STM32F407VET6-development-board-Cortex-M4-STM32-minimum-system-learning-board-ARM-core-board/32618222721.html
 //
-// for STM32F103C8T6 Minimum System (not a BluePill, but only slightly different)
-// https://www.aliexpress.com/item/1pcs-STM32F103C8T6-ARM-STM32-Minimum-System-Development-Board-Module-For-arduino/32653883227.html
+// e.g. for direct matching display
+// https://www.aliexpress.com/item/3-2-inch-TFT-LCD-screen-with-resistive-touch-screens-ILI9341-display-module/32662835059.html
 
-#ifndef _GxIO_STM32F103C8T6_P16_TIKY_H_
-#define _GxIO_STM32F103C8T6_P16_TIKY_H_
+#ifndef _GxIO_STM32F407V_P16_H_
+#define _GxIO_STM32F407V_P16_H_
 
-#include "../GxIO.h"
+#include "../../GxIO.h"
 
-#if defined(ARDUINO_ARCH_STM32F1)
+#if defined(ARDUINO_ARCH_STM32F4) || defined(ARDUINO_ARCH_STM32L4)
 
-class GxIO_STM32F103C8T6_P16_TIKY : public GxIO
+class GxIO_STM32F407V_P16 : public GxIO
 {
   public:
-    GxIO_STM32F103C8T6_P16_TIKY();
-    const char* name = "GxIO_STM32F103C8T6_P16_TIKY";
+    GxIO_STM32F407V_P16(bool bl_active_high = true);
+    const char* name = "GxIO_STM32F407V_P16";
     void reset();
     void init();
     uint8_t readDataTransaction();
@@ -36,18 +36,17 @@ class GxIO_STM32F103C8T6_P16_TIKY : public GxIO
     void writeData(uint8_t d);
     void writeData(uint8_t* d, uint32_t num);
     void writeData16(uint16_t d, uint32_t num = 1);
-    void writeAddrMSBfirst(uint16_t addr);
+    void writeAddrMSBfirst(uint16_t d);
     void startTransaction();
     void endTransaction();
     void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
-    void setDataPinsOutput();
-    void setDataPinsInput();
     int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
+    bool _bl_active_high;
 };
 
-#define GxIO_Class GxIO_STM32F103C8T6_P16_TIKY
+#define GxIO_Class GxIO_STM32F407V_P16
 
 #endif
 

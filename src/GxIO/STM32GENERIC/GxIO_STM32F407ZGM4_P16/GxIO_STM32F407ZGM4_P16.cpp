@@ -13,7 +13,8 @@
 // Specific Board "BLACK F407ZG (M4 DEMO)"
 // https://github.com/danieleff/STM32GENERIC
 
-#if defined(ARDUINO_ARCH_STM32) && (defined(STM32F407VE) || defined(STM32F407ZE) || defined(STM32F407ZG))
+//#if defined(ARDUINO_ARCH_STM32) && (defined(STM32F407VE) || defined(STM32F407ZE) || defined(STM32F407ZG))
+#if defined(ARDUINO_ARCH_STM32) && defined(STM32F407ZG)
 
 #include "GxIO_STM32F407ZGM4_P16.h"
 
@@ -304,4 +305,3 @@ void GxIO_STM32F407ZGM4_P16::setBackLight(bool lit)
 }
 
 #endif
-

@@ -27,7 +27,7 @@ void GxCTRL::drawPixel(uint16_t x, uint16_t y, uint16_t color)
 void GxCTRL::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
   IO.startTransaction();
-  boolean steep = abs(y1 - y0) > abs(x1 - x0);
+  bool steep = abs(y1 - y0) > abs(x1 - x0);
   if (steep)
   {
     swap(x0, y0);
@@ -119,4 +119,3 @@ void GxCTRL::invertDisplay(bool i)
 {
   IO.writeCommandTransaction(i ? 0x21 : 0x20);
 }
-

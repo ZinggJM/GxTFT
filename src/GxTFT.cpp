@@ -602,7 +602,7 @@ void GxTFT::setTextColor(uint16_t c, uint16_t b)
 ** Function name:           setTextWrap
 ** Description:             Define if text should wrap at end of line
 ***************************************************************************************/
-void GxTFT::setTextWrap(boolean w)
+void GxTFT::setTextWrap(bool w)
 {
   textwrap = w;
 }
@@ -774,7 +774,7 @@ void GxTFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint
 #endif
     //>>>>>>>>>>>>>>>>>>
 
-    boolean fillbg = (bg != color);
+    bool fillbg = (bg != color);
 
     if ((size == 1) && fillbg)
     {
@@ -1072,7 +1072,7 @@ void GxTFT::pushColors(uint8_t *data, uint32_t len)
 void GxTFT::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
   return Controller.drawLine(x0, y0, x1, y1, color);
-  boolean steep = abs(y1 - y0) > abs(x1 - x0);
+  bool steep = abs(y1 - y0) > abs(x1 - x0);
   if (steep) {
     swap(x0, y0);
     swap(x1, y1);
@@ -1213,7 +1213,7 @@ void GxTFT::setRotation(uint8_t r)
  ** Function name:           invertDisplay
  ** Description:             invert the display colours i = 1 invert, i = 0 normal
  ***************************************************************************************/
-void GxTFT::invertDisplay(boolean i)
+void GxTFT::invertDisplay(bool i)
 {
   Controller.invertDisplay(i);
 }

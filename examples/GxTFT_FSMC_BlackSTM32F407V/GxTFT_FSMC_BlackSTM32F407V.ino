@@ -1,19 +1,21 @@
 // modified by Jean-Marc Zingg to be an example for the GxTFT library
 // original source taken from https://github.com/Bodmer/TFT_HX8357
 
-//#include <GxTFT_GFX.h> // Hardware-specific library
+////#include <GxTFT_GFX.h> // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #include <GxTFT.h> // Hardware-specific library
 
 // select one display class
-//#define TFT_Class GxTFT_GFX
+////#define TFT_Class GxTFT_GFX // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #define TFT_Class GxTFT
 
 // select one GxIO class, 
 // note: "error: 'GxIO_Class' does not name a type": indicates target board selection mismatch
-// this version is for use with Arduino package STM32DUINO, board "STM32 Discovery F407".
+// this version is for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics), board "Generic STM32F4 series" part e.g. "BLACK F407ZG".
+#include <GxIO/STM32MICRO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
+// this version is for use with Arduino package STM32DUINO, board "Generic STMF407V series".
 //#include <GxIO/STM32DUINO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
 // this version is for use with Arduino package STM32GENERIC, board "BLACK F407VE/ZE/ZG boards".
-#include <GxIO/STM32GENERIC/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
+//#include <GxIO/STM32GENERIC/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
 
 // select one GxCTRL class
 #include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
@@ -479,4 +481,3 @@ void reportID()
   Written by Limor Fried/Ladyada for Adafruit Industries.
   MIT license, all text above must be included in any redistribution
  ****************************************************/
-

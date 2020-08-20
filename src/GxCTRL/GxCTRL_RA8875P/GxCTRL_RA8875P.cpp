@@ -724,7 +724,7 @@ bool GxCTRL_RA8875P::curveHelper(int16_t xCenter, int16_t yCenter, int16_t longA
   return true;
 }
 
-boolean GxCTRL_RA8875P::waitPoll(uint8_t regname, uint8_t waitflag)
+bool GxCTRL_RA8875P::waitPoll(uint8_t regname, uint8_t waitflag)
 {
   /* Wait for the command to finish */
   unsigned long timeout = millis();
@@ -787,5 +787,3 @@ uint8_t  GxCTRL_RA8875P::readStatus(void)
   IO.selectRegister(false);
   return IO.readDataTransaction();
 }
-
-

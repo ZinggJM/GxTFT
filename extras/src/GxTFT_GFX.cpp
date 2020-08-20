@@ -8,6 +8,8 @@
 // (the "light" display class using Adafruit_GFX for graphics)
 // original source taken from https://github.com/stevstrong/Adafruit_ILI9486_STM32/tree/master
 
+#if !defined(STM32GENERIC) && !defined(ARDUINO_ARCH_STM32F4) && !defined(ARDUINO_ARCH_STM32F1)// Adafruit_GFX doesn't compile for these packages
+
 #include "GxTFT_GFX.h"
 
 // Swap any type
@@ -228,3 +230,4 @@ void GxTFT_GFX::fillCurve(int16_t xCenter, int16_t yCenter, int16_t longAxis, in
   if (Controller.fillCurve(xCenter, yCenter, longAxis, shortAxis, curvePart, color)) return;
 }
 
+#endif

@@ -7,6 +7,9 @@
 //
 // for STM32F103C8T6 Minimum System (not a BluePill, but only slightly different)
 // https://www.aliexpress.com/item/1pcs-STM32F103C8T6-ARM-STM32-Minimum-System-Development-Board-Module-For-arduino/32653883227.html
+//
+// this version is for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics), board "Generic STM32F1 series" part "BluePill F103C8".
+// preferences Additional Boards Manager URLs https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/master/STM32/package_stm_index.json
 
 #if (defined(ARDUINO_ARCH_STM32) && defined(STM32F1xx))
 
@@ -85,11 +88,12 @@ void GxIO_STM32F103C8T6_P16_TIKY::reset()
 
 void GxIO_STM32F103C8T6_P16_TIKY::init()
 {
+  RCC->APB2ENR |= 0x0000000C; // enable port A & B clocks
+  uint32_t t = RCC->AHBENR; // delay
   uint32_t mapr = AFIO->MAPR;
   mapr &= ~AFIO_MAPR_SWJ_CFG;
-  //mapr |= AFIO_MAPR_SWJ_CFG_NO_JTAG_SW;
-  mapr |= AFIO_MAPR_SWJ_CFG_NOJNTRST;
-  AFIO->MAPR = mapr; // remap JTAG pins as GPIO
+  mapr |= AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
+  AFIO->MAPR = mapr; // remap JTAG pin A15 as GPIO
   digitalWrite(_cs, HIGH);
   digitalWrite(_rs, HIGH);
   digitalWrite(_wr, HIGH);

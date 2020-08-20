@@ -9,13 +9,17 @@
 // https://www.aliexpress.com/item/STM32-core-development-TFT-LCD-screen-evaluation-board-with-high-speed-FSMC-SDIO-interface/32667841009.html
 //
 // for pin information see the backside of the TFT, for the data pin to port pin mapping see FSMC pin table STM32F103V doc.
+//
+// this version is for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics), board "Generic STM32F1 series" part "GENERIC F103VC".
+// preferences Additional Boards Manager URLs https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/master/STM32/package_stm_index.json
 
 #ifndef _GxIO_STM32F103V_P16_TIKY_H_
 #define _GxIO_STM32F103V_P16_TIKY_H_
 
-#include "../GxIO.h"
+#include "../../GxIO.h"
 
-#if defined(ARDUINO_ARCH_STM32F1)
+#if defined(ARDUINO_ARCH_STM32)&& defined(STM32F1xx) && !defined(STM32GENERIC) // "STM32 Boards (select from submenu)"
+#if defined(ARDUINO_GENERIC_F103VC) || defined(ARDUINO_GENERIC_F103VD) || defined(ARDUINO_GENERIC_F103VE) || defined(ARDUINO_GENERIC_F103VF)
 
 class GxIO_STM32F103V_P16_TIKY : public GxIO
 {
@@ -51,6 +55,7 @@ class GxIO_STM32F103V_P16_TIKY : public GxIO
 
 #define GxIO_Class GxIO_STM32F103V_P16_TIKY
 
+#endif
 #endif
 
 #endif

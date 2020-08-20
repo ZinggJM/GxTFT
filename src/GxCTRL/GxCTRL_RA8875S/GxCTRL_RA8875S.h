@@ -63,7 +63,7 @@ class GxCTRL_RA8875S : public GxCTRL
     uint8_t readData(void);
     void    writeCommand(uint8_t d);
     uint8_t readStatus(void);
-    boolean waitPoll(uint8_t r, uint8_t f);
+    bool waitPoll(uint8_t r, uint8_t f);
     uint8_t _rotation;
     uint16_t _tft_width, _tft_height; // physical
     bool _is_clipping;
@@ -72,4 +72,3 @@ class GxCTRL_RA8875S : public GxCTRL
 #define GxCTRL_Class GxCTRL_RA8875S
 
 #endif
-

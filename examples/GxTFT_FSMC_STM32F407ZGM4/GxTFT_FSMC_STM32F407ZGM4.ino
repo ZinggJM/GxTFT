@@ -1,21 +1,23 @@
 // modified by Jean-Marc Zingg to be an example for the GxTFT library
 // original source taken from https://github.com/Bodmer/TFT_HX8357
 
-//#include <GxTFT_GFX.h> // Hardware-specific library
+////#include <GxTFT_GFX.h> // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #include <GxTFT.h> // Hardware-specific library
 
 // select one display class
-//#define TFT_Class GxTFT_GFX
+////#define TFT_Class GxTFT_GFX // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #define TFT_Class GxTFT
 
 // select one GxIO class, 
 // note: "error: 'GxIO_Class' does not name a type": indicates target board selection mismatch
+// this version is for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics), board "Generic STM32F4 series" part "BLACK F407ZG".
+#include <GxIO/STM32MICRO/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
 // this version is for use with Arduino package STM32GENERIC, board "BLACK F407VE/ZE/ZG boards".
 // Specific Board "BLACK F407ZG (M4 DEMO)"
 // I use it with ST-LINK-V2, Upload method "STLink[Automatic serial = SerialUSB]", USB disabled.
 // For Serial I use a Serial to USB converter on PA9, PA10, "SerialUART1".
 // https://github.com/danieleff/STM32GENERIC
-#include <GxIO/STM32GENERIC/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
+//#include <GxIO/STM32GENERIC/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
 // create instance for the selected GxIO class
 GxIO_Class io; // #define GxIO_Class is in the selected header file
 // note: "error: 'GxIO_Class' does not name a type": indicates target board selection mismatch
@@ -496,4 +498,3 @@ void reportID()
   Written by Limor Fried/Ladyada for Adafruit Industries.
   MIT license, all text above must be included in any redistribution
  ****************************************************/
-

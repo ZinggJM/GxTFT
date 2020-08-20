@@ -233,7 +233,7 @@ void GxIO_STM32F103C8T6_P16_TIKY::writeCommand(uint8_t c)
   GPIOB_BASE->BSRR = (0x1 << 12);  // B12 RS high
 }
 
-void GxIO_STM32F103C8T6_P16_TIKY::writeCommand16(uint16_t c);
+void GxIO_STM32F103C8T6_P16_TIKY::writeCommand16(uint16_t c)
 {
   GPIOB_BASE->BRR = (0x1 << 12);  // B12 RS low
   writeData16(c);

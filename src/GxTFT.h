@@ -303,7 +303,7 @@ class GxTFT : public Print
              fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color),
 
              setRotation(uint8_t r),
-             invertDisplay(boolean i),
+             invertDisplay(bool i),
 
              drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color),
              drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color),
@@ -326,7 +326,7 @@ class GxTFT : public Print
              setTextColor(uint16_t fgcolor, uint16_t bgcolor),
              setTextSize(uint8_t size),
              setTextFont(uint8_t font),
-             setTextWrap(boolean wrap),
+             setTextWrap(bool wrap),
              setTextDatum(uint8_t datum),
              setTextPadding(uint16_t x_width);
 
@@ -396,7 +396,7 @@ class GxTFT : public Print
 
     int8_t   _cs, _rs, _rst, _wr, _fcs; // Control lines
 
-    boolean  textwrap; // If set, 'wrap' text at right edge of display
+    bool  textwrap; // If set, 'wrap' text at right edge of display
 
 #ifdef LOAD_GFXFF
     GFXfont

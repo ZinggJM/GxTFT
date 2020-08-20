@@ -19,12 +19,14 @@
 // modified by Jean-Marc Zingg to be an example for the GxTFT library
 // original source taken from https://github.com/Bodmer/TFT_HX8357
 
-//#include <GxTFT_GFX.h> // Hardware-specific library
+////#include <GxTFT_GFX.h> // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #include <GxTFT.h> // Hardware-specific library
 
 // select one display class
-//#define TFT_Class GxTFT_GFX
+////#define TFT_Class GxTFT_GFX // deprecated, uses Adafruit_GFX; you would need to copy it from extras/src for use
 #define TFT_Class GxTFT
+
+// all STM32 targets are for use with Arduino package "STM32 Boards (select from submenu)" (STMicroelectronics)
 
 // ***> select one GxIO class (or select a pre-configured display below) <***
 // **************************************************************************
@@ -34,18 +36,18 @@
 //#include <GxIO/GxIO_DUE_P16_WIRED/GxIO_DUE_P16_WIRED.h>
 //#include <GxIO/GxIO_MEGA_P16_MEGASHIELD/GxIO_MEGA_P16_MEGASHIELD.h>
 //#include <GxIO/GxIO_SPI/GxIO_SPI.h>
-//#include <GxIO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
-//#include <GxIO/GxIO_STM32F103V_P16_TIKY/GxIO_STM32F103V_P16_TIKY.h>
-//#include <GxIO/GxIO_STM32F407V_P16/GxIO_STM32F407V_P16.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F103C8T6_P16_TIKY/GxIO_STM32F103C8T6_P16_TIKY.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F103V_P16_TIKY/GxIO_STM32F103V_P16_TIKY.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F407V_P16/GxIO_STM32F407V_P16.h>
 //#include <GxIO/GxIO_UNO_P8_SHIELD/GxIO_UNO_P8_SHIELD.h>
 
-//#include <GxIO/STM32DUINO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
-//#include <GxIO/STM32GENERIC/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
-//#include <GxIO/STM32DUINO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
-//#include <GxIO/STM32GENERIC/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
 
-//#include <GxIO/STM32GENERIC/GxIO_STM32F407ZGM4_P16/GxIO_STM32F407ZGM4_P16.h>
-//#include <GxIO/STM32GENERIC/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F407ZGM4_P16/GxIO_STM32F407ZGM4_P16.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
 
 
 // ***> select one GxCTRL class (or select a pre-configured display below) <***
@@ -63,11 +65,11 @@
 
 // ***> create instance for the selected GxIO class  (or select a pre-configured display below) <***
 // *************************************************************************************************
-GxIO_Class io; // #define GxIO_Class is in the selected header file
+//GxIO_Class io; // #define GxIO_Class is in the selected header file
 
 // ***> or create instance for SPI, the constructor needs parameters (or ...) <***
 // *******************************************************************************
-//GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
+// GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
 //GxIO_Class io(SPI, SS, D4, D3); // 480x320 3.5inch RPI Display on Wemos D1 (ESP8266)
 //GxIO_Class io(SPI, SS, D3, D4, D2); // transflective SSD1283A Display on Wemos D1 mini proto board(ESP8266)
 //GxIO_Class io(SPI, SS, 17, 16, 4); // transflective SSD1283A Display on WEMOS LOLIN32 ESP32
@@ -75,7 +77,7 @@ GxIO_Class io; // #define GxIO_Class is in the selected header file
 
 // ***> create instance for the selected GxCTRL class  (or select a pre-configured display below) <***
 // ***************************************************************************************************
-GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
+//GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header file
 
 // ***> select one or adapt (or select a pre-configured display below) <***
 // ************************************************************************
@@ -95,6 +97,7 @@ GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header f
 //#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h"
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
@@ -106,9 +109,12 @@ GxCTRL_Class controller(io); // #define GxCTRL_Class is in the selected header f
 //#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
+//#include "myTFTs/my_5_Tiky_854x480_BluePill.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"
+//#include "myTFTs/my_5_Tiky_854x480_FSMC.h"
 //#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
+//#include "myTFTs/my_7_SSD1963_800x480_STM32F103C.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI_DUE.h"
 //#include "myTFTs/my_7_Waveshare_800x480_CTE_DUE.h"
