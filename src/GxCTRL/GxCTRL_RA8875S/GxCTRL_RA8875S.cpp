@@ -731,6 +731,7 @@ bool GxCTRL_RA8875S::roundRectHelper(int16_t x, int16_t y, int16_t w, int16_t h,
   writeReg(RA8875_ELLIPSE, filled ? 0xE0 : 0xA0); // draw
   /* Wait for the command to finish */
   waitPoll(RA8875_ELLIPSE, RA8875_DCR_LINESQUTRI_STATUS);
+  return true;
 }
 
 bool GxCTRL_RA8875S::ellipseHelper(int16_t xCenter, int16_t yCenter, int16_t longAxis, int16_t shortAxis, uint16_t color, bool filled)
