@@ -11,7 +11,10 @@ A New Approach for a General TFT Library.
 - I recommend to use other common Arduino TFT libraries whenever possible, as these are better supported
 - my recommendations are MCUFRIEND_kbv, TFT_eSPI, and the whole range of Adafruit libraries
 
-### Version 2.1.0
+### Version 2.1.1
+- added support for BLACK_F407ZE STM32 board with FSMC TFT connector
+- supported by classes GxIO_STM32F407ZET6_P16 and GxIO_STM32F407ZET6_FSMC
+#### Version 2.1.0
 - all STM32 targets are now supported with official STM32 package from STMicroelectronics
 - fixed a timing issue with OTM8009A support
 #### Version 2.0.3

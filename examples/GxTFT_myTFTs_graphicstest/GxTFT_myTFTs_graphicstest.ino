@@ -37,6 +37,8 @@
 //#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h" // not re-tested
 //#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h" // not re-tested
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok 
