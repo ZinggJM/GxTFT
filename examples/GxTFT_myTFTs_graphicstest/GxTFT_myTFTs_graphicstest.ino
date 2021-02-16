@@ -36,12 +36,15 @@
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h" // ok
 //#include "myTFTs/my_2.8_RobotDyn_ili2325_MEGA.h" // not re-tested
 //#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h" // not re-tested
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok 
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144.h" //
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144_FSMC.h" // not yet ready
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_DUE.h" // ok
