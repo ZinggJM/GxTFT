@@ -43,8 +43,8 @@
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok 
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144.h" //
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144_FSMC.h" // not yet ready
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144_FSMC.h" // ok
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_DUE.h" // ok
