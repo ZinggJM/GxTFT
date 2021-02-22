@@ -1025,10 +1025,9 @@ void GxTFT::pushColor(uint16_t color, uint16_t len)
 ***************************************************************************************/
 // Sends an array of 16-bit color values to the TFT; used
 // externally by BMP examples.  Assumes that setWindow() has
-// previously been called to define the bounds.  Max 255 pixels at
-// a time (BMP examples read in small chunks due to limited RAM).
+// previously been called to define the bounds.
 
-void GxTFT::pushColors(uint16_t *data, uint8_t len)
+void GxTFT::pushColors(uint16_t *data, uint32_t len)
 {
   IO.startTransaction();
   while (len--)
@@ -1054,7 +1053,7 @@ void GxTFT::pushColors(uint8_t *data, uint32_t len)
     uint16_t color;
     ((uint8_t *)&color)[1] = *data++; // Hi byte
     ((uint8_t *)&color)[0] = *data++; // Lo byte
-    IO.writeData(color);
+    IO.writeData16(color);
     len -= 2;
   }
   IO.endTransaction();
@@ -1975,7 +1974,15 @@ void GxTFT::readRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t* d
 
 void GxTFT::writeRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t *data)
 {
-
+  IO.startTransaction();
+  Controller.setWindow(x, y, x + w - 1, y + h - 1);
+  uint32_t len = uint32_t(w) * uint32_t(h);
+  while (len--)
+  {
+    uint16_t color = *data++;
+    IO.writeData16(color);
+  }
+  IO.endTransaction();
 }
 
 void GxTFT::pushRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t *data)

@@ -288,7 +288,7 @@ class GxTFT : public Print
              pushColor(uint16_t color),
              pushColor(uint16_t color, uint16_t len),
 
-             pushColors(uint16_t *data, uint8_t len),
+             pushColors(uint16_t *data, uint32_t len),
              pushColors(uint8_t  *data, uint32_t len),
 
              fillScreen(uint16_t color),
