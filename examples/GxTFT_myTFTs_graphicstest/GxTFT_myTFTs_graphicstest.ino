@@ -38,12 +38,14 @@
 //#include "myTFTs/my_2.8_RobotDyn_ili2325_RobotDynUNOshield.h" // not re-tested
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6_FSMC.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6M3.h" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6M3_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4.h" // ok
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok 
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144.h" // ok
 //#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144_FSMC.h" // ok
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h" // ok
@@ -53,6 +55,8 @@
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h" // ok
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h" // ok
 //#include "myTFTs/my_3.5_ILI9488_480x320_MEGA.h" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3.h" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3_FSMC.h" // ok
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h" // ok
 //#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V on pin 24
 //#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V jumper on processor board (to pin 28)
@@ -107,7 +111,7 @@ void setup()
   GxTestReadGRAM();
   delay(5000);
   //while(1) yield();
-  
+
 
   Serial.println(F("Benchmark                Time (microseconds)"));
 
@@ -460,7 +464,7 @@ unsigned long testFilledRoundRects() {
   return micros() - start;
 }
 
-void testEllipses() 
+void testEllipses()
 {
   tft.fillScreen(BLACK);
   for (int i = 0; i < 40; i++)
@@ -484,7 +488,7 @@ void testEllipses()
   delay(2000);
 }
 
-void testCurves() 
+void testCurves()
 {
   uint16_t x = tft.width() / 2;
   uint16_t y = tft.height() / 2;
