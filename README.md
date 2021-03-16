@@ -12,7 +12,7 @@ A New Approach for a General TFT Library.
 - my recommendations are MCUFRIEND_kbv, TFT_eSPI, and the whole range of Adafruit libraries
 
 ### Version 2.1.6
-- added suport for 3.97" NT35510 800x480 display
+- added support for 3.97" NT35510 800x480 display
 - added support for STM32F407VxT6 board with FSMC 34 pin female TFT connector
 - details available here: http://www.lcdwiki.com/STM32F407VxT6_Board
 - supported by classes GxIO_STM32F407VxT6_P16 and GxIO_STM32F407VxT6_FSMC
