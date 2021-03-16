@@ -11,7 +11,12 @@ A New Approach for a General TFT Library.
 - I recommend to use other common Arduino TFT libraries whenever possible, as these are better supported
 - my recommendations are MCUFRIEND_kbv, TFT_eSPI, and the whole range of Adafruit libraries
 
-### Version 2.1.5
+### Version 2.1.6
+- added suport for 3.97" NT35510 800x480 display
+- added support for STM32F407VxT6 board with FSMC 34 pin female TFT connector
+- details available here: http://www.lcdwiki.com/STM32F407VxT6_Board
+- supported by classes GxIO_STM32F407VxT6_P16 and GxIO_STM32F407VxT6_FSMC
+#### Version 2.1.5
 - added support for black STM32F103ZET6 M3 DEMO board
 - supported by classes GxIO_STM32F103ZET6M3_P16 and GxIO_STM32F103ZET6M3_FSMC
 - this board is similar to the black STM32F407ZET6 M4 DEMO board added in Version 2.1.0

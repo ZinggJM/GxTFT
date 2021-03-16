@@ -94,6 +94,21 @@ void GxReportRegisters()
     reportRegister(0xDB, 1, "Read ID2");
     reportRegister(0xDC, 1, "Read ID3");
   }
+  else if (controller.ID == 0x3551)
+  {
+    reportRegister(0x04, 3, "Read Display ID");
+    reportRegister(0x0A, 1, "Read Power Mode");
+    reportRegister(0x0B, 1, "Read MADCTL");
+    reportRegister(0x0C, 1, "Read Pixel Format");
+    reportRegister(0x0D, 1, "Read Image Mode");
+    reportRegister(0x0E, 1, "Read Signal Mode");
+    reportRegister(0x0F, 1, "Read Self-diagnostic result");
+    reportRegister(0xA1, 5, "RDDDBS");
+    //reportRegister(0xA8, 5, "RDDDBC");
+    reportRegister(0xDA, 1, "Read ID1");
+    reportRegister(0xDB, 1, "Read ID2");
+    reportRegister(0xDC, 1, "Read ID3");
+  }
   else
   {
     reportRegister(0x00, 2, "ID: ILI9320, ILI9325, ILI9335, ...");
@@ -192,4 +207,3 @@ void GxTestReadGRAM()
   }
 #endif
 }
-

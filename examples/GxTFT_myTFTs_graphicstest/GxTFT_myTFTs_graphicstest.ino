@@ -57,8 +57,14 @@
 //#include "myTFTs/my_3.5_ILI9488_480x320_MEGA.h" // ok
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3.h" // ok
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3_FSMC.h" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407VxT6.h" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407VxT6_FSMC.h" // ok
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h" // ok
-//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V on pin 24
+//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6.h" // ok
+//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6_FSMC.h" // ok
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6.h" // ok, requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6_FSMC.h" // ok, requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V on pin 24 if LDO version
 //#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // ok, requires 5V jumper on processor board (to pin 28)
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h" // not re-tested, connector missing
 //#include "myTFTs/my_5_Tiky_854x480_BluePill.h" // ok

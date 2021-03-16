@@ -44,6 +44,7 @@
 //#include <GxIO/STM32MICRO/GxIO_STM32F407V_P16/GxIO_STM32F407V_P16.h>
 //#include <GxIO/STM32MICRO/GxIO_STM32F407ZET6_P16/GxIO_STM32F407ZET6_P16.h>
 //#include <GxIO/STM32MICRO/GxIO_STM32F407ZGM4_P16/GxIO_STM32F407ZGM4_P16.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F407VxT6_P16/GxIO_STM32F407VxT6_P16.h>
 //#include <GxIO/STM32MICRO/GxIO_STM32Nucleo144_P16/GxIO_STM32Nucleo144_P16.h>
 
 //#include <GxIO/STM32MICRO/GxIO_STM32F1_FSMC/GxIO_STM32F1_FSMC.h>
@@ -52,6 +53,7 @@
 //#include <GxIO/STM32MICRO/GxIO_STM32F4_FSMC/GxIO_STM32F4_FSMC.h>
 //#include <GxIO/STM32MICRO/GxIO_STM32F407ZET6_FSMC/GxIO_STM32F407ZET6_FSMC.h>
 //#include <GxIO/STM32MICRO/GxIO_STM32F407ZGM4_FSMC/GxIO_STM32F407ZGM4_FSMC.h>
+//#include <GxIO/STM32MICRO/GxIO_STM32F407VxT6_FSMC/GxIO_STM32F407VxT6_FSMC.h>
 //#include <GxIO/STM32MICRO/GxIO_STM32Nucleo144_FSMC/GxIO_STM32Nucleo144_FSMC.h>
 
 
@@ -65,6 +67,7 @@
 //#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
 //#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 //#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 320x480 e.g. 3.5inch RPI Display
+//#include <GxCTRL/GxCTRL_NT35510/GxCTRL_NT35510.h> // 800x480 e.g. "IPS 3.97 inch 16.7M HD TFT" from Ruijia Industry
 //#include <GxCTRL/GxCTRL_OTM8009A/GxCTRL_OTM8009A.h> // 800x480 e.g. "IPS 3.97 inch 16.7M HD TFT" from Ruijia Industry
 //#include <GxCTRL/GxCTRL_OTM8009A_RV047/GxCTRL_OTM8009A_RV047.h> // 854x480 e.g. RV047 4.7" TFT from Ruijia Industry
 
@@ -119,8 +122,12 @@
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
-//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"
-//#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"
+//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6.h"
+//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6_FSMC.h"
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6.h" // requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6_FSMC.h" // requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // requires 5V on pin 24 if LDO version
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
 //#include "myTFTs/my_5_Tiky_854x480_BluePill.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
