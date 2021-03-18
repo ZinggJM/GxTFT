@@ -65,6 +65,7 @@
 //#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
 //#include <GxCTRL/GxCTRL_ILI9481/GxCTRL_ILI9481.h> // HVGA 320x480
 //#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
+//#include <GxCTRL/GxCTRL_ST7796S/GxCTRL_ST7796S.h> // 320x480
 //#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 //#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 320x480 e.g. 3.5inch RPI Display
 //#include <GxCTRL/GxCTRL_NT35510/GxCTRL_NT35510.h> // 800x480 e.g. "IPS 3.97 inch 16.7M HD TFT" from Ruijia Industry
@@ -127,6 +128,8 @@
 //#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6.h" // requires 5V on pin 24 if LDO version
 //#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6_FSMC.h" // requires 5V on pin 24 if LDO version
 //#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_4.0_320x480_ST7796S_STM32F407VxT6.h"
+//#include "myTFTs/my_4.0_320x480_ST7796S_STM32F407VxT6_FSMC.h"
 //#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // requires 5V on pin 24 if LDO version
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
 //#include "myTFTs/my_5_Tiky_854x480_BluePill.h"

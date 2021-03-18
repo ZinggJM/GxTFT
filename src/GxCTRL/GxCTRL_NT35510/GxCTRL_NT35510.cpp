@@ -23,7 +23,7 @@
 
 uint32_t GxCTRL_NT35510::readID()
 {
-  return readRegister(0xA1, 2, 2);
+  return readRegister(0x04, 0, 3);
 }
 
 uint32_t GxCTRL_NT35510::readRegister(uint8_t nr, uint8_t index, uint8_t bytes)
