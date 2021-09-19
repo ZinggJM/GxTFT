@@ -52,12 +52,22 @@ void GxIO_SPI::init()
   IOSPI.setDataMode(SPI_MODE0);
   IOSPI.setBitOrder(MSBFIRST);
   setFrequency(GxIO_SPI_defaultFrequency);
+  if (_cs == SS)
+  {
+    digitalWrite(_cs, HIGH);
+    pinMode(_cs, OUTPUT);
+  }
 }
 
 void GxIO_SPI::setFrequency(uint32_t freq)
 {
 #if defined(ESP8266) || defined(ESP32)
   IOSPI.setFrequency(freq);
+#elif defined(ARDUINO_ARCH_STM32) && !defined(STM32GENERIC) // "STM32 Boards (select from submenu)"
+  // should use GxIO_SPI_USING_TRANSACTION instead. needs transaction.
+  SPISettings settings(freq, MSBFIRST, SPI_MODE0);
+  IOSPI.endTransaction(); // avoid hang
+  IOSPI.beginTransaction(settings); // use one common transaction
 #elif defined(SPI_HAS_TRANSACTION)
   // true also for STM32F1xx Boards
   SPISettings settings(freq, MSBFIRST, SPI_MODE0);

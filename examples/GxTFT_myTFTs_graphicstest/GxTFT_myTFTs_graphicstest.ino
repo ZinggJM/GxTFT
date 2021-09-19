@@ -51,7 +51,7 @@
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h" // ok
 //#include "myTFTs/my_3.5_RPi_480x320_DUE.h" // ok
-//#include "myTFTs/my_3.5_RPi_480x320_STM.h" // not yet ok
+//#include "myTFTs/my_3.5_RPi_480x320_STM.h" // ok
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h" // ok
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h" // ok
 //#include "myTFTs/my_3.5_ILI9488_480x320_MEGA.h" // ok

@@ -11,7 +11,11 @@ A New Approach for a General TFT Library.
 - I recommend to use other common Arduino TFT libraries whenever possible, as these are better supported
 - my recommendations are MCUFRIEND_kbv, TFT_eSPI, and the whole range of Adafruit libraries
 
-### Version 2.1.7
+### Version 2.1.8
+- added controller class GxCTRL_ILI9486_WSPI for RPi SPI ILI9486 displays
+- this class works with the "special" SPI interface of Waveshare ILI9486 boards
+- tested on Wemos D1 R2, Arduino Due, STM32 Nucleo-64 F103RB and L476RG
+#### Version 2.1.7
 - added support for 4" ST7796S 480x320 34 pin TFT display
 #### Version 2.1.6
 - added support for 3.97" NT35510 800x480 display

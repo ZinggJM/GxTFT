@@ -64,7 +64,8 @@
 //#include <GxCTRL/GxCTRL_HX8357C/GxCTRL_HX8357C.h>
 //#include <GxCTRL/GxCTRL_ILI9341/GxCTRL_ILI9341.h> // 240x320
 //#include <GxCTRL/GxCTRL_ILI9481/GxCTRL_ILI9481.h> // HVGA 320x480
-//#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480 e.g. 3.5inch RPI Display
+//#include <GxCTRL/GxCTRL_ILI9486/GxCTRL_ILI9486.h> // 320x480
+//#include <GxCTRL/GxCTRL_ILI9486_WSPI/GxCTRL_ILI9486_WSPI.h> // 320x480 Waveshare 3.5inch RPI Display
 //#include <GxCTRL/GxCTRL_ST7796S/GxCTRL_ST7796S.h> // 320x480
 //#include <GxCTRL/GxCTRL_ILI9806/GxCTRL_ILI9806.h> // 854x480 e.g. Tiky 5" TFT from Ruijia Industry
 //#include <GxCTRL/GxCTRL_SSD1963/GxCTRL_SSD1963.h> // 320x480 e.g. 3.5inch RPI Display
@@ -83,6 +84,7 @@
 //GxIO_Class io(SPI, SS, D3, D4, D2); // transflective SSD1283A Display on Wemos D1 mini proto board(ESP8266)
 //GxIO_Class io(SPI, SS, 17, 16, 4); // transflective SSD1283A Display on WEMOS LOLIN32 ESP32
 //GxIO_Class io(SPI, SS, 8, 9, 7); // transflective SSD1283A Display on Arduino UNO
+//GxIO_Class io(SPI, SS, 6, 5); // Waveshare 3.5inch RPI Display on Nucleo-64
 
 // ***> create instance for the selected GxCTRL class  (or select a pre-configured display below) <***
 // ***************************************************************************************************
@@ -119,7 +121,7 @@
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
 //#include "myTFTs/my_3.5_RPi_480x320_DUE.h"
-//#include "myTFTs/my_3.5_RPi_480x320_STM.h" // not yet ok
+//#include "myTFTs/my_3.5_RPi_480x320_STM.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
 //#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
