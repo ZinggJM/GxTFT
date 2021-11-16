@@ -5,7 +5,7 @@
 
 #include "GxIO_SPI.h"
 
-GxIO_SPI::GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst, int8_t bl) : IOSPI(spi)
+GxIO_SPI::GxIO_SPI(SPIClass& spi, int16_t cs, int16_t dc, int16_t rst, int16_t bl) : IOSPI(spi)
 {
   _cs   = cs;
   _dc   = dc;
@@ -283,7 +283,7 @@ void GxIO_SPI::setBackLight(bool lit)
 
 #if defined(ARDUINO_ARCH_SAM)
 
-GxIO_SPI_USING_TRANSACTION::GxIO_SPI_USING_TRANSACTION(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst, int8_t bl)
+GxIO_SPI_USING_TRANSACTION::GxIO_SPI_USING_TRANSACTION(SPIClass& spi, int16_t cs, int16_t dc, int16_t rst, int16_t bl)
   : IOSPI(spi), settings(GxIO_SPI_defaultFrequency, MSBFIRST, SPI_MODE0)
 {
   _cs   = cs;

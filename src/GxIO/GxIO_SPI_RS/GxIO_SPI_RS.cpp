@@ -7,7 +7,7 @@
 
 #if defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
-GxIO_SPI_RS::GxIO_SPI_RS(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst, int8_t bl) : IOSPI(spi)
+GxIO_SPI_RS::GxIO_SPI_RS(SPIClass& spi, int16_t cs, int16_t dc, int16_t rst, int16_t bl) : IOSPI(spi)
 {
   _cs   = cs;
   _rst  = rst;
@@ -285,5 +285,3 @@ void GxIO_SPI_RS::setBackLight(bool lit)
 }
 
 #endif
-
-

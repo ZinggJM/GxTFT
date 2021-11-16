@@ -37,7 +37,7 @@ class GxIO_UNO_P8_ROBOTDYN_SHIELD : public GxIO
     void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
-    int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
+    int16_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
     volatile uint8_t* const _ucsrb; // Serial0 interference
     uint8_t _dummy_ucsrb; // for have not UCSRB
 };

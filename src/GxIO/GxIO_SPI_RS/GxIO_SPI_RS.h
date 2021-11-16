@@ -15,7 +15,7 @@
 class GxIO_SPI_RS : public GxIO
 {
   public:
-    GxIO_SPI_RS(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
+    GxIO_SPI_RS(SPIClass& spi, int16_t cs, int16_t dc, int16_t rst = -1, int16_t bl = -1);
     const char* name = "GxIO_SPI_RS";
     void reset();
     void init();
@@ -46,7 +46,7 @@ class GxIO_SPI_RS : public GxIO
     uint8_t transfer(uint8_t data, bool rs_data);
     uint16_t transfer16(uint16_t data, bool rs_data);
     SPIClass& IOSPI;
-    int8_t _cs, _rst, _bl; // Control lines
+    int16_t _cs, _rst, _bl; // Control lines
 };
 
 #define GxIO_Class GxIO_SPI_RS
@@ -54,4 +54,3 @@ class GxIO_SPI_RS : public GxIO
 #endif
 
 #endif
-

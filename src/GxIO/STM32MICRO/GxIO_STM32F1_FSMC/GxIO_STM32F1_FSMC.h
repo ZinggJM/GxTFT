@@ -50,7 +50,7 @@ class GxIO_STM32F1_FSMC : public GxIO
     void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
-    int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
+    int16_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
 };
 
 #define GxIO_Class GxIO_STM32F1_FSMC

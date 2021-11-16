@@ -43,7 +43,7 @@ class GxIO_DUE_P16_TIKY : public GxIO
     void setBackLight(bool lit);
   private:
     void setDataPins(uint8_t mode);
-    int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
+    int16_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
 };
 
 #define GxIO_Class GxIO_DUE_P16_TIKY

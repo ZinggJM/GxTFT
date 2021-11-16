@@ -41,7 +41,7 @@ class GxIO_DUE_P16_WIRED : public GxIO
     void setBackLight(bool lit);
   private:
     void setDataPins(uint8_t mode);
-    int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
+    int16_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
     bool _bl_active_high;
 };
 

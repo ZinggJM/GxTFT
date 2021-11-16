@@ -13,7 +13,7 @@
 class GxIO_SPI : public GxIO
 {
   public:
-    GxIO_SPI(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
+    GxIO_SPI(SPIClass& spi, int16_t cs, int16_t dc, int16_t rst = -1, int16_t bl = -1);
     const char* name = "GxIO_SPI";
     void reset();
     void init();
@@ -41,7 +41,7 @@ class GxIO_SPI : public GxIO
     void setBackLight(bool lit);
   protected:
     SPIClass& IOSPI;
-    int8_t _cs, _dc, _rst, _bl; // Control lines
+    int16_t _cs, _dc, _rst, _bl; // Control lines
 };
 
 #define GxIO_Class GxIO_SPI
@@ -56,7 +56,7 @@ class GxIO_SPI : public GxIO
 class GxIO_SPI_USING_TRANSACTION : public GxIO
 {
   public:
-    GxIO_SPI_USING_TRANSACTION(SPIClass& spi, int8_t cs, int8_t dc, int8_t rst = -1, int8_t bl = -1);
+    GxIO_SPI_USING_TRANSACTION(SPIClass& spi, int16_t cs, int16_t dc, int16_t rst = -1, int16_t bl = -1);
     const char* name = "GxIO_SPI";
     void reset();
     void init();
@@ -83,7 +83,7 @@ class GxIO_SPI_USING_TRANSACTION : public GxIO
   protected:
     SPIClass& IOSPI;
     SPISettings settings;
-    int8_t _cs, _dc, _rst, _bl, _ss; // Control lines
+    int16_t _cs, _dc, _rst, _bl, _ss; // Control lines
 };
 
 #endif

@@ -39,8 +39,8 @@ class GxIO_MEGA_P8_MEGASHIELD_LS : public GxIO
     void selectRegister(bool rs_low); // for generalized readData & writeData (RA8875)
     void setBackLight(bool lit);
   private:
-    int8_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
-    int8_t _ls; // latch strobe
+    int16_t _cs, _rs, _rst, _wr, _rd, _bl; // Control lines
+    int16_t _ls; // latch strobe
     volatile uint8_t* _lsport;
     uint8_t _lsbit;
 };
