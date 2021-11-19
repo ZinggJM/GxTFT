@@ -18,7 +18,7 @@
 // preferences Additional Boards Manager URLs https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/master/STM32/package_stm_index.json
 
 #if defined(ARDUINO_ARCH_STM32) && defined(STM32F407xx) && !defined(STM32GENERIC) // "STM32 Boards (select from submenu)"
-#if defined(ARDUINO_GENERIC_F407VE) || defined(ARDUINO_GENERIC_F407VG)
+#if defined(ARDUINO_GENERIC_F407VETX) || defined(ARDUINO_GENERIC_F407VGTX)
 
 #include "GxIO_STM32F407VxT6_P16.h"
 

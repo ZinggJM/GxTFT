@@ -22,7 +22,7 @@
 #include "../../GxIO.h"
 
 #if defined(ARDUINO_ARCH_STM32) && defined(STM32F407xx) && !defined(STM32GENERIC) // "STM32 Boards (select from submenu)"
-#if defined(ARDUINO_GENERIC_F407VE) || defined(ARDUINO_GENERIC_F407VG)
+#if defined(ARDUINO_GENERIC_F407VETX) || defined(ARDUINO_GENERIC_F407VGTX)
 
 class GxIO_STM32F407VxT6_FSMC : public GxIO
 {

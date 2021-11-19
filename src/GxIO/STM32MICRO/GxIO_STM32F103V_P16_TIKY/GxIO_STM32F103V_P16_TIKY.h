@@ -19,7 +19,7 @@
 #include "../../GxIO.h"
 
 #if defined(ARDUINO_ARCH_STM32)&& defined(STM32F1xx) && !defined(STM32GENERIC) // "STM32 Boards (select from submenu)"
-#if defined(ARDUINO_GENERIC_F103VC) || defined(ARDUINO_GENERIC_F103VD) || defined(ARDUINO_GENERIC_F103VE) || defined(ARDUINO_GENERIC_F103VF)
+#if defined(ARDUINO_GENERIC_F103VCTX) || defined(ARDUINO_GENERIC_F103VDTX) || defined(ARDUINO_GENERIC_F103VETX) || defined(ARDUINO_GENERIC_F103VFTX) || defined(ARDUINO_GENERIC_F103VGTX)
 
 class GxIO_STM32F103V_P16_TIKY : public GxIO
 {

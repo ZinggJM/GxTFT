@@ -16,7 +16,7 @@
 // preferences Additional Boards Manager URLs https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/master/STM32/package_stm_index.json
 
 #if defined(ARDUINO_ARCH_STM32)&& defined(STM32F1xx) && !defined(STM32GENERIC) // "STM32 Boards (select from submenu)"
-#if defined(ARDUINO_GENERIC_F103VC) || defined(ARDUINO_GENERIC_F103VD) || defined(ARDUINO_GENERIC_F103VE) || defined(ARDUINO_GENERIC_F103VF)
+#if defined(ARDUINO_GENERIC_F103VCTX) || defined(ARDUINO_GENERIC_F103VDTX) || defined(ARDUINO_GENERIC_F103VETX) || defined(ARDUINO_GENERIC_F103VFTX) || defined(ARDUINO_GENERIC_F103VGTX)
 
 #include "GxIO_STM32F1_FSMC.h"
 

@@ -107,37 +107,37 @@
 //#include "myTFTs/my_1.6_transflective_SSD1283A_ESP.h"
 //#include "myTFTs/my_2.4_TFT_mcufriend_UNO.h"
 //#include "myTFTs/my_2.8_blue_ili9341_UNO.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6_FSMC.h"
-//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3.h"
-//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3_FSMC.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6_FSMC.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144.h"
-//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144_FSMC.h"
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6.h"        // "Generic STM32F1 series", "Generic F103ZETx" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F103ZET6_FSMC.h"   // "Generic STM32F1 series", "Generic F103ZETx" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3.h"      // "Generic STM32F1 series", "Generic F103ZETx" // ok
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F103ZET6M3_FSMC.h" // "Generic STM32F1 series", "Generic F103ZETx" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4.h"              // "Generic STM32F4 series", "Black F407VE" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F4_FSMC.h"         // "Generic STM32F4 series", "Black F407VE" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6.h"        // "Generic STM32F4 series", "Black F407ZE" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZET6_FSMC.h"   // "Generic STM32F4 series", "Black F407ZE" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_STM32F407ZGM4_FSMC.h"   // "Generic STM32F4 series", "Black F407ZG" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144.h"            // "Nucleo-144", "Nucleo F767ZI" or "Nucleo F746ZG" // ok
+//#include "myTFTs/my_3.2_TFT_320x240_ILI9341_Nucleo144_FSMC.h"       // "Nucleo-144", "Nucleo F767ZI" or "Nucleo F746ZG" // ok
 //#include "myTFTs/my_3.5_TFT_LCD_Shield_UNO.h"
 //#include "myTFTs/my_3.5_RPi_480x320_ESP.h"
 //#include "myTFTs/my_3.5_RPi_480x320_DUE.h"
 //#include "myTFTs/my_3.5_RPi_480x320_STM.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_MEGA.h"
 //#include "myTFTs/my_3.5_HVGA_480x320_DUE_direct.h"
-//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"
-//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6.h"
-//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6_FSMC.h"
-//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6.h" // requires 5V on pin 24 if LDO version
-//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6_FSMC.h" // requires 5V on pin 24 if LDO version
-//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h" // requires 5V on pin 24 if LDO version
-//#include "myTFTs/my_4.0_320x480_ST7796S_STM32F407VxT6.h"
-//#include "myTFTs/my_4.0_320x480_ST7796S_STM32F407VxT6_FSMC.h"
-//#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h" // requires 5V on pin 24 if LDO version
+//#include "myTFTs/my_3.5_TFT_480x320_ILI9486_STM32F407ZGM4_FSMC.h"   // "Generic STM32F4 series", "Black F407ZG" // ok
+//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6.h"           // "Generic STM32F4 series", "Generic F407VETx" or "Generic F407VGTx" // ok
+//#include "myTFTs/my_3.97_800x480_NT35510_STM32F407VxT6_FSMC.h"      // "Generic STM32F4 series", "Generic F407VETx" or "Generic F407VGTx" // ok
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6.h"          // "Generic STM32F4 series", "Generic F407VETx" or "Generic F407VGTx" // LDO version needs strong 5V on pin 24, ok
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407VxT6_FSMC.h"     // "Generic STM32F4 series", "Generic F407VETx" or "Generic F407VGTx" // LDO version needs strong 5V on pin 24, ok
+//#include "myTFTs/my_3.97_800x480_OTM8009A_STM32F407ZGM4_FSMC.h"     // "Generic STM32F4 series", "Black F407ZG" // ok
+//#include "myTFTs/my_4.0_320x480_ST7796S_STM32F407VxT6.h"            // "Generic STM32F4 series", "Generic F407VETx" or "Generic F407VGTx" // ok
+//#include "myTFTs/my_4.0_320x480_ST7796S_STM32F407VxT6_FSMC.h"       // "Generic STM32F4 series", "Generic F407VETx" or "Generic F407VGTx" // ok
+//#include "myTFTs/my_4.7_854x480_OTM8009A_STM32F407ZGM4_FSMC.h"      // "Generic STM32F4 series", "Black F407ZG" // LDO version needs strong 5V on pin 24, ok
 //#include "myTFTs/my_5_Tiky_854x480_DUE.h"
 //#include "myTFTs/my_5_Tiky_854x480_BluePill.h"
 //#include "myTFTs/my_5_Tiky_854x480_STM32F103C.h"
-//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"
-//#include "myTFTs/my_5_Tiky_854x480_FSMC.h"
+//#include "myTFTs/my_5_Tiky_854x480_STM32F103V.h"                    // "Generic STM32F1 series", "Generic F103VCTx" // ok
+//#include "myTFTs/my_5_Tiky_854x480_FSMC.h"                          // "Generic STM32F1 series", "Generic F103VCTx" // ok
 //#include "myTFTs/my_7_SSD1963_800x480_DUE.h"
 //#include "myTFTs/my_7_SSD1963_800x480_STM32F103C.h"
 //#include "myTFTs/my_7_Waveshare_800x480_SPI.h"
